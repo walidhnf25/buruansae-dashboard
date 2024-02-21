@@ -18,7 +18,6 @@ class DataSayur extends BaseController
 
         $data = [
             'tittle' => 'Data Sayur | Buruan SAE',
-            'data_sayur' => $this->dataSayurModel->getDataSayur(),
             'data_sayur' => $this->dataSayurModel->paginate(10, 'data_sayur'),
             'pager' => $this->dataSayurModel->pager,
             'currentPage' => $currentPage,

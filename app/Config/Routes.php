@@ -2,7 +2,7 @@
 
 namespace Config;
 
-use App\Controllers\DataSayur;
+use App\Controllers;
 
 // Create a new instance of our RouteCollection class.
 $routes = Services::routes();
