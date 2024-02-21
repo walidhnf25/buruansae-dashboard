@@ -23,13 +23,8 @@ class App extends BaseConfig
      *
      * @var string
      */
-<<<<<<< HEAD
     // public $baseURL = 'http://buruansae.matradipti.org/';
     public $baseURL = 'http://localhost:8080/';
-=======
-    public $baseURL = 'http://buruansae-dashboard.matradipti.org/';
-    // public $baseURL = 'http://localhost:8080/';
->>>>>>> e59e25ac4d2958385df2fe223744b4cb0eee46e5
 
     /**
      * --------------------------------------------------------------------------
@@ -42,11 +37,7 @@ class App extends BaseConfig
      *
      * @var string
      */
-<<<<<<< HEAD
     public $indexPage = '';
-=======
-    public $indexPage = 'index.php';
->>>>>>> e59e25ac4d2958385df2fe223744b4cb0eee46e5
     // public $indexPage = '';
 
     /**
