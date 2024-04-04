@@ -63,13 +63,6 @@
                 <a href="dataPengolahanSampah" class="btn btn-primary" type="button">Input Data</a>
             </div>
         </div>
-        <div class="catalog">
-            <img src="asset/bibit.jpg" class="card-img-top" alt="asset/bibit.jpg" >
-            <h4 class="text-center mt-2 mb-3">Data Bibit</h4>
-            <div class="d-grid gap-2 col-6 mx-auto mt-5 mb-3">
-                <a href="dataPembibitan" class="btn btn-primary" type="button">Input Data</a>
-            </div>
-        </div>
     </section>
     
 <?= $this->endSection(); ?>

@@ -2,26 +2,25 @@
 
 namespace App\Controllers;
 
+use App\Models\dataKelompokModel;
 use App\Models\dataPengolahanSampahModel;
 
 class DataPengolahanSampah extends BaseController
 {
     protected $dataPengolahanSampahModel;
+    protected $dataKelompokModel;
     public function __construct()
     {
         $this->dataPengolahanSampahModel = new dataPengolahanSampahModel();
+        $this->dataKelompokModel = new dataKelompokModel();
     }
 
     public function index()
     {
-        $currentPage = $this->request->getVar('page_data_sampah') ? $this->request->getVar('page_data_sampah') : 1;
-
         $data = [
             'tittle' => 'Data Pengolahan Sampah | Buruan SAE',
-            'data_sampah' => $this->dataPengolahanSampahModel->paginate(10, 'data_sampah'),
+            'data_sampah' => $this->dataPengolahanSampahModel->getDataSampah(),
             'validation' => \Config\Services::validation(),
-            'pager' => $this->dataPengolahanSampahModel->pager,
-            'currentPage' => $currentPage
         ];
 
         return view('pages/dataPengolahanSampah', $data);
@@ -31,7 +30,9 @@ class DataPengolahanSampah extends BaseController
     {
         $data = [
             'tittle' => 'Data Sampah | Buruan SAE',
-            'validation' => \Config\Services::validation()
+            'validation' => \Config\Services::validation(),
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'sampah' => $this->dataPengolahanSampahModel->getDataSampah()
         ];
         return view('pages/tambahDataSampah', $data);
     }
@@ -65,6 +66,7 @@ class DataPengolahanSampah extends BaseController
         }
 
         $this->dataPengolahanSampahModel->save([
+            'id_kelompok' => $this->request->getVar('id_kelompok'),
             'tanggal_masuk' => $this->request->getVar('tanggal_masuk'),
             'jenis_pengolahan' => $this->request->getVar('jenis_pengolahan'),
             'jumlah_sampah' => $this->request->getVar('jumlah_sampah')
@@ -87,7 +89,8 @@ class DataPengolahanSampah extends BaseController
         $data = [
             'tittle' => 'Data Sampah | Buruan SAE',
             'validation' => \Config\Services::validation(),
-            'sampah' => $this->dataPengolahanSampahModel->getDataSampah($id_data_sampah)
+            'sampah' => $this->dataPengolahanSampahModel->getDataSampah($id_data_sampah),
+            'kelompok' => $this->dataKelompokModel->getDataKelompok()
         ];
 
         return view('pages/editDataSampah', $data);
@@ -123,6 +126,7 @@ class DataPengolahanSampah extends BaseController
 
         $this->dataPengolahanSampahModel->save([
             'id_data_sampah' => $id_data_sampah,
+            'id_kelompok' => $this->request->getVar('id_kelompok'),
             'tanggal_masuk' => $this->request->getVar('tanggal_masuk'),
             'jenis_pengolahan' => $this->request->getVar('jenis_pengolahan'),
             'jumlah_sampah' => $this->request->getVar('jumlah_sampah')

@@ -281,6 +281,7 @@ img {
 
 .table > thead {
   text-align: center;
+  min-width: 100%;
 }
 
 .nav-tabel {
@@ -331,6 +332,7 @@ img {
 
 .tab {
   display: none;
+  min-width: auto;
 }
 
 .tab-active {

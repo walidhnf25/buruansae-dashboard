@@ -16,12 +16,18 @@
     <a href="<?= base_url(); ?>/dataSayur/tambahDataSayur" class="btn btn-primary">Tambah Data</a>
   </div>
 
-  <div class="table-responsive-sm">
-    <table class="table table-bordered table-hover ">
+  <div class="table-responsive-lg">
+    <table id="tablehome" class="table table-bordered table-hover ">
       <thead class="table-dark align-middle ">
         <tr class="align-middle">
           <th scope="col">No</th>
           <th scope="col">Nama Sayur</th>
+          <th scope="col">Kelompok</th>
+          <th scope="col">Penyuluh</th>
+          <th scope="col">Pendamping</th>
+          <th scope="col">Kecamatan</th>
+          <th scope="col">Kelurahan</th>
+          <th scope="col">RW</th>
           <th scope="col">Tanggal Tanam</th>
           <th scope="col">Ketegori Tumbuhan</th>
           <th scope="col">Jumlah Tanam</th>
@@ -29,39 +35,47 @@
         </tr>
       </thead>
       <tbody>
-        <?php $i = 1 + (10 * ($currentPage - 1)); ?>
+        <?php $i = 1; ?>
         <?php foreach ($data_sayur as $sayur) : ?>
           <tr class="table-light align-middle">
             <th scope="row"><?= $i++; ?></th>
             <td><?= $sayur['nama_sayur']; ?></td>
+            <td><?= $sayur['nama_kelompok']; ?></td>
+            <td><?= $sayur['penyuluh']; ?></td>
+            <td><?= $sayur['pendamping']; ?></td>
+            <td><?= $sayur['kecamatan']; ?></td>
+            <td><?= $sayur['kelurahan']; ?></td>
+            <td><?= $sayur['rw']; ?></td>
             <td><?= $sayur['tanggal_tanam']; ?></td>
             <td><?= $sayur['kategori_tumbuhan']; ?></td>
             <td><?= $sayur['jumlah_tanam']; ?></td>
             <td>
-              <?php if ($sayur['waktu_panen'] == null) { ?>
-                <a href="<?= base_url('/dataSayur/dataPanenSayur/' . $sayur['id_sayur']); ?>" class="btn btn-success">Panen</a>
-
-                <a href="<?= base_url('/dataSayur/editDataSayur/' . $sayur['id_sayur']); ?>" class="btn btn-warning">Edit</a>
-
+              <?php if (!isset($sayur['waktu_panen']) || $sayur['waktu_panen'] == null) : ?>
+                <a href="<?= base_url(); ?>/dataSayur/dataPanenSayur/<?= $sayur['id_sayur']; ?>" class="btn btn-success mb-2">Panen</a>
+                <a href="<?= base_url(); ?>/dataSayur/editDataSayur/<?= $sayur['id_sayur']; ?>" class="btn btn-warning mb-2">Edit</a>
+                <?php if (isset($sayur['id_sayur'])) : ?>
                 <form action="/dataSayur/<?= $sayur['id_sayur']; ?>" method="post" class="d-inline">
                   <?= csrf_field(); ?>
                   <input type="hidden" name="_method" value="DELETE">
                   <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah anda yakin?');">Delete</button>
                 </form>
-              <?php } else { ?>
-                <span class="badge bg-success">Sudah Panen</span>
-                <a href="<?= base_url(); ?>/dataSayur/dataPanenSayur/<?= $sayur['id_sayur']; ?>" class="btn btn-warning">Edit Data Panen</a>
-                <form action="/dataSayur/<?= $sayur['id_sayur']; ?>" method="post" class="d-inline">
-                  <?= csrf_field(); ?>
-                  <input type="hidden" name="_method" value="DELETE">
-                  <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah anda yakin?');">Delete</button>
-                <?php }; ?>
+              <?php endif; ?>
+              <?php else : ?>
+                <span class="badge bg-success mb-2">Sudah Panen</span>
+                <a href="<?= base_url(); ?>/dataSayur/dataPanenSayur/<?= $sayur['id_sayur']; ?>" class="btn btn-warning mb-2">Edit Data Panen</a>
+                <?php if (isset($sayur['id_sayur'])) : ?>
+                  <form action="/dataSayur/<?= $sayur['id_sayur']; ?>" method="post" class="d-inline">
+                    <?= csrf_field(); ?>
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah anda yakin?');">Delete</button>
+                  </form>
+                <?php endif; ?>
+              <?php endif; ?>
             </td>
           </tr>
         <?php endforeach; ?>
       </tbody>
     </table>
-    <?= $pager->links('data_sayur', 'pagination_sayur'); ?>
   </div>
 </div>
 

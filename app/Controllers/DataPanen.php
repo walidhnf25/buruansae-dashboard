@@ -7,9 +7,9 @@ use App\Models\dataTanamanObatModel;
 use App\Models\dataTernakModel;
 use App\Models\dataIkanModel;
 use App\Models\dataBuahModel;
+use App\Models\dataKelompokModel;
 use App\Models\dataOlahanHasilModel;
 use App\Models\dataPengolahanSampahModel;
-use App\Models\dataPembibitanModel;
 
 class DataPanen extends BaseController
 {
@@ -20,7 +20,7 @@ class DataPanen extends BaseController
     protected $dataBuahModel;
     protected $dataOlahanHasilModel;
     protected $dataPengolahanSampahModel;
-    protected $dataPembibitanModel;
+    
 
     public function __construct()
     {
@@ -31,7 +31,7 @@ class DataPanen extends BaseController
         $this->dataBuahModel = new dataBuahModel();
         $this->dataOlahanHasilModel = new dataOlahanhasilModel();
         $this->dataPengolahanSampahModel = new dataPengolahanSampahModel();
-        $this->dataPembibitanModel = new dataPembibitanModel();
+
     }
 
     public function index()
@@ -47,7 +47,6 @@ class DataPanen extends BaseController
             'buah' => $this->dataBuahModel->getDataBuah(),
             'olahan_hasil' => $this->dataOlahanHasilModel->getDataOlahanHasil(),
             'sampah' => $this->dataPengolahanSampahModel->getDataSampah(),
-            'bibit' => $this->dataPembibitanModel->getDataPembibitan(),
             'validation' => \Config\Services::validation()
         ];
 

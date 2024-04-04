@@ -21,6 +21,37 @@
                         <?= $validation->getError('nama_sayur'); ?>
                     </div>
                 </div>
+                <div class="form-group mb-3">
+                    <label for="nama_kelompok" class="form-label">Assign Tugas Kelompok</label>
+                    <select name="id_kelompok" class="form-select">
+                        <option value="" style="display: none;" class="hidden">--Pilih Nama Kelompok--</option>
+                        <?php foreach ($kelompok as $key => $value) { ?>
+                            <option 
+                            value="<?php echo $value['id_kelompok']; ?>" 
+                            data-penyuluh="<?php echo $value['penyuluh']; ?>" 
+                            data-pendamping="<?php echo $value['pendamping']; ?>" 
+                            data-kecamatan="<?php echo $value['kecamatan']; ?>"
+                            data-kelurahan="<?php echo $value['kelurahan']; ?>"
+                            ><?php echo $value['nama_kelompok']; ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="mb-3 form-group">
+                    <label for="penyuluh">Penyuluh</label>
+                    <input type="text" name="penyuluh" id="penyuluh" class="form-control" readonly>
+                </div>
+                <div class="mb-3 form-group">
+                    <label for="pendamping">Pendamping</label>
+                    <input type="text" name="pendamping" id="pendamping" class="form-control" readonly>
+                </div>
+                <div class="mb-3 form-group">
+                    <label for="kecamatan">Kecamatan</label>
+                    <input type="text" name="kecamatan" id="kecamatan" class="form-control" readonly>
+                </div>
+                <div class="mb-3 form-group">
+                    <label for="kelurahan">Kelurahan</label>
+                    <input type="text" name="kelurahan" id="kelurahan" class="form-control" readonly>
+                </div>
                 <div class="mb-3">
                     <label for="tanggal_tanam" class="form-label">Tanggal Tanam</label>
                     <input type="date" class="form-control <?= ($validation->hasError('tanggal_tanam')) ? 'is-invalid' : ''; ?>" id="tanggal_tanam" name="tanggal_tanam">
@@ -61,4 +92,35 @@
     </div>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('select[name="id_kelompok"]').change(function() {
+            var selectedOption = $(this).find('option:selected');
+            var penyuluh = selectedOption.data('penyuluh');
+            var pendamping = selectedOption.data('pendamping');
+            var kecamatan = selectedOption.data('kecamatan');
+            var kelurahan = selectedOption.data('kelurahan');
+            $('input[name="penyuluh"]').val(penyuluh);
+            $('input[name="pendamping"]').val(pendamping);
+            $('input[name="kecamatan"]').val(kecamatan);
+            $('input[name="kelurahan"]').val(kelurahan);
+        });
+    });
+</script>
+
+<!-- <script>
+    $('#nama_kelompok', on('change', (event) => {
+        getnamakelompok(event.target.kelompok).then(data_sayur => {
+            $('kecamatan').val(data_sayur.kecamatan);
+            $('kelurahan').val(data_sayur.kelurahan);
+        });
+    }));
+    async function getnamakelompok(id_sayur){
+        let response = await fetch('/api/DataSayur/' + id_sayur);
+        let data = await response.json();
+
+        return data;
+    }
+</script> -->
 <?= $this->endSection(); ?>

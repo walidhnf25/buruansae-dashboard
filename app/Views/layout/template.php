@@ -34,6 +34,7 @@
     </div>
     <ul class="menu-list">
       <li><a href="<?= base_url("/Home"); ?>"><strong>Home</strong></a></li>
+      <li><a href="<?= base_url(); ?>/DataKelompok"><strong>Data Kelompok</strong></a></li>
       <li><a href="<?= base_url(); ?>/DataPanen"><strong>Data Panen</strong></a></li>
       <!-- <li class="btn-profile"><i data-feather="user" ></i></li> -->
     </ul>
@@ -82,5 +83,59 @@
 <!-- Option 1: Bootstrap Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
+<!-- DATA TABLE -->
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
+
+<!-- Include jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Include Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Include Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+<script>
+  new DataTable("#tablehome");
+  new DataTable("#tableKelompok");
+  new DataTable("#tablePanensayur");
+  new DataTable("#tablePanenobat");
+  new DataTable("#tablePanenternak");
+  new DataTable("#tablePanenikan");
+  new DataTable("#tablePanenbuah");
+  new DataTable("#tablePanenolahan");
+  new DataTable("#tablePanensampah");
+</script>
+
+<script>
+$(document).ready(function() {
+    $('select[name="id_kelompok"]').select2();
+});
+</script>
+<script>
+    history.pushState(null, null, location.href);
+    history.back();
+    history.forward();
+    window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
+<script>
+    $(document).ready(function() {
+        $('select[name="id_kelompok"]').change(function() {
+            var selectedOption = $(this).find('option:selected');
+            var penyuluh = selectedOption.data('penyuluh');
+            var pendamping = selectedOption.data('pendamping');
+            var kecamatan = selectedOption.data('kecamatan');
+            var kelurahan = selectedOption.data('kelurahan');
+            $('input[name="penyuluh"]').val(penyuluh);
+            $('input[name="pendamping"]').val(pendamping);
+            $('input[name="kecamatan"]').val(kecamatan);
+            $('input[name="kelurahan"]').val(kelurahan);
+        });
+    });
+</script>
 
 </html>

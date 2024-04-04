@@ -35,6 +35,7 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'Login::index');
 // $routes->get('/', 'DataSayur::save');
+$routes->get('/tambahDataSayur', 'DataSayur::index');
 $routes->delete('/dataSayur/(:num)', 'DataSayur::delete/$1');
 $routes->delete('/dataTanamanObat/(:num)', 'DataTanamanObat::delete/$1');
 $routes->delete('/dataTernak/(:num)', 'DataTernak::delete/$1');
@@ -42,8 +43,10 @@ $routes->delete('/dataIkan/(:num)', 'DataIkan::delete/$1');
 $routes->delete('/dataBuah/(:num)', 'DataBuah::delete/$1');
 $routes->delete('/dataOlahanHasil/(:num)', 'DataOlahanHasil::delete/$1');
 $routes->delete('/dataPengolahanSampah/(:num)', 'DataPengolahanSampah::delete/$1');
-$routes->delete('/dataPembibitan/(:num)', 'DataPembibitan::delete/$1');
-$routes->delete('/dataPembibitan/(:num)', 'DataPembibitan::delete/$1');
+// $routes->delete('/dataPembibitan/(:num)', 'DataPembibitan::delete/$1');
+
+
+$routes->delete('/DataKelompok/(:num)', 'DataKelompok::delete/$1');
 
 //Routing Data Sayur
 $routes->get('/dataSayur/dataPanenSayur/(id_sayur)', 'DataSayur::dataPanenSayur/$1');
@@ -73,9 +76,12 @@ $routes->get('/dataOlahanHasil/dataProduksi/(id_data_olahan_hasil)', 'DataOlahan
 $routes->get('/dataPengolahanSampah/editDataSampah/(:segment)', 'DataPengolahanSampah::editDataSampah/$1');
 $routes->get('/dataPengolahanSampah/dataProduksiSampah/(id_data_sampah)', 'DataPengolahanSampah::dataProduksiSampah/$1');
 
-//Routing Data Olahan Pembibitan
-$routes->get('/dataPembibitan/editDataPembibitan/(:segment)', 'DataPembibitan::editDataPembibitan/$1');
-$routes->get('/dataPembibitan/dataPanenPembibitan/(id_bibit)', 'DataPembibitan::dataPanenPembibitan/$1');
+// //Routing Data Olahan Pembibitan
+// $routes->get('/dataPembibitan/editDataPembibitan/(:segment)', 'DataPembibitan::editDataPembibitan/$1');
+// $routes->get('/dataPembibitan/dataPanenPembibitan/(id_bibit)', 'DataPembibitan::dataPanenPembibitan/$1');
+
+//Routing Data Kelompok
+$routes->get('/DataKelompok/editDataKelompok/(:segment)', 'DataKelompok::editDataKelompok/$1');
 
 // $routes->get('/dataSayur', 'dataSayur::index');
 // $routes->get('/dataSayur/(:num)', 'DataSayur::dataPanenSayur/$1');
