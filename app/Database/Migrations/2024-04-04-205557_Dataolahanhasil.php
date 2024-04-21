@@ -9,7 +9,7 @@ class Dataolahanhasil extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id_olahan_hasil' => [
+            'id_data_olahan_hasil' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
                 'unsigned'       => true,
@@ -106,7 +106,7 @@ class Dataolahanhasil extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id_olahan_hasil', true);
+        $this->forge->addKey('id_data_olahan_hasil', true);
         $this->forge->addForeignKey('id_kelompok', 'data_kelompok', 'id_kelompok');
         $this->forge->createTable('data_olahan_hasil');
     }

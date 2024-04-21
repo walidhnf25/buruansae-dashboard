@@ -47,11 +47,13 @@ class Datakelompok extends Migration
             ],
         ]);
         $this->forge->addKey('id_kelompok', true);
+        // $this->forge->addForeignKey('id_komoditi', 'data_komoditi', 'id_komoditi');
         $this->forge->createTable('data_kelompok');
     }
 
     public function down()
     {
+        // $this->forge->dropForeignKey('data_kelompok', 'data_kelompok_id_komoditi_foreign');
         $this->forge->dropTable('data_kelompok');
     }
 }

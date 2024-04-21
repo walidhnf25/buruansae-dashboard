@@ -9,7 +9,7 @@ class Datasampah extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id_sampah' => [
+            'id_data_sampah' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
                 'unsigned'       => true,
@@ -76,7 +76,7 @@ class Datasampah extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id_sampah', true);
+        $this->forge->addKey('id_data_sampah', true);
         $this->forge->addForeignKey('id_kelompok', 'data_kelompok', 'id_kelompok');
         $this->forge->createTable('data_sampah');
     }
