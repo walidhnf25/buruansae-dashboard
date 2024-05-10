@@ -10,23 +10,21 @@
                 <div class="mb-3">
                     <label for="jenis_ternak" class="form-label">Jenis Ternak</label>
                     <select class="form-select <?= ($validation->hasError('jenis_ternak')) ? 'is-invalid' : ''; ?>" name="jenis_ternak" id="jenis_ternak">
-                        <!-- <option value="" class="hidden" style="display: none;" >Pilih Jenis Ternak</option>
-                        <option disabled>Pilih Jenis Ternak</option> -->
-                        <option value="Ayam Petelur <?php (old('jenis_ternak')==='Ayam Petelur')? 'selected' :'' ; ?>">Ayam Petelur</option>
-                        <option value="Kelinci <?php (old('jenis_ternak')==='Kelinci')? 'selected' :'' ; ?>">Kelinci</option>
-                        <option value="Ayam Joper <?php (old('jenis_ternak')==='Ayam Joper')? 'selected' :'' ; ?>">Ayam Joper</option>
-                        <option value="Bebek <?php (old('jenis_ternak')==='Bebek')? 'selected' :'' ; ?>">Bebek</option>
+                        <option value="" class="hidden" style="display: none;" disabled>Pilih Ternak</option>
+                        <?php foreach ($komoditi as $k) : ?>
+                            <option value="<?= $k['nama_komoditi'] ?>" <?= old('jenis_ternak') == $k['nama_komoditi'] ? 'selected' : ''; ?>><?= $k['nama_komoditi'] ?></option>
+                        <?php endforeach; ?>
                     </select>
                     <div class="invalid-feedback">
                         <?= $validation->getError('jenis_ternak'); ?>
                     </div>
-                </div> 
+                </div>
                 <div class="form-group mb-3">
-                    <label for="nama_kelompok" class="form-label">Assign Tugas Kelompok</label>
+                    <label for="nama_kelompok" class="form-label">Assign Kelompok</label>
                     <select name="id_kelompok" class="form-select">
-                        <option value="" style="display: none;" class="hidden">--Pilih Nama Kelompok--</option>
+                        <option value="" style="display: none;" class="hidden" disabled>--Pilih Nama Kelompok--</option>
                         <?php foreach ($kelompok as $key => $value) { ?>
-                            <option value="<?php echo $value['id_kelompok']; ?>" data-penyuluh="<?php echo $value['penyuluh']; ?>" data-pendamping="<?php echo $value['pendamping']; ?>" data-kecamatan="<?php echo $value['kecamatan']; ?>" data-kelurahan="<?php echo $value['kelurahan']; ?>"><?php echo $value['nama_kelompok']; ?></option>
+                            <option value="<?php echo $value['id_kelompok']; ?>" data-penyuluh="<?php echo $value['penyuluh']; ?>" data-pendamping="<?php echo $value['pendamping']; ?>" data-kecamatan="<?php echo $value['kecamatan']; ?>" data-kelurahan="<?php echo $value['kelurahan']; ?>" <?php echo old('id_kelompok', $ternak['id_kelompok']) == $value['id_kelompok'] ? 'selected' : ''; ?>><?php echo $value['nama_kelompok']; ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -54,7 +52,7 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="jumlah_ternak" class="form-label">Jumlah Ternak</label>                
+                    <label for="jumlah_ternak" class="form-label">Jumlah Ternak</label>
                     <input type="number" min="1" class="form-control <?= ($validation->hasError('jumlah_ternak')) ? 'is-invalid' : ''; ?>" id="jumlah_ternak" name="jumlah_ternak" value="<?= (old('jumlah_ternak')) ? old('jumlah_ternak') : $ternak['jumlah_ternak']; ?>">
                     <div class="invalid-feedback">
                         <?= $validation->getError('jumlah_ternak'); ?>
@@ -64,9 +62,9 @@
                     <label for="jumlah_pakan" class="form-label">Jumlah Pakan</label>
                     <input type="number" min="1" class="form-control <?= ($validation->hasError('jumlah_pakan')) ? 'is-invalid' : ''; ?>" id="jumlah_pakan" name="jumlah_pakan" value="<?= (old('jumlah_pakan')) ? old('jumlah_pakan') : $ternak['jumlah_pakan']; ?>">
                     <div class="invalid-feedback">
-                    <?= $validation->getError('jumlah_pakan'); ?>
+                        <?= $validation->getError('jumlah_pakan'); ?>
                     </div>
-                </div>    
+                </div>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
                     <a href="<?= base_url(); ?>/dataTernak" class="btn btn-secondary" type="button">Kembali</a>
                     <button class="btn btn-primary me-md-2" type="submit">Simpan</button>

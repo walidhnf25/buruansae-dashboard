@@ -4,15 +4,19 @@ namespace App\Controllers;
 
 use App\Models\dataKelompokModel;
 use App\Models\dataTernakModel;
+use App\Models\DataKomoditiModel;
 
 class DataTernak extends BaseController
 {
     protected $dataTernakModel;
     protected $dataKelompokModel;
+    protected $dataKomoditiModel;
+
     public function __construct()
     {
         $this->dataTernakModel = new dataTernakModel();
         $this->dataKelompokModel = new dataKelompokModel();
+        $this->dataKomoditiModel = new DataKomoditiModel();
     }
 
     public function index()
@@ -33,7 +37,8 @@ class DataTernak extends BaseController
             'tittle' => 'Data Ternak | Buruan SAE',
             'validation' => \Config\Services::validation(),
             'ternak' => $this->dataTernakModel->getDataTernak(),
-            'kelompok' => $this->dataKelompokModel->getDataKelompok()
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'TERNAK')->findAll(),
         ];
         return view('pages/tambahDataTernak', $data);
     }
@@ -100,7 +105,8 @@ class DataTernak extends BaseController
             'tittle' => 'Data Ternak | Buruan SAE',
             'validation' => \Config\Services::validation(),
             'ternak' => $this->dataTernakModel->getDataTernak($id_ternak),
-            'kelompok' => $this->dataKelompokModel->getDataKelompok()
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'TERNAK')->findAll()
         ];
 
         return view('pages/editDataTernak', $data);

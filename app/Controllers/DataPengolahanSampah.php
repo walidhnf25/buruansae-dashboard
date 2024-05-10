@@ -4,15 +4,18 @@ namespace App\Controllers;
 
 use App\Models\dataKelompokModel;
 use App\Models\dataPengolahanSampahModel;
+use App\Models\dataKomoditiModel;
 
 class DataPengolahanSampah extends BaseController
 {
     protected $dataPengolahanSampahModel;
     protected $dataKelompokModel;
+    protected $dataKomoditiModel;
     public function __construct()
     {
         $this->dataPengolahanSampahModel = new dataPengolahanSampahModel();
         $this->dataKelompokModel = new dataKelompokModel();
+        $this->dataKomoditiModel = new dataKomoditiModel();
     }
 
     public function index()
@@ -32,7 +35,8 @@ class DataPengolahanSampah extends BaseController
             'tittle' => 'Data Sampah | Buruan SAE',
             'validation' => \Config\Services::validation(),
             'kelompok' => $this->dataKelompokModel->getDataKelompok(),
-            'sampah' => $this->dataPengolahanSampahModel->getDataSampah()
+            'sampah' => $this->dataPengolahanSampahModel->getDataSampah(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'OLAHAN SAMPAH')->findAll()
         ];
         return view('pages/tambahDataSampah', $data);
     }
@@ -90,7 +94,8 @@ class DataPengolahanSampah extends BaseController
             'tittle' => 'Data Sampah | Buruan SAE',
             'validation' => \Config\Services::validation(),
             'sampah' => $this->dataPengolahanSampahModel->getDataSampah($id_data_sampah),
-            'kelompok' => $this->dataKelompokModel->getDataKelompok()
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'OLAHAN SAMPAH')->findAll()
         ];
 
         return view('pages/editDataSampah', $data);

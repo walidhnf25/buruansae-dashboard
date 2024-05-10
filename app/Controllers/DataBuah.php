@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\dataBuahModel;
 use App\Models\dataKelompokModel;
+use App\Models\dataKomoditiModel;
 
 
 
@@ -11,10 +12,12 @@ class DataBuah extends BaseController
 {
     protected $dataBuahModel;
     protected $dataKelompokModel;
+    protected $dataKomoditiModel;
     public function __construct()
     {
         $this->dataBuahModel = new dataBuahModel();
         $this->dataKelompokModel = new dataKelompokModel();
+        $this->dataKomoditiModel = new dataKomoditiModel();
     }
 
     public function index()
@@ -35,7 +38,8 @@ class DataBuah extends BaseController
             'tittle' => 'Data Buah | Buruan SAE',
             'validation' => \Config\Services::validation(),
             'buah' => $this->dataBuahModel->getDataBuah(),
-            'kelompok' => $this->dataKelompokModel->getDataKelompok()
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'BUAH')->findAll()
         ];
         return view('pages/tambahDataBuah', $data);
     }
@@ -100,6 +104,7 @@ class DataBuah extends BaseController
             'validation' => \Config\Services::validation(),
             'buah' => $this->dataBuahModel->getDataBuah($id_buah),
             'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'BUAH')->findAll()
         ];
 
         return view('pages/editDataBuah', $data);

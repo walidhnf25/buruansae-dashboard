@@ -10,23 +10,21 @@
                 <div class="mb-3">
                     <label for="nama_sayur" class="form-label">Nama Sayur</label>
                     <select class="form-select <?= ($validation->hasError('nama_sayur')) ? 'is-invalid' : ''; ?>" name="nama_sayur" id="nama_sayur">
-                        <!-- <option value="" class="hidden" style="display: none;">Pilih Sayur</option>
-                        <option disabled>Pilih Sayur</option> -->
-                        <option value="Brokoli" <?= (old('nama_sayur') === 'Brokoli') ? 'selected' : ''; ?>>Brokoli</option>
-                        <option value="Kangkung" <?= (old('nama_sayur') === 'Kangkung') ? 'selected' : ''; ?>>Kangkung</option>
-                        <option value="Sawi" <?= (old('nama_sayur') === 'Sawi') ? 'selected' : ''; ?>>Sawi</option>
-                        <option value="Bayam" <?= (old('nama_sayur') === 'Bayam') ? 'selected' : ''; ?>>Bayam</option>
+                        <option value="" class="hidden" style="display: none;" disabled>Pilih Sayur</option>
+                        <?php foreach ($komoditi as $k) : ?>
+                            <option value="<?= $k['nama_komoditi'] ?>" <?= old('nama_sayur') == $k['nama_komoditi'] ? 'selected' : ''; ?>><?= $k['nama_komoditi'] ?></option>
+                        <?php endforeach; ?>
                     </select>
                     <div class="invalid-feedback">
                         <?= $validation->getError('nama_sayur'); ?>
                     </div>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="nama_kelompok" class="form-label">Assign Tugas Kelompok</label>
+                    <label for="nama_kelompok" class="form-label">Assign Kelompok</label>
                     <select name="id_kelompok" class="form-select">
-                        <option value="" style="display: none;" class="hidden">--Pilih Nama Kelompok--</option>
+                        <option value="" style="display: none;" class="hidden" disabled>--Pilih Nama Kelompok--</option>
                         <?php foreach ($kelompok as $key => $value) { ?>
-                            <option value="<?php echo $value['id_kelompok']; ?>" data-penyuluh="<?php echo $value['penyuluh']; ?>" data-pendamping="<?php echo $value['pendamping']; ?>" data-kecamatan="<?php echo $value['kecamatan']; ?>" data-kelurahan="<?php echo $value['kelurahan']; ?>"><?php echo $value['nama_kelompok']; ?></option>
+                            <option value="<?php echo $value['id_kelompok']; ?>" data-penyuluh="<?php echo $value['penyuluh']; ?>" data-pendamping="<?php echo $value['pendamping']; ?>" data-kecamatan="<?php echo $value['kecamatan']; ?>" data-kelurahan="<?php echo $value['kelurahan']; ?>" <?php echo old('id_kelompok', $sayur['id_kelompok']) == $value['id_kelompok'] ? 'selected' : ''; ?>><?php echo $value['nama_kelompok']; ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -85,21 +83,6 @@
     </div>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('select[name="id_kelompok"]').change(function() {
-            var selectedOption = $(this).find('option:selected');
-            var penyuluh = selectedOption.data('penyuluh');
-            var pendamping = selectedOption.data('pendamping');
-            var kecamatan = selectedOption.data('kecamatan');
-            var kelurahan = selectedOption.data('kelurahan');
-            $('input[name="penyuluh"]').val(penyuluh);
-            $('input[name="pendamping"]').val(pendamping);
-            $('input[name="kecamatan"]').val(kecamatan);
-            $('input[name="kelurahan"]').val(kelurahan);
-        });
-    });
-</script>
+
 
 <?= $this->endSection(); ?>

@@ -9,7 +9,7 @@
             <form action="<?= base_url(); ?>/DataKelompok/update/<?= $kelompok['id_kelompok']; ?>" method="post">
                 <?= csrf_field(); ?>
                 <div class="mb-3">
-                    <label for="penyuluh" class="form-label">Penyuluh</label>
+                    <label for="penyuluh" clases="form-label">Penyuluh</label>
                     <input type="text" class="form-control <?= ($validation->hasError('penyuluh')) ? 'is-invalid' : ''; ?>" id="penyuluh" name="penyuluh" value="<?= (old('penyuluh')) ? old('penyuluh') : $kelompok['penyuluh']; ?>">
                     <div class="invalid-feedback">
                         <?= $validation->getError('penyuluh'); ?>

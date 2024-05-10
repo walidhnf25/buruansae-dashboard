@@ -9,7 +9,7 @@ class Datakomoditi extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id_komoditi' => [
+            'id' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
                 'unsigned'       => true,
@@ -39,7 +39,7 @@ class Datakomoditi extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id_komoditi', true);
+        $this->forge->addKey('id', true);
         $this->forge->createTable('data_komoditi');
     }
 

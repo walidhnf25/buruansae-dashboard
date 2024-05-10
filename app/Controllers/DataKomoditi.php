@@ -93,18 +93,18 @@ class DataKomoditi extends BaseController
         return redirect()->to('/datakomoditi');
     }
 
-    public function edit($id_komoditi)
+    public function edit($id)
     {
         $data = [
             'tittle' => 'Form Edit Data Komoditi | Buruan SAE',
             'validation' => \Config\Services::validation(),
-            'komoditi' => $this->datakomoditiModel->getDataKomoditi($id_komoditi)
+            'komoditi' => $this->datakomoditiModel->getDataKomoditi($id)
         ];
 
         return view('pages/datakomoditi/editDataKomoditi', $data);
     }
 
-    public function update($id_komoditi)
+    public function update($id)
     {
         // validasi input
 
@@ -134,7 +134,7 @@ class DataKomoditi extends BaseController
                 ]
             ],
         ])) {
-            return redirect()->to('/datakomoditi/edit/' . $id_komoditi)->withInput();
+            return redirect()->to('/datakomoditi/edit/' . $id)->withInput();
         }
 
         // Get the start and end dates from the request
@@ -149,7 +149,7 @@ class DataKomoditi extends BaseController
         $duration = $start->difference($end)->getDays();
 
         $this->datakomoditiModel->save([
-            'id_komoditi' => $id_komoditi,
+            'id' => $id,
             'nama_komoditi' => $this->request->getVar('nama_komoditi'),
             'sektor' => $this->request->getVar('sektor'),
             'start_date' => $startDate,
@@ -162,9 +162,9 @@ class DataKomoditi extends BaseController
         return redirect()->to('/datakomoditi');
     }
 
-    public function delete($id_komoditi)
+    public function delete($id)
     {
-        $this->datakomoditiModel->delete($id_komoditi);
+        $this->datakomoditiModel->delete($id);
         session()->setFlashdata('pesan', 'Data berhasil dihapus.');
         return redirect()->to('/datakomoditi');
     }

@@ -11,28 +11,27 @@
                     <label for="tanggal_masuk" class="form-label">Tanggal Masuk</label>
                     <input type="date" class="form-control <?= ($validation->hasError('tanggal_masuk')) ? 'is-invalid' : ''; ?>" id="tanggal_masuk" name="tanggal_masuk">
                     <div class="invalid-feedback">
-                    <?= $validation->getError('tanggal_masuk'); ?>
+                        <?= $validation->getError('tanggal_masuk'); ?>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="jenis_pengolahan" class="form-label">Jenis Pengolahan</label>
-                    <input type="text" class="form-control <?= ($validation->hasError('jenis_pengolahan')) ? 'is-invalid' : ''; ?>" id="jenis_pengolahan" name="jenis_pengolahan">
+                    <select class="form-select <?= ($validation->hasError('jenis_pengolahan')) ? 'is-invalid' : ''; ?>" name="jenis_pengolahan" id="jenis_pengolahan">
+                        <option value="" class="hidden" style="display: none;">Pilih Olahan Sampah</option>
+                        <?php foreach ($komoditi as $k) : ?>
+                            <option value="<?= $k['nama_komoditi'] ?>"><?= $k['nama_komoditi'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
                     <div class="invalid-feedback">
-                    <?= $validation->getError('jenis_pengolahan'); ?>
+                        <?= $validation->getError('jenis_pengolahan'); ?>
                     </div>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="nama_kelompok" class="form-label">Assign Tugas Kelompok</label>
+                    <label for="nama_kelompok" class="form-label">Assign Kelompok</label>
                     <select name="id_kelompok" class="form-select">
                         <option value="" style="display: none;" class="hidden">--Pilih Nama Kelompok--</option>
                         <?php foreach ($kelompok as $key => $value) { ?>
-                            <option 
-                            value="<?php echo $value['id_kelompok']; ?>" 
-                            data-penyuluh="<?php echo $value['penyuluh']; ?>" 
-                            data-pendamping="<?php echo $value['pendamping']; ?>" 
-                            data-kecamatan="<?php echo $value['kecamatan']; ?>"
-                            data-kelurahan="<?php echo $value['kelurahan']; ?>"
-                            ><?php echo $value['nama_kelompok']; ?></option>
+                            <option value="<?php echo $value['id_kelompok']; ?>" data-penyuluh="<?php echo $value['penyuluh']; ?>" data-pendamping="<?php echo $value['pendamping']; ?>" data-kecamatan="<?php echo $value['kecamatan']; ?>" data-kelurahan="<?php echo $value['kelurahan']; ?>"><?php echo $value['nama_kelompok']; ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -53,16 +52,16 @@
                     <input type="text" name="kelurahan" id="kelurahan" class="form-control" readonly>
                 </div>
                 <div class="mb-3">
-                    <label for="jumlah_sampah" class="form-label">Jumlah Sampah (kg)</label>                
+                    <label for="jumlah_sampah" class="form-label">Jumlah Sampah (kg)</label>
                     <input type="number" min="1" class="form-control <?= ($validation->hasError('jumlah_sampah')) ? 'is-invalid' : ''; ?>" id="jumlah_sampah" name="jumlah_sampah">
                     <div class="invalid-feedback">
                         <?= $validation->getError('jumlah_sampah'); ?>
                     </div>
                 </div>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-                        <a href="<?= base_url(); ?>/dataPengolahanSampah" class="btn btn-secondary" type="button">Kembali</a>
-                        <button type="submit" class="btn btn-primary">Tambah</button>
-                    </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                    <a href="<?= base_url(); ?>/dataPengolahanSampah" class="btn btn-secondary" type="button">Kembali</a>
+                    <button type="submit" class="btn btn-primary">Tambah</button>
+                </div>
             </form>
         </div>
     </div>

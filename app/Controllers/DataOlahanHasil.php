@@ -4,16 +4,20 @@ namespace App\Controllers;
 
 use App\Models\dataKelompokModel;
 use App\Models\dataOlahanHasilModel;
+use App\Models\dataKomoditiModel;
 
 
 class DataOlahanHasil extends BaseController
 {
     protected $dataOlahanHasilModel;
     protected $dataKelompokModel;
+    protected $dataKomoditiModel;
+
     public function __construct()
     {
         $this->dataOlahanHasilModel = new dataOlahanhasilModel();
         $this->dataKelompokModel = new dataKelompokModel();
+        $this->dataKomoditiModel = new dataKomoditiModel();
     }
 
     public function index()
@@ -35,6 +39,7 @@ class DataOlahanHasil extends BaseController
             'validation' => \Config\Services::validation(),
             'kelompok' => $this->dataKelompokModel->getDataKelompok(),
             'olahan_hasil' => $this->dataOlahanHasilModel->getDataOlahanHasil(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'OLAHAN HASIL')->findAll()
         ];
         return view('pages/tambahDataOlahanHasil', $data);
     }
@@ -127,6 +132,7 @@ class DataOlahanHasil extends BaseController
             'validation' => \Config\Services::validation(),
             'olahan_hasil' => $this->dataOlahanHasilModel->getDataOlahanHasil($id_data_olahan_hasil),
             'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'OLAHAN HASIL')->findAll()
         ];
 
         return view('pages/editDataOlahanHasil', $data);

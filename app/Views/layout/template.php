@@ -20,6 +20,7 @@ use App\Controllers\Home;
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+
 </head>
 
 <title><?= $tittle ?></title>
@@ -29,7 +30,7 @@ use App\Controllers\Home;
   <nav class="navbar navbar-expand-xl navbar-light" style="background-color: rgb(83, 136, 83);" aria-label="Sixth navbar example">
     <div class="container-fluid justify-content-between align-center mx-3">
       <a class="navbar-brand" href="/Home">
-        <img src="<?= base_url(); ?>/asset/logo-k.png" style="width: 200px;" alt="">
+        <img src="<?= base_url(); ?>/asset/logo-k.png" style="width: 150px;" alt="">
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample06" aria-controls="navbarsExample06" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -41,10 +42,10 @@ use App\Controllers\Home;
             <a href="<?= base_url("/Home"); ?>" class="nav-font"><strong>Home</strong></a>
           </li>
           <li class="nav-item me-5">
-            <a href="<?= base_url(); ?>/DataKelompok" class="nav-font"><strong>Data Kelompok</strong></a>
+            <a href="<?= base_url(); ?>/DataPanen" class="nav-font"><strong>Data Panen</strong></a>
           </li>
           <li class="nav-item me-5">
-            <a href="<?= base_url(); ?>/DataPanen" class="nav-font"><strong>Data Panen</strong></a>
+            <a href="<?= base_url(); ?>/DataKelompok" class="nav-font"><strong>Data Kelompok</strong></a>
           </li>
           <li class="nav-item me-5">
             <a href="<?= base_url(); ?>/DataKomoditi" class="nav-font"><strong>Data Komoditi</strong></a>
@@ -52,7 +53,7 @@ use App\Controllers\Home;
         </ul>
         <ul class="nav-item dropdown">
           <a class="nav-link" href="#" id="dropdown06" data-bs-toggle="dropdown" aria-expanded="false">
-            <svg xmlns="http://www.w3.org/2000/svg" style="width: 35px;" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <svg xmlns="http://www.w3.org/2000/svg" style="width: 30px;" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
               <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
             </svg>
           </a>
@@ -83,9 +84,7 @@ use App\Controllers\Home;
       };
     }
   </script>
-
 </body>
-
 
 
 <script src="profile.js"></script>
@@ -105,6 +104,7 @@ use App\Controllers\Home;
 <!-- Option 1: Bootstrap Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
+
 <!-- DATA TABLE -->
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
@@ -113,10 +113,14 @@ use App\Controllers\Home;
 <!-- Include jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+
 <!-- Include Select2 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 
 <!-- Include Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
 <script>
@@ -134,17 +138,12 @@ use App\Controllers\Home;
 
 <script>
   $(document).ready(function() {
-    $('select[name="id_kelompok"]').select2();
+    $('select[name="id_kelompok"]').select2({
+      theme: 'bootstrap-5'
+    });
   });
 </script>
-<script>
-  history.pushState(null, null, location.href);
-  history.back();
-  history.forward();
-  window.onpopstate = function() {
-    history.go(1);
-  };
-</script>
+
 <script>
   $(document).ready(function() {
     $('select[name="id_kelompok"]').change(function() {

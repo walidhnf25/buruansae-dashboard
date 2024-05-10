@@ -4,14 +4,18 @@ namespace App\Controllers;
 
 use App\Models\dataTanamanObatModel;
 use App\Models\dataKelompokModel;
+use App\Models\dataKomoditiModel;
+
 class DataTanamanObat extends BaseController
 {
     protected $dataTanamanObatModel;
     protected $dataKelompokModel;
+    protected $dataKomoditiModel;
     public function __construct()
     {
         $this->dataTanamanObatModel = new dataTanamanObatModel();
         $this->dataKelompokModel = new dataKelompokModel();
+        $this->dataKomoditiModel = new dataKomoditiModel();
     }
 
     public function index()
@@ -33,6 +37,7 @@ class DataTanamanObat extends BaseController
             'validation' => \Config\Services::validation(),
             'obat' => $this->dataTanamanObatModel->getDataTanamanObat(),
             'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'TANAMAN OBAT')->findAll()
         ];
         return view('pages/tambahDataTanamanObat', $data);
     }
@@ -98,6 +103,7 @@ class DataTanamanObat extends BaseController
             'tittle' => 'Data Tanaman Obat | Buruan SAE',
             'obat' => $this->dataTanamanObatModel->getDataTanamanObat($id_tanaman_obat),
             'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'TANAMAN OBAT')->findAll(),
             'validation' => \Config\Services::validation(),
         ];
 

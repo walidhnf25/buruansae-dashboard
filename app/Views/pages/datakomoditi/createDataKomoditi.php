@@ -18,9 +18,12 @@
                 <label for="sektor" class="form-label">Sektor</label>
                 <select class="form-select <?= ($validation->hasError('sektor')) ? 'is-invalid' : ''; ?>" id="sektor" name="sektor" required>
                     <option selected>Choose...</option>
-                    <option value="PERTANIAN">PERTANIAN</option>
-                    <option value="PETERNAKAN">PETERNAKAN</option>
-                    <option value="PERIKANAN">PERIKANAN</option>
+                    <option value="SAYUR">SAYUR</option>
+                    <option value="TANAMAN OBAT">TANAMAN OBAT</option>
+                    <option value="TERNAK">TERNAK</option>
+                    <option value="IKAN">IKAN</option>
+                    <option value="BUAH">BUAH</option>
+                    <option value="OLAHAN HASIL">OLAHAN HASIL</option>
                     <option value="OLAHAN SAMPAH">OLAHAN SAMPAH</option>
                 </select>
                 <div class="invalid-feedback">

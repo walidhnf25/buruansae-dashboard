@@ -36,8 +36,8 @@
                             <td><?= $dk['sektor']; ?></td>
                             <td><?= $dk['durasi_tanam']; ?></td>
                             <td>
-                                <a href="/DataKomoditi/edit/<?= $dk['id_komoditi']; ?>" class="btn btn-warning">Edit</a>
-                                <form action="/DataKomoditi/delete/<?= $dk['id_komoditi']; ?>" method="post" class="d-inline">
+                                <a href="/DataKomoditi/edit/<?= $dk['id']; ?>" class="btn btn-warning">Edit</a>
+                                <form action="/DataKomoditi/delete/<?= $dk['id']; ?>" method="post" class="d-inline">
                                     <?= csrf_field(); ?>
                                     <input type="hidden" name="_method" value="DELETE">
                                     <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah anda yakin?');">Delete</button>

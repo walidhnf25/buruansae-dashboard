@@ -4,15 +4,20 @@ namespace App\Controllers;
 
 use App\Models\dataIkanModel;
 use App\Models\dataKelompokModel;
+use App\Models\dataKomoditiModel;
+
 
 class DataIkan extends BaseController
 {
     protected $dataIkanModel;
     protected $dataKelompokModel;
+    protected $dataKomoditiModel;
+
     public function __construct()
     {
         $this->dataIkanModel = new dataIkanModel();
         $this->dataKelompokModel = new dataKelompokModel();
+        $this->dataKomoditiModel = new dataKomoditiModel();
     }
 
     public function index()
@@ -33,6 +38,7 @@ class DataIkan extends BaseController
             'validation' => \Config\Services::validation(),
             'ikan' => $this->dataIkanModel->getDataIkan(),
             'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'IKAN')->findAll()
         ];
         return view('pages/tambahDataIkan', $data);
     }
@@ -97,7 +103,8 @@ class DataIkan extends BaseController
             'tittle' => 'Edit Data Ikan | Buruan SAE',
             'validation' => \Config\Services::validation(),
             'ikan' => $this->dataIkanModel->getDataIkan($id_ikan),
-            'kelompok' => $this->dataKelompokModel->getDataKelompok()
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'IKAN')->findAll()
         ];
 
         return view('pages/editDataIkan', $data);

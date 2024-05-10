@@ -10,29 +10,21 @@
                 <div class="mb-3">
                     <label for="jenis_ternak" class="form-label">Jenis Ternak</label>
                     <select class="form-select <?= ($validation->hasError('jenis_ternak')) ? 'is-invalid' : ''; ?>" name="jenis_ternak" id="jenis_ternak">
-                        <option value="" class="hidden" style="display: none;" >Pilih Jenis Ternak</option>
-                        <option disabled>Pilih Jenis Ternak</option>
-                        <option value="Ayam Petelur">Ayam Petelur</option>
-                        <option value="Kelinci">Kelinci</option>
-                        <option value="Ayam Joper">Ayam Joper</option>
-                        <option value="Bebek">Bebek</option>
+                        <option value="" class="hidden" style="display: none;">Pilih Ternak</option>
+                        <?php foreach ($komoditi as $k) : ?>
+                            <option value="<?= $k['nama_komoditi'] ?>"><?= $k['nama_komoditi'] ?></option>
+                        <?php endforeach; ?>
                     </select>
                     <div class="invalid-feedback">
                         <?= $validation->getError('jenis_ternak'); ?>
                     </div>
-                </div> 
+                </div>
                 <div class="form-group mb-3">
-                    <label for="nama_kelompok" class="form-label">Assign Tugas Kelompok</label>
+                    <label for="nama_kelompok" class="form-label">Assign Kelompok</label>
                     <select name="id_kelompok" class="form-select">
                         <option value="" style="display: none;" class="hidden">--Pilih Nama Kelompok--</option>
                         <?php foreach ($kelompok as $key => $value) { ?>
-                            <option 
-                            value="<?php echo $value['id_kelompok']; ?>" 
-                            data-penyuluh="<?php echo $value['penyuluh']; ?>" 
-                            data-pendamping="<?php echo $value['pendamping']; ?>" 
-                            data-kecamatan="<?php echo $value['kecamatan']; ?>"
-                            data-kelurahan="<?php echo $value['kelurahan']; ?>"
-                            ><?php echo $value['nama_kelompok']; ?></option>
+                            <option value="<?php echo $value['id_kelompok']; ?>" data-penyuluh="<?php echo $value['penyuluh']; ?>" data-pendamping="<?php echo $value['pendamping']; ?>" data-kecamatan="<?php echo $value['kecamatan']; ?>" data-kelurahan="<?php echo $value['kelurahan']; ?>"><?php echo $value['nama_kelompok']; ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -56,11 +48,11 @@
                     <label for="waktu_pakan" class="form-label">Waktu Pakan</label>
                     <input type="date" class="form-control <?= ($validation->hasError('waktu_pakan')) ? 'is-invalid' : ''; ?>" id="waktu_pakan" name="waktu_pakan">
                     <div class="invalid-feedback">
-                    <?= $validation->getError('waktu_pakan'); ?>
+                        <?= $validation->getError('waktu_pakan'); ?>
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="jumlah_ternak" class="form-label">Jumlah Ternak (Ekor)</label>                
+                    <label for="jumlah_ternak" class="form-label">Jumlah Ternak (Ekor)</label>
                     <input type="number" min="1" class="form-control <?= ($validation->hasError('jumlah_ternak')) ? 'is-invalid' : ''; ?>" id="jumlah_ternak" name="jumlah_ternak">
                     <div class="invalid-feedback">
                         <?= $validation->getError('jumlah_ternak'); ?>
@@ -72,11 +64,11 @@
                     <div class="invalid-feedback">
                         <?= $validation->getError('jumlah_pakan'); ?>
                     </div>
-                </div>    
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-                        <a href="<?= base_url(); ?>/dataTernak" class="btn btn-secondary" type="button">Kembali</a>
-                        <button type="submit" class="btn btn-primary">Tambah</button>
-                    </div>
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                    <a href="<?= base_url(); ?>/dataTernak" class="btn btn-secondary" type="button">Kembali</a>
+                    <button type="submit" class="btn btn-primary">Tambah</button>
+                </div>
             </form>
         </div>
     </div>

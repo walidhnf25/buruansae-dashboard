@@ -4,16 +4,19 @@ namespace App\Controllers;
 
 use App\Models\dataSayurModel;
 use App\Models\dataKelompokModel;
+use App\Models\DataKomoditiModel;
 
 class DataSayur extends BaseController
 {
     protected $dataSayurModel;
     protected $dataKelompokModel;
+    protected $dataKomoditiModel;
 
     public function __construct()
     {
         $this->dataSayurModel = new dataSayurModel();
         $this->dataKelompokModel = new dataKelompokModel();
+        $this->dataKomoditiModel = new DataKomoditiModel();
     }
 
     public function index()
@@ -34,8 +37,9 @@ class DataSayur extends BaseController
             'tittle' => 'Data Sayur | Buruan SAE',
             // 'nama_kelompok' => $this->dataSayurModel->getUniqueNamaKelompok(), // Fetch unique nama_kelompok values
             'data_sayur' => $this->dataSayurModel->getDataSayur(),
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'SAYUR')->findAll(),
             'validation' => \Config\Services::validation(),
-            'kelompok' => $this->dataKelompokModel->getDataKelompok()
         ];
 
         return view('pages/tambahDataSayur', $data);
@@ -103,7 +107,8 @@ class DataSayur extends BaseController
             'tittle' => 'Data Sayur | Buruan SAE',
             'validation' => \Config\Services::validation(),
             'sayur' => $this->dataSayurModel->getDataSayur($id_sayur),
-            'kelompok' => $this->dataKelompokModel->getDataKelompok()
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'SAYUR')->findAll(),
 
         ];
 
