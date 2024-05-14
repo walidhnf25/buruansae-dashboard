@@ -10,7 +10,7 @@
                 <div class="mb-3">
                     <label for="nama_buah" class="form-label">Nama Buah</label>
                     <select class="form-select <?= ($validation->hasError('nama_buah')) ? 'is-invalid' : ''; ?>" name="nama_buah" id="nama_buah">
-                        <option value="" class="hidden" style="display: none;">Pilih Sayur</option>
+                        <option value="" class="hidden" style="display: none;">Pilih Buah</option>
                         <?php foreach ($komoditi as $k) : ?>
                             <option value="<?= $k['nama_komoditi'] ?>"><?= $k['nama_komoditi'] ?></option>
                         <?php endforeach; ?>
@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="nama_kelompok" class="form-label">Assign Tugas Kelompok</label>
+                    <label for="nama_kelompok" class="form-label">Assign Kelompok</label>
                     <select name="id_kelompok" class="form-select">
                         <option value="" style="display: none;" class="hidden">--Pilih Nama Kelompok--</option>
                         <?php foreach ($kelompok as $key => $value) { ?>
@@ -52,17 +52,26 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="kategori_tumbuhan" class="form-label">Kategori Tumbuhan</label>
-                    <input hidden type="text" class="form-control <?= ($validation->hasError('kategori_tumbuhan')) ? 'is-invalid' : ''; ?>" id="kategori_tumbuhan" name="kategori_tumbuhan">
-                    <select class="form-select <?= ($validation->hasError('kategori_tumbuhan')) ? 'is-invalid' : ''; ?>" name="kategori_tumbuhan" id="kategori_tumbuhan">
-                        <option value="" class="hidden" style="display: none;">Pilih Kategori Tumbuhan</option>
-                        <option disabled>Pilih Kategori Tumbuhan</option>
-                        <option value="Pohon">Pohon</option>
-                        <option disabled value="Bibit">Bibit</option>
-                        <option disabled value="Benih">Benih</option>
-                    </select>
-                    <div class="invalid-feedback">
-                        <?= $validation->getError('kategori_tumbuhan'); ?>
+                    <div class="mb-3">
+                        <label for="kategori_tumbuhan" class="form-label">Kategori Tumbuhan</label>
+                        <input hidden type="text" class="form-control <?= ($validation->hasError('kategori_tumbuhan')) ? 'is-invalid' : ''; ?>" id="kategori_tumbuhan" name="kategori_tumbuhan">
+                        <div class="radio">
+                            <div class="form-check form-check-inline">
+                                <input type="radio" class="form-check-input <?= ($validation->hasError('kategori_tumbuhan')) ? 'is-invalid' : ''; ?>" id="radio1" name="kategori_tumbuhan" value="Pohon">
+                                <label class="form-check-label" for="radio1">Pohon</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" class="form-check-input <?= ($validation->hasError('kategori_tumbuhan')) ? 'is-invalid' : ''; ?>" id="radio2" name="kategori_tumbuhan" value="Benih">
+                                <label class="form-check-label" for="radio2">Benih</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" class="form-check-input <?= ($validation->hasError('kategori_tumbuhan')) ? 'is-invalid' : ''; ?>" id="radio3" name="kategori_tumbuhan" value="Bibit">
+                                <label class="form-check-label" for="radio2">Bibit</label>
+                            </div>
+                        </div>
+                        <div class="invalid-feedback">
+                            <?= $validation->getError('kategori_tumbuhan'); ?>
+                        </div>
                     </div>
                 </div>
                 <div class="mb-3">

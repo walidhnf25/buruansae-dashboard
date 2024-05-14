@@ -30,7 +30,7 @@ class DataTanamanObat extends BaseController
         return view('pages/dataTanamanObat', $data);
     }
 
-    public function tambahDataTamananObat()
+    public function tambahDataTanamanObat()
     {
         $data = [
             'tittle' => 'Data Tanaman Obat | Buruan SAE',
@@ -73,7 +73,7 @@ class DataTanamanObat extends BaseController
             ]
         ])) {
             $validation = \Config\Services::validation();
-            return redirect()->to('/dataTanamanObat/tambahDataTamananObat')->withInput()->with('validation', $validation);
+            return redirect()->to('/dataTanamanObat/tambahDataTanamanObat')->withInput()->with('validation', $validation);
         }
 
         $this->dataTanamanObatModel->save([

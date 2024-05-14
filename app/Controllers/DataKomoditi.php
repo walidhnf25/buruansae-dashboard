@@ -33,7 +33,7 @@ class DataKomoditi extends BaseController
             'validation' => \Config\Services::validation()
         ];
 
-        return view('pages/datakomoditi/createDataKomoditi', $data);
+        return view('pages/DataKomoditi/createDataKomoditi', $data);
     }
 
     public function save()
@@ -66,7 +66,7 @@ class DataKomoditi extends BaseController
                 ]
             ],
         ])) {
-            return redirect()->to('/datakomoditi/createDataKomoditi')->withInput();
+            return redirect()->to('/DataKomoditi/createDataKomoditi')->withInput();
         }
 
         // Get the start and end dates from the request
@@ -90,7 +90,7 @@ class DataKomoditi extends BaseController
 
         session()->setFlashdata('pesan', 'Data berhasil ditambahkan.');
 
-        return redirect()->to('/datakomoditi');
+        return redirect()->to('/DataKomoditi');
     }
 
     public function edit($id)
@@ -101,7 +101,7 @@ class DataKomoditi extends BaseController
             'komoditi' => $this->datakomoditiModel->getDataKomoditi($id)
         ];
 
-        return view('pages/datakomoditi/editDataKomoditi', $data);
+        return view('pages/DataKomoditi/editDataKomoditi', $data);
     }
 
     public function update($id)
@@ -134,7 +134,7 @@ class DataKomoditi extends BaseController
                 ]
             ],
         ])) {
-            return redirect()->to('/datakomoditi/edit/' . $id)->withInput();
+            return redirect()->to('/DataKomoditi/edit/' . $id)->withInput();
         }
 
         // Get the start and end dates from the request
@@ -159,14 +159,13 @@ class DataKomoditi extends BaseController
 
         session()->setFlashdata('pesan', 'Data berhasil diubah.');
 
-        return redirect()->to('/datakomoditi');
+        return redirect()->to('/DataKomoditi');
     }
 
     public function delete($id)
     {
         $this->datakomoditiModel->delete($id);
         session()->setFlashdata('pesan', 'Data berhasil dihapus.');
-        return redirect()->to('/datakomoditi');
+        return redirect()->to('/DataKomoditi');
     }
-
 }

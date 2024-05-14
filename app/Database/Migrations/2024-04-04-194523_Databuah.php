@@ -34,6 +34,10 @@ class Databuah extends Migration
                 'constraint' => '255',
                 'null' => true
             ],
+            'jumlah_tanam' => [
+                'type' => 'DOUBLE',
+                'null' => false
+            ],
             'jenis_pupuk' => [
                 'type' => 'VARCHAR',
                 'constraint' => '255',

@@ -15,25 +15,30 @@ class Filters extends BaseConfig
      * Configures aliases for Filter classes to
      * make reading things nicer and simpler.
      *
-     * @var array
+     * @var array<string, class-string|list<class-string>> [filter_name => classname]
+     *                                                     or [filter_name => [classname1, classname2, ...]]
      */
-    public $aliases = [
+    public array $aliases = [
         'csrf'          => CSRF::class,
         'toolbar'       => DebugToolbar::class,
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
+        'login'      => \Myth\Auth\Filters\LoginFilter::class,
+        'role'       => \Myth\Auth\Filters\RoleFilter::class,
+        'permission' => \Myth\Auth\Filters\PermissionFilter::class,
     ];
 
     /**
      * List of filter aliases that are always
      * applied before and after every request.
      *
-     * @var array
+     * @var array<string, array<string, array<string, string>>>|array<string, list<string>>
      */
-    public $globals = [
+    public array $globals = [
         'before' => [
-            // 'honeypot',
+            'honeypot',
+            'login',
             // 'csrf',
             // 'invalidchars',
         ],
@@ -49,11 +54,13 @@ class Filters extends BaseConfig
      * particular HTTP method (GET, POST, etc.).
      *
      * Example:
-     * 'post' => ['csrf', 'throttle']
+     * 'post' => ['foo', 'bar']
      *
-     * @var array
+     * If you use this, you should disable auto-routing because auto-routing
+     * permits any HTTP method to access a controller. Accessing the controller
+     * with a method you don't expect could bypass the filter.
      */
-    public $methods = [];
+    public array $methods = [];
 
     /**
      * List of filter aliases that should run on any
@@ -61,8 +68,8 @@ class Filters extends BaseConfig
      *
      * Example:
      * 'isLoggedIn' => ['before' => ['account/*', 'profiles/*']]
-     *
-     * @var array
      */
-    public $filters = [];
+    public array $filters = [
+        'login' => ['before' => ['Home/*']],
+    ];
 }

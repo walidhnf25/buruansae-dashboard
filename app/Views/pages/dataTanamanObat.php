@@ -13,7 +13,7 @@
 
   <!-- Button trigger modal -->
   <div class="tabel_sayur my-3">
-    <a href="<?= base_url(); ?>/dataTanamanObat/tambahDataTamananObat" class="btn btn-primary">Tambah Data</a>
+    <a href="<?= base_url(); ?>/dataTanamanObat/tambahDataTanamanObat" class="btn btn-primary">Tambah Data</a>
   </div>
 
   <div class="table-responsive-sm">

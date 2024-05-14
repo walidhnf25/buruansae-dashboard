@@ -1,104 +1,101 @@
 <?php
 
-namespace Config;
+use CodeIgniter\Router\RouteCollection;
 
-use App\Controllers;
-
-// Create a new instance of our RouteCollection class.
-$routes = Services::routes();
-
-// Load the system's routing file first, so that the app and ENVIRONMENT
-// can override as needed.
-if (file_exists(SYSTEMPATH . 'Config/Routes.php')) {
-    require SYSTEMPATH . 'Config/Routes.php';
-}
-
-/*
- * --------------------------------------------------------------------
- * Router Setup
- * --------------------------------------------------------------------
+/**
+ * @var RouteCollection $routes
  */
-$routes->setDefaultNamespace('App\Controllers');
-$routes->setDefaultController('Home');
-$routes->setDefaultMethod('index');
-$routes->setTranslateURIDashes(false);
-$routes->set404Override();
-$routes->setAutoRoute(true);
+$routes->get('/', 'Home::index');
+$routes->get('/Home', 'Home::index');
 
-/*
- * --------------------------------------------------------------------
- * Route Definitions
- * --------------------------------------------------------------------
- */
+// GET ALL INDEX
+// $routes->get('/', 'Login::index');
+$routes->get('/dataSayur', 'DataSayur::index');
+$routes->get('/dataTanamanObat', 'DataTanamanObat::index');
+$routes->get('/dataTernak', 'DataTernak::index');
+$routes->get('/dataIkan', 'DataIkan::index');
+$routes->get('/dataBuah', 'DataBuah::index');
+$routes->get('/dataOlahanHasil', 'DataOlahanHasil::index');
+$routes->get('/dataPengolahanSampah', 'DataPengolahanSampah::index');
+$routes->get('/DataKelompok', 'DataKelompok::index');
+$routes->get('/DataKomoditi', 'DataKomoditi::index');
+$routes->get('DataPanen', 'DataPanen::index');
 
-// We get a performance increase by specifying the default
-// route since we don't have to scan directories.
-$routes->get('/', 'Login::index');
-// $routes->get('/', 'DataSayur::save');
-$routes->get('/tambahDataSayur', 'DataSayur::index');
-$routes->delete('/dataSayur/(:num)', 'DataSayur::delete/$1');
-$routes->delete('/dataTanamanObat/(:num)', 'DataTanamanObat::delete/$1');
-$routes->delete('/dataTernak/(:num)', 'DataTernak::delete/$1');
-$routes->delete('/dataIkan/(:num)', 'DataIkan::delete/$1');
-$routes->delete('/dataBuah/(:num)', 'DataBuah::delete/$1');
-$routes->delete('/dataOlahanHasil/(:num)', 'DataOlahanHasil::delete/$1');
-$routes->delete('/dataPengolahanSampah/(:num)', 'DataPengolahanSampah::delete/$1');
-// $routes->delete('/dataPembibitan/(:num)', 'DataPembibitan::delete/$1');
-
-
-$routes->delete('/DataKelompok/(:num)', 'DataKelompok::delete/$1');
-
-//Routing Data Sayur
-$routes->get('/dataSayur/dataPanenSayur/(id_sayur)', 'DataSayur::dataPanenSayur/$1');
-$routes->get('/dataSayur/editDataSayur/(:segment)', 'DataSayur::editDataSayur/$1');
-
-//Routing Data Tanaman Obat
-$routes->get('/dataTanamanObat/editDataTanamanObat/(:segment)', 'DataTanamanObat::editDataTanamanObat/$1');
-$routes->get('/dataTanamanObat/dataPanenTanamanObat/(id_tanaman_obat)', 'DataTanamanObat::dataPanenTanamanObat/$1');
-
-//Routing Data Ternak
-$routes->get('/dataTernak/editDataTernak/(:segment)', 'DataTernak::editDataTernak/$1');
-$routes->get('/dataTernak/dataPanenTernak/(id_ternak)', 'DataTernak::dataPanenTernak/$1');
-
-//Routing Data Ikan
-$routes->get('/dataIkan/editDataIkan/(:segment)', 'DataIkan::editDataIkan/$1');
-$routes->get('/dataIkan/dataPanenIkan/(id_ikan)', 'DataIkan::dataPanenIkan/$1');
-
-//Routing Data Buah
-$routes->get('/dataBuah/editDataBuah/(:segment)', 'DataIkan::editDataBuah/$1');
-$routes->get('/dataBuah/dataPanenBuah/(id_buah)', 'DataBuah::dataPanenBuah/$1');
-
-//Routing Data Olahan Hasil
-$routes->get('/dataOlahanHasil/editDataOlahanHasil/(:segment)', 'DataOlahanHasil::editDataOlahanHasil/$1');
-$routes->get('/dataOlahanHasil/dataProduksi/(id_data_olahan_hasil)', 'DataOlahanHasil::dataProduksi/$1');
-
-//Routing Data Olahan Produksi Sampah
-$routes->get('/dataPengolahanSampah/editDataSampah/(:segment)', 'DataPengolahanSampah::editDataSampah/$1');
-$routes->get('/dataPengolahanSampah/dataProduksiSampah/(id_data_sampah)', 'DataPengolahanSampah::dataProduksiSampah/$1');
-
-// //Routing Data Olahan Pembibitan
-// $routes->get('/dataPembibitan/editDataPembibitan/(:segment)', 'DataPembibitan::editDataPembibitan/$1');
-// $routes->get('/dataPembibitan/dataPanenPembibitan/(id_bibit)', 'DataPembibitan::dataPanenPembibitan/$1');
+//Routing Data Komoditi
+$routes->get('/datakomoditi', 'DataKomoditi::index');
+$routes->get('/DataKomoditi/edit/(:num)', 'DataKomoditi::edit/$1');
+$routes->get('/datakomoditi/edit/(:num)', 'datakomoditi::edit/$1');
+$routes->post('/DataKomoditi/update/(:num)', 'DataKomoditi::update/$1');
+$routes->get('/DataKomoditi/createDataKomoditi', 'DataKomoditi::createDataKomoditi');
+$routes->post('/DataKomoditi/save', 'DataKomoditi::save');
+$routes->delete('/DataKomoditi/delete/(:num)', 'DataKomoditi::delete/$1');
 
 //Routing Data Kelompok
-$routes->get('/DataKelompok/editDataKelompok/(:segment)', 'DataKelompok::editDataKelompok/$1');
+// $routes->get('/DataKelompok/editDataKelompok/(:segment)', 'DataKelompok::editDataKelompok/$1');
+$routes->get('/DataKelompok/editDataKelompok/(:num)', 'DataKelompok::editDataKelompok/$1');
+$routes->post('DataKelompok/update/(:num)', 'DataKelompok::update/$1');
+$routes->get('/DataKelompok/tambahDataKelompok', 'DataKelompok::tambahDataKelompok');
+$routes->post('/DataKelompok/save', 'DataKelompok::save');
 
-// $routes->get('/dataSayur', 'dataSayur::index');
-// $routes->get('/dataSayur/(:num)', 'DataSayur::dataPanenSayur/$1');
+//Routing Data Sayur
+$routes->get('/dataSayur/tambahDataSayur', 'DataSayur::tambahDataSayur');
+$routes->post('/dataSayur/save', 'DataSayur::save');
+$routes->delete('/dataSayur/(:num)', 'DataSayur::delete/$1');
+$routes->get('/dataSayur/editDataSayur/(:num)', 'DataSayur::editDataSayur/$1');
+$routes->post('/dataSayur/update/(:num)', 'DataSayur::update/$1');
+$routes->get('/dataSayur/dataPanenSayur/(:num)', 'DataSayur::dataPanenSayur/$1');
+$routes->post('/dataSayur/updateDataPanen/(:num)', 'DataSayur::updateDataPanen/$1');
 
-/*
- * --------------------------------------------------------------------
- * Additional Routing
- * --------------------------------------------------------------------
- *
- * There will often be times that you need additional routing and you
- * need it to be able to override any defaults in this file. Environment
- * based routes is one such time. require() additional route files here
- * to make that happen.
- *
- * You will have access to the $routes object within that file without
- * needing to reload it.
- */
-if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
-    require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
-}
+//Routing Data Tanaman Obat
+$routes->get('/dataTanamanObat/tambahDataTanamanObat', 'DataTanamanObat::tambahDataTanamanObat');
+$routes->post('/dataTanamanObat/save', 'DataTanamanObat::save');
+$routes->delete('/dataTanamanObat/(:num)', 'DataTanamanObat::delete/$1');
+$routes->get('/dataTanamanObat/editDataTanamanObat/(:num)', 'DataTanamanObat::editDataTanamanObat/$1');
+$routes->post('/dataTanamanObat/update/(:num)', 'DataTanamanObat::update/$1');
+$routes->get('/dataTanamanObat/dataPanenTanamanObat/(:num)', 'DataTanamanObat::dataPanenTanamanObat/$1');
+$routes->post('/dataTanamanObat/updateDataPanen/(:num)', 'DataTanamanObat::updateDataPanen/$1');
+
+//Routing Data Ternak
+$routes->get('/dataTernak/tambahDataTernak', 'DataTernak::tambahDataTernak');
+$routes->post('/dataTernak/save', 'DataTernak::save');
+$routes->delete('/dataTernak/(:num)', 'DataTernak::delete/$1');
+$routes->get('/dataTernak/editDataTernak/(:num)', 'DataTernak::editDataTernak/$1');
+$routes->post('/dataTernak/update/(:num)', 'DataTernak::update/$1');
+$routes->get('/dataTernak/dataPanenTernak/(:num)', 'DataTernak::dataPanenTernak/$1');
+$routes->post('/dataTernak/tambah_data_panen/(:num)', 'DataTernak::tambah_data_panen/$1');
+
+//Routing Data Ikan
+$routes->get('/dataIkan/tambahDataIkan', 'DataIkan::tambahDataIkan');
+$routes->post('/dataIkan/save', 'DataIkan::save');
+$routes->delete('/dataIkan/(:num)', 'DataIkan::delete/$1');
+$routes->get('/dataIkan/editDataIkan/(:num)', 'DataIkan::editDataIkan/$1');
+$routes->post('/dataIkan/update/(:num)', 'DataIkan::update/$1');
+$routes->get('/dataIkan/dataPanenIkan/(:num)', 'DataIkan::dataPanenIkan/$1');
+$routes->post('/dataIkan/tambah_data_panen/(:num)', 'DataIkan::tambah_data_panen/$1');
+
+//Routing Data Buah
+$routes->get('/dataBuah/tambahDataBuah', 'DataBuah::tambahDataBuah');
+$routes->post('/dataBuah/save', 'DataBuah::save');
+$routes->delete('/dataBuah/(:num)', 'DataBuah::delete/$1');
+$routes->get('/dataBuah/editDataBuah/(:num)', 'DataBuah::editDataBuah/$1');
+$routes->post('/dataBuah/update/(:num)', 'DataBuah::update/$1');
+$routes->get('/dataBuah/dataPanenBuah/(:num)', 'DataBuah::dataPanenBuah/$1');
+$routes->post('/dataBuah/tambah_data_panen/(:num)', 'DataBuah::tambah_data_panen/$1');
+
+//Routing Data Olahan Hasil
+$routes->get('/dataOlahanHasil/tambahDataOlahanHasil', 'DataOlahanHasil::tambahDataOlahanHasil');
+$routes->post('/dataOlahanHasil/save', 'DataOlahanHasil::save');
+$routes->delete('/dataOlahanHasil/(:num)', 'DataOlahanHasil::delete/$1');
+$routes->get('/dataOlahanHasil/editDataOlahanHasil/(:num)', 'DataOlahanHasil::editDataOlahanHasil/$1');
+$routes->post('/dataOlahanHasil/update/(:num)', 'DataOlahanHasil::update/$1');
+$routes->get('/dataOlahanHasil/dataProduksi/(:num)', 'DataOlahanHasil::dataProduksi/$1');
+$routes->post('/dataOlahanHasil/tambah_data_produksi/(:num)', 'DataOlahanHasil::tambah_data_produksi/$1');
+
+//Routing Data Olahan Produksi Sampah
+$routes->get('/dataPengolahanSampah/tambahDataSampah', 'DataPengolahanSampah::tambahDataSampah');
+$routes->post('/dataPengolahanSampah/save', 'DataPengolahanSampah::save');
+$routes->delete('/dataPengolahanSampah/(:num)', 'DataPengolahanSampah::delete/$1');
+$routes->get('/dataPengolahanSampah/editDataSampah/(:num)', 'DataPengolahanSampah::editDataSampah/$1');
+$routes->post('/dataPengolahanSampah/update/(:num)', 'DataPengolahanSampah::update/$1');
+$routes->get('/dataPengolahanSampah/dataProduksiSampah/(:num)', 'DataPengolahanSampah::dataProduksiSampah/$1');
+$routes->post('/dataPengolahanSampah/tambah_data_produksi/(:num)', 'DataPengolahanSampah::tambah_data_produksi/$1');
