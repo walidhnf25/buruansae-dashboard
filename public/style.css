@@ -69,6 +69,12 @@ img {
   gap: 2px;
 }
 
+.nav-font {
+  font-size: 1em;
+  text-decoration: none;
+  color: white;
+}
+
 .menu-list .btn-profile {
   display: none;
 }
@@ -281,6 +287,7 @@ img {
 
 .table > thead {
   text-align: center;
+  min-width: 100%;
 }
 
 .nav-tabel {
@@ -331,6 +338,7 @@ img {
 
 .tab {
   display: none;
+  min-width: auto;
 }
 
 .tab-active {

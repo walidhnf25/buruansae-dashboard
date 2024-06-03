@@ -2,26 +2,31 @@
 
 namespace App\Controllers;
 
+use App\Models\dataKelompokModel;
 use App\Models\dataOlahanHasilModel;
+use App\Models\dataKomoditiModel;
+
 
 class DataOlahanHasil extends BaseController
 {
     protected $dataOlahanHasilModel;
+    protected $dataKelompokModel;
+    protected $dataKomoditiModel;
+
     public function __construct()
     {
         $this->dataOlahanHasilModel = new dataOlahanhasilModel();
+        $this->dataKelompokModel = new dataKelompokModel();
+        $this->dataKomoditiModel = new dataKomoditiModel();
     }
 
     public function index()
     {
-        $currentPage = $this->request->getVar('page_data_olahan_hasil') ? $this->request->getVar('page_data_olahan_hasil') : 1;
 
         $data = [
             'tittle' => 'Data Olahan Hasil | Buruan SAE',
-            'data_olahan_hasil' => $this->dataOlahanHasilModel->paginate(10, 'data_olahan_hasil'),
-            'validation' => \Config\Services::validation(),
-            'pager' => $this->dataOlahanHasilModel->pager,
-            'currentPage' => $currentPage
+            'data_olahan_hasil' => $this->dataOlahanHasilModel->getDataOlahanHasil(),
+            'validation' => \Config\Services::validation()
         ];
 
         return view('pages/dataOlahanHasil', $data);
@@ -32,6 +37,9 @@ class DataOlahanHasil extends BaseController
         $data = [
             'tittle' => 'Data Olahan Hasil | Buruan SAE',
             'validation' => \Config\Services::validation(),
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'olahan_hasil' => $this->dataOlahanHasilModel->getDataOlahanHasil(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'OLAHAN HASIL')->findAll()
         ];
         return view('pages/tambahDataOlahanHasil', $data);
     }
@@ -94,6 +102,7 @@ class DataOlahanHasil extends BaseController
         }
 
         $this->dataOlahanHasilModel->save([
+            'id_kelompok' => $this->request->getVar('id_kelompok'),
             'uji_lab' => $this->request->getVar('uji_lab'),
             'tanggal_produksi' => $this->request->getVar('tanggal_produksi'),
             'izin_halal' => $this->request->getVar('izin_halal'),
@@ -121,7 +130,9 @@ class DataOlahanHasil extends BaseController
         $data = [
             'tittle' => 'Data Olahan Hasil | Buruan SAE',
             'validation' => \Config\Services::validation(),
-            'olahan_hasil' => $this->dataOlahanHasilModel->getDataOlahanHasil($id_data_olahan_hasil)
+            'olahan_hasil' => $this->dataOlahanHasilModel->getDataOlahanHasil($id_data_olahan_hasil),
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'OLAHAN HASIL')->findAll()
         ];
 
         return view('pages/editDataOlahanHasil', $data);
@@ -186,6 +197,7 @@ class DataOlahanHasil extends BaseController
 
         $this->dataOlahanHasilModel->save([
             'id_data_olahan_hasil' => $id_data_olahan_hasil,
+            'id_kelompok' => $this->request->getVar('id_kelompok'),
             'uji_lab' => $this->request->getVar('uji_lab'),
             'tanggal_produksi' => $this->request->getVar('tanggal_produksi'),
             'izin_halal' => $this->request->getVar('izin_halal'),

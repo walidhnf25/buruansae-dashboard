@@ -3,36 +3,41 @@
 namespace App\Controllers;
 
 use App\Models\dataTanamanObatModel;
+use App\Models\dataKelompokModel;
+use App\Models\dataKomoditiModel;
 
 class DataTanamanObat extends BaseController
 {
     protected $dataTanamanObatModel;
+    protected $dataKelompokModel;
+    protected $dataKomoditiModel;
     public function __construct()
     {
         $this->dataTanamanObatModel = new dataTanamanObatModel();
+        $this->dataKelompokModel = new dataKelompokModel();
+        $this->dataKomoditiModel = new dataKomoditiModel();
     }
 
     public function index()
     {
-        $currentPage = $this->request->getVar('page_data_tanaman_obat') ? $this->request->getVar('page_data_tanaman_obat') : 1;
-
         $data = [
             'tittle' => 'Data Tanaman Obat | Buruan SAE',
             // 'data_tanaman_obat' => $this->dataTanamanObatModel->getDataTanamanObat(),
             'validation' => \Config\Services::validation(),
-            'data_tanaman_obat' => $this->dataTanamanObatModel->paginate(10, 'data_tanaman_obat'),
-            'pager' => $this->dataTanamanObatModel->pager,
-            'currentPage' => $currentPage
+            'data_tanaman_obat' => $this->dataTanamanObatModel->getDataTanamanObat(),
         ];
 
         return view('pages/dataTanamanObat', $data);
     }
 
-    public function tambahDataTamananObat()
+    public function tambahDataTanamanObat()
     {
         $data = [
             'tittle' => 'Data Tanaman Obat | Buruan SAE',
-            'validation' => \Config\Services::validation()
+            'validation' => \Config\Services::validation(),
+            'obat' => $this->dataTanamanObatModel->getDataTanamanObat(),
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'TANAMAN OBAT')->findAll()
         ];
         return view('pages/tambahDataTanamanObat', $data);
     }
@@ -68,11 +73,12 @@ class DataTanamanObat extends BaseController
             ]
         ])) {
             $validation = \Config\Services::validation();
-            return redirect()->to('/dataTanamanObat/tambahDataTamananObat')->withInput()->with('validation', $validation);
+            return redirect()->to('/dataTanamanObat/tambahDataTanamanObat')->withInput()->with('validation', $validation);
         }
 
         $this->dataTanamanObatModel->save([
             'nama_tanaman_obat' => $this->request->getVar('nama_tanaman_obat'),
+            'id_kelompok' => $this->request->getVar('id_kelompok'),
             'tanggal_tanam' => $this->request->getVar('tanggal_tanam'),
             'kategori_tumbuhan' => $this->request->getVar('kategori_tumbuhan'),
             'jumlah_tanam' => $this->request->getVar('jumlah_tanam')
@@ -95,8 +101,10 @@ class DataTanamanObat extends BaseController
     {
         $data = [
             'tittle' => 'Data Tanaman Obat | Buruan SAE',
+            'obat' => $this->dataTanamanObatModel->getDataTanamanObat($id_tanaman_obat),
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'TANAMAN OBAT')->findAll(),
             'validation' => \Config\Services::validation(),
-            'obat' => $this->dataTanamanObatModel->getDataTanamanObat($id_tanaman_obat)
         ];
 
         return view('pages/editDataTanamanObat', $data);
@@ -137,6 +145,7 @@ class DataTanamanObat extends BaseController
 
         $data = [
             'nama_tanaman_obat' => $this->request->getVar('nama_tanaman_obat'),
+            'id_kelompok' => $this->request->getVar('id_kelompok'),
             'tanggal_tanam' => $this->request->getVar('tanggal_tanam'),
             'kategori_tumbuhan' => $this->request->getVar('kategori_tumbuhan'),
             'jumlah_tanam' => $this->request->getVar('jumlah_tanam')

@@ -2,26 +2,30 @@
 
 namespace App\Controllers;
 
+use App\Models\dataKelompokModel;
 use App\Models\dataTernakModel;
+use App\Models\DataKomoditiModel;
 
 class DataTernak extends BaseController
 {
     protected $dataTernakModel;
+    protected $dataKelompokModel;
+    protected $dataKomoditiModel;
+
     public function __construct()
     {
         $this->dataTernakModel = new dataTernakModel();
+        $this->dataKelompokModel = new dataKelompokModel();
+        $this->dataKomoditiModel = new DataKomoditiModel();
     }
 
     public function index()
     {
-        $currentPage = $this->request->getVar('page_data_ternak') ? $this->request->getVar('page_data_ternak') : 1;
-
+        
         $data = [
             'tittle' => 'Data Ternak | Buruan SAE',
             'validation' => \Config\Services::validation(),
-            'data_ternak' => $this->dataTernakModel->paginate(10, 'data_ternak'),
-            'pager' => $this->dataTernakModel->pager,
-            'currentPage' => $currentPage
+            'data_ternak' => $this->dataTernakModel->getDataTernak(),
         ];
 
         return view('pages/dataTernak', $data);
@@ -32,6 +36,9 @@ class DataTernak extends BaseController
         $data = [
             'tittle' => 'Data Ternak | Buruan SAE',
             'validation' => \Config\Services::validation(),
+            'ternak' => $this->dataTernakModel->getDataTernak(),
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'TERNAK')->findAll(),
         ];
         return view('pages/tambahDataTernak', $data);
     }
@@ -72,6 +79,7 @@ class DataTernak extends BaseController
 
         $this->dataTernakModel->save([
             'jenis_ternak' => $this->request->getVar('jenis_ternak'),
+            'id_kelompok' => $this->request->getVar('id_kelompok'),
             'waktu_pakan' => $this->request->getVar('waktu_pakan'),
             'jumlah_pakan' => $this->request->getVar('jumlah_pakan'),
             'jumlah_ternak' => $this->request->getVar('jumlah_ternak')
@@ -96,7 +104,9 @@ class DataTernak extends BaseController
         $data = [
             'tittle' => 'Data Ternak | Buruan SAE',
             'validation' => \Config\Services::validation(),
-            'ternak' => $this->dataTernakModel->getDataTernak($id_ternak)
+            'ternak' => $this->dataTernakModel->getDataTernak($id_ternak),
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'TERNAK')->findAll()
         ];
 
         return view('pages/editDataTernak', $data);
@@ -138,6 +148,7 @@ class DataTernak extends BaseController
 
         $this->dataTernakModel->save([
             'id_ternak' => $id_ternak,
+            'id_kelompok' => $this->request->getVar('id_kelompok'),
             'jenis_ternak' => $this->request->getVar('jenis_ternak'),
             'waktu_pakan' => $this->request->getVar('waktu_pakan'),
             'jumlah_pakan' => $this->request->getVar('jumlah_pakan'),

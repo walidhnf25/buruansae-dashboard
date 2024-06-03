@@ -17,11 +17,17 @@
   </div>
 
   <div class="table-responsive-sm">
-    <table class="table table-bordered table-hover ">
+    <table id="tablehome" class="table table-bordered table-hover ">
       <thead class="table-dark align-middle ">
         <tr class="align-middle">
           <th scope="col">No</th>
           <th scope="col">Nama Buah</th>
+          <th scope="col">Kelompok</th>
+          <th scope="col">Penyuluh</th>
+          <th scope="col">Pendamping</th>
+          <th scope="col">Kecamatan</th>
+          <th scope="col">Kelurahan</th>
+          <th scope="col">RW</th>
           <th scope="col">Tanggal Tanam</th>
           <th scope="col">Kategori Tumbuhan</th>
           <th scope="col">Jumlah Tanam</th>
@@ -29,40 +35,47 @@
         </tr>
       </thead>
       <tbody>
-        <?php $i = 1 + (10 * ($currentPage - 1)); ?>
+        <?php $i = 1; ?>
         <?php foreach ($data_buah as $buah) : ?>
           <tr class="table-light align-middle">
             <th scope="row"><?= $i++; ?></th>
             <td><?= $buah['nama_buah']; ?></td>
+            <td><?= $buah['nama_kelompok']; ?></td>
+            <td><?= $buah['penyuluh']; ?></td>
+            <td><?= $buah['pendamping']; ?></td>
+            <td><?= $buah['kecamatan']; ?></td>
+            <td><?= $buah['kelurahan']; ?></td>
+            <td><?= $buah['rw']; ?></td>
             <td><?= $buah['tanggal_tanam']; ?></td>
             <td><?= $buah['kategori_tumbuhan']; ?></td>
             <td><?= $buah['jumlah_tanam']; ?></td>
             <td>
-              <?php if ($buah['waktu_panen'] == null) { ?>
-                <a href="<?= base_url(); ?>/dataBuah/dataPanenBuah/<?= $buah['id_buah']; ?>" class="btn btn-success">Panen</a>
-
-                <a href="<?= base_url(); ?>/dataBuah/editBuah/<?= $buah['id_buah']; ?>" class="btn btn-warning">Edit</a>
-
-                <form action="<?= base_url(); ?>/dataBuah/<?= $buah['id_buah']; ?>" method="post" class="d-inline">
-                  <?= csrf_field(); ?>
-                  <input type="hidden" name="_method" value="DELETE">
-                  <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah anda yakin?');">Delete</button>
-                </form>
-              <?php } else { ?>
-                <span class="badge bg-success">Sudah Panen</span>
-                <a href="<?= base_url(); ?>/dataBuah/dataPanenBuah/<?= $buah['id_buah']; ?>" class="btn btn-warning">Edit Data Panen</a>
-                <form action="<?= base_url(); ?>/dataBuah/<?= $buah['id_buah']; ?>" method="post" class="d-inline">
-                  <?= csrf_field(); ?>
-                  <input type="hidden" name="_method" value="DELETE">
-                  <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah anda yakin?');">Delete</button>
-                </form>
-              <?php }; ?>
+              <?php if (!isset($buah['waktu_panen']) || $buah['waktu_panen'] == null) : ?>
+                <a href="<?= base_url(); ?>/dataBuah/dataPanenBuah/<?= $buah['id_buah']; ?>" class="btn btn-success mb-2">Panen</a>
+                <a href="<?= base_url(); ?>/dataBuah/editBuah/<?= $buah['id_buah']; ?>" class="btn btn-warning mb-2">Edit</a>
+                <?php if (isset($buah['id_buah'])) : ?>
+                  <form action="/dataBuah/<?= $buah['id_buah']; ?>" method="post" class="d-inline">
+                    <?= csrf_field(); ?>
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah anda yakin?');">Delete</button>
+                  </form>
+                <?php endif; ?>
+              <?php else : ?>
+                <span class="badge bg-success mb-2">Sudah Panen</span>
+                <a href="<?= base_url(); ?>/dataBuah/dataPanenBuah/<?= $buah['id_buah']; ?>" class="btn btn-warning mb-2">Edit Data Buah</a>
+                <?php if (isset($buah['id_buah'])) : ?>
+                  <form action="/dataBuah/<?= $buah['id_buah']; ?>" method="post" class="d-inline">
+                    <?= csrf_field(); ?>
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah anda yakin?');">Delete</button>
+                  </form>
+                <?php endif; ?>
+              <?php endif; ?>
             </td>
           </tr>
         <?php endforeach; ?>
       </tbody>
     </table>
-    <?= $pager->links('data_buah', 'pagination_dataBuah'); ?>
   </div>
 </div>
 

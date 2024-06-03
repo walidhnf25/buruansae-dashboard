@@ -3,24 +3,28 @@
 namespace App\Controllers;
 
 use App\Models\dataSayurModel;
+use App\Models\dataKelompokModel;
+use App\Models\DataKomoditiModel;
 
 class DataSayur extends BaseController
 {
     protected $dataSayurModel;
+    protected $dataKelompokModel;
+    protected $dataKomoditiModel;
+
     public function __construct()
     {
         $this->dataSayurModel = new dataSayurModel();
+        $this->dataKelompokModel = new dataKelompokModel();
+        $this->dataKomoditiModel = new DataKomoditiModel();
     }
 
     public function index()
     {
-        $currentPage = $this->request->getVar('page_data_sayur') ? $this->request->getVar('page_data_sayur') : 1;
 
         $data = [
             'tittle' => 'Data Sayur | Buruan SAE',
-            'data_sayur' => $this->dataSayurModel->paginate(10, 'data_sayur'),
-            'pager' => $this->dataSayurModel->pager,
-            'currentPage' => $currentPage,
+            'data_sayur' => $this->dataSayurModel->getDataSayur(),
             'validation' => \Config\Services::validation()
         ];
 
@@ -31,8 +35,13 @@ class DataSayur extends BaseController
     {
         $data = [
             'tittle' => 'Data Sayur | Buruan SAE',
+            // 'nama_kelompok' => $this->dataSayurModel->getUniqueNamaKelompok(), // Fetch unique nama_kelompok values
+            'data_sayur' => $this->dataSayurModel->getDataSayur(),
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'SAYUR')->findAll(),
             'validation' => \Config\Services::validation(),
         ];
+
         return view('pages/tambahDataSayur', $data);
     }
 
@@ -72,6 +81,7 @@ class DataSayur extends BaseController
 
         $this->dataSayurModel->save([
             'nama_sayur' => $this->request->getVar('nama_sayur'),
+            'id_kelompok' => $this->request->getVar('id_kelompok'),
             'tanggal_tanam' => $this->request->getVar('tanggal_tanam'),
             'kategori_tumbuhan' => $this->request->getVar('kategori_tumbuhan'),
             'jumlah_tanam' => $this->request->getVar('jumlah_tanam')
@@ -84,7 +94,7 @@ class DataSayur extends BaseController
 
     public function delete($id_sayur)
     {
-        $sayur = $this->dataSayurModel->find($id_sayur);
+        // $sayur = $this->dataSayurModel->find($id_sayur);
         // unlink('../asset/' . $sayur['gambar']);
         $this->dataSayurModel->delete($id_sayur);
         session()->setFlashdata('pesan', 'Data berhasil dihapus.');
@@ -96,7 +106,10 @@ class DataSayur extends BaseController
         $data = [
             'tittle' => 'Data Sayur | Buruan SAE',
             'validation' => \Config\Services::validation(),
-            'sayur' => $this->dataSayurModel->getDataSayur($id_sayur)
+            'sayur' => $this->dataSayurModel->getDataSayur($id_sayur),
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'SAYUR')->findAll(),
+
         ];
 
         return view('pages/editDataSayur', $data);
@@ -137,9 +150,10 @@ class DataSayur extends BaseController
 
         $data = [
             'nama_sayur' => $this->request->getVar('nama_sayur'),
+            'id_kelompok' => $this->request->getVar('id_kelompok'),
             'tanggal_tanam' => $this->request->getVar('tanggal_tanam'),
             'kategori_tumbuhan' => $this->request->getVar('kategori_tumbuhan'),
-            'jumlah_tanam' => $this->request->getVar('jumlah_tanam')
+            'jumlah_tanam' => $this->request->getVar('jumlah_tanam'),
         ];
 
         // Update data berdasarkan id_sayur

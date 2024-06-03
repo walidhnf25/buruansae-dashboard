@@ -3,25 +3,30 @@
 namespace App\Controllers;
 
 use App\Models\dataBuahModel;
+use App\Models\dataKelompokModel;
+use App\Models\dataKomoditiModel;
+
+
 
 class DataBuah extends BaseController
 {
     protected $dataBuahModel;
+    protected $dataKelompokModel;
+    protected $dataKomoditiModel;
     public function __construct()
     {
         $this->dataBuahModel = new dataBuahModel();
+        $this->dataKelompokModel = new dataKelompokModel();
+        $this->dataKomoditiModel = new dataKomoditiModel();
     }
 
     public function index()
     {
-        $currentPage = $this->request->getVar('page_data_buah') ? $this->request->getVar('page_data_buah') : 1;
 
         $data = [
             'tittle' => 'Data Buah | Buruan SAE',
             'validation' => \Config\Services::validation(),
-            'data_buah' => $this->dataBuahModel->paginate(10, 'data_buah'),
-            'pager' => $this->dataBuahModel->pager,
-            'currentPage' => $currentPage
+            'data_buah' => $this->dataBuahModel->getDataBuah()
         ];
 
         return view('pages/dataBuah', $data);
@@ -31,7 +36,10 @@ class DataBuah extends BaseController
     {
         $data = [
             'tittle' => 'Data Buah | Buruan SAE',
-            'validation' => \Config\Services::validation()
+            'validation' => \Config\Services::validation(),
+            'buah' => $this->dataBuahModel->getDataBuah(),
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'BUAH')->findAll()
         ];
         return view('pages/tambahDataBuah', $data);
     }
@@ -71,6 +79,7 @@ class DataBuah extends BaseController
 
         $this->dataBuahModel->save([
             'nama_buah' => $this->request->getVar('nama_buah'),
+            'id_kelompok' => $this->request->getVar('id_kelompok'),
             'tanggal_tanam' => $this->request->getVar('tanggal_tanam'),
             'kategori_tumbuhan' => $this->request->getVar('kategori_tumbuhan'),
             'jumlah_tanam' => $this->request->getVar('jumlah_tanam')
@@ -93,7 +102,9 @@ class DataBuah extends BaseController
         $data = [
             'tittle' => 'Data Buah | Buruan SAE',
             'validation' => \Config\Services::validation(),
-            'buah' => $this->dataBuahModel->getDataBuah($id_buah)
+            'buah' => $this->dataBuahModel->getDataBuah($id_buah),
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'BUAH')->findAll()
         ];
 
         return view('pages/editDataBuah', $data);
@@ -135,6 +146,7 @@ class DataBuah extends BaseController
         $this->dataBuahModel->save([
             'id_buah' => $id_buah,
             'nama_buah' => $this->request->getVar('nama_buah'),
+            'id_kelompok' => $this->request->getVar('id_kelompok'),
             'tanggal_tanam' => $this->request->getVar('tanggal_tanam'),
             'kategori_tumbuhan' => $this->request->getVar('kategori_tumbuhan'),
             'jumlah_tanam' => $this->request->getVar('jumlah_tanam')

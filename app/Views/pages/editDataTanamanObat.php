@@ -11,18 +11,39 @@
                 <div class="mb-3">
                     <label for="nama_tanaman_obat" class="form-label">Nama Tanaman Obat</label>
                     <select class="form-select <?= ($validation->hasError('nama_tanaman_obat')) ? 'is-invalid' : ''; ?>" name="nama_tanaman_obat" id="nama_tanaman_obat">
-                        <option value="" class="hidden" style="display: none;">Pilih Tanaman</option>
-                        <option disabled>Pilih Tanaman Obat</option>
-                        <option value="Daun Dewa <?php (old('nama_tanaman_obat') === 'Daun Dewa') ? 'selected' : ''; ?>">Daun Dewa</option>
-                        <option value="Sereh <?php (old('nama_tanaman_obat') === 'Sereh') ? 'selected' : ''; ?>">Sereh</option>
-                        <option value="Jahe <?php (old('nama_tanaman_obat') === 'Jahe') ? 'selected' : ''; ?>">Jahe</option>
-                        <option value="Kayu Manis <?php (old('nama_tanaman_obat') === 'Kayu Manis') ? 'selected' : ''; ?>">Kayu Manis</option>
-                        <option value="Kencur <?php (old('nama_tanaman_obat') === 'Kencur') ? 'selected' : ''; ?>">Kencur</option>
-                        <option value="Lengkuas <?php (old('nama_tanaman_obat') === 'Lengkuas') ? 'selected' : ''; ?>">Lengkuas</option>
+                        <option value="" class="hidden" style="display: none;" disabled>Pilih Tanaman Obat</option>
+                        <?php foreach ($komoditi as $k) : ?>
+                            <option value="<?= $k['nama_komoditi'] ?>" <?= old('nama_tanaman_obat') == $k['nama_komoditi'] ? 'selected' : ''; ?>><?= $k['nama_komoditi'] ?></option>
+                        <?php endforeach; ?>
                     </select>
                     <div class="invalid-feedback">
                         <?= $validation->getError('nama_tanaman_obat'); ?>
                     </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="nama_kelompok" class="form-label">Assign Kelompok</label>
+                    <select name="id_kelompok" class="form-select">
+                        <option value="" style="display: none;" class="hidden" disabled>--Pilih Nama Kelompok--</option>
+                        <?php foreach ($kelompok as $key => $value) { ?>
+                            <option value="<?php echo $value['id_kelompok']; ?>" data-penyuluh="<?php echo $value['penyuluh']; ?>" data-pendamping="<?php echo $value['pendamping']; ?>" data-kecamatan="<?php echo $value['kecamatan']; ?>" data-kelurahan="<?php echo $value['kelurahan']; ?>" <?php echo old('id_kelompok', $obat['id_kelompok']) == $value['id_kelompok'] ? 'selected' : ''; ?>><?php echo $value['nama_kelompok']; ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="mb-3 form-group">
+                    <label for="penyuluh">Penyuluh</label>
+                    <input type="text" name="penyuluh" id="penyuluh" class="form-control" readonly>
+                </div>
+                <div class="mb-3 form-group">
+                    <label for="pendamping">Pendamping</label>
+                    <input type="text" name="pendamping" id="pendamping" class="form-control" readonly>
+                </div>
+                <div class="mb-3 form-group">
+                    <label for="kecamatan">Kecamatan</label>
+                    <input type="text" name="kecamatan" id="kecamatan" class="form-control" readonly>
+                </div>
+                <div class="mb-3 form-group">
+                    <label for="kelurahan">Kelurahan</label>
+                    <input type="text" name="kelurahan" id="kelurahan" class="form-control" readonly>
                 </div>
                 <div class="mb-3">
                     <label for="tanggal_tanam" class="form-label">Tanggal Tanam</label>
@@ -62,5 +83,22 @@
         </div>
     </div>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('select[name="id_kelompok"]').change(function() {
+            var selectedOption = $(this).find('option:selected');
+            var penyuluh = selectedOption.data('penyuluh');
+            var pendamping = selectedOption.data('pendamping');
+            var kecamatan = selectedOption.data('kecamatan');
+            var kelurahan = selectedOption.data('kelurahan');
+            $('input[name="penyuluh"]').val(penyuluh);
+            $('input[name="pendamping"]').val(pendamping);
+            $('input[name="kecamatan"]').val(kecamatan);
+            $('input[name="kelurahan"]').val(kelurahan);
+        });
+    });
+</script>
 
 <?= $this->endSection(); ?>

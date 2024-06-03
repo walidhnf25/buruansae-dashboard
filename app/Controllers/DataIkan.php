@@ -3,26 +3,29 @@
 namespace App\Controllers;
 
 use App\Models\dataIkanModel;
+use App\Models\dataKelompokModel;
+use App\Models\dataKomoditiModel;
+
 
 class DataIkan extends BaseController
 {
     protected $dataIkanModel;
+    protected $dataKelompokModel;
+    protected $dataKomoditiModel;
+
     public function __construct()
     {
         $this->dataIkanModel = new dataIkanModel();
+        $this->dataKelompokModel = new dataKelompokModel();
+        $this->dataKomoditiModel = new dataKomoditiModel();
     }
 
     public function index()
     {
-        $currentPage = $this->request->getVar('page_data_ikan') ? $this->request->getVar('page_data_ikan') : 1;
-
         $data = [
             'tittle' => 'Data Ikan | Buruan SAE',
             'validation' => \Config\Services::validation(),
-            'data_ikan' => $this->dataIkanModel->paginate(10, 'data_ikan'),
-            'pager' => $this->dataIkanModel->pager,
-            'currentPage' => $currentPage
-
+            'data_ikan' => $this->dataIkanModel->getDataIkan()
         ];
 
         return view('pages/dataIkan', $data);
@@ -32,7 +35,10 @@ class DataIkan extends BaseController
     {
         $data = [
             'tittle' => 'Data Ikan | Buruan SAE',
-            'validation' => \Config\Services::validation()
+            'validation' => \Config\Services::validation(),
+            'ikan' => $this->dataIkanModel->getDataIkan(),
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'IKAN')->findAll()
         ];
         return view('pages/tambahDataIkan', $data);
     }
@@ -74,6 +80,7 @@ class DataIkan extends BaseController
         $this->dataIkanModel->save([
             'waktu_pakan' => $this->request->getVar('waktu_pakan'),
             'jenis_ikan' => $this->request->getVar('jenis_ikan'),
+            'id_kelompok' => $this->request->getVar('id_kelompok'), // tambah ini
             'jumlah_pakan' => $this->request->getVar('jumlah_pakan'),
             'jumlah_ikan' => $this->request->getVar('jumlah_ikan')
         ]);
@@ -95,7 +102,9 @@ class DataIkan extends BaseController
         $data = [
             'tittle' => 'Edit Data Ikan | Buruan SAE',
             'validation' => \Config\Services::validation(),
-            'ikan' => $this->dataIkanModel->getDataIkan($id_ikan)
+            'ikan' => $this->dataIkanModel->getDataIkan($id_ikan),
+            'kelompok' => $this->dataKelompokModel->getDataKelompok(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'IKAN')->findAll()
         ];
 
         return view('pages/editDataIkan', $data);
@@ -138,6 +147,7 @@ class DataIkan extends BaseController
         $this->dataIkanModel->save([
             'id_ikan' => $id_ikan,
             'jenis_ikan' => $this->request->getVar('jenis_ikan'),
+            'id_kelompok' => $this->request->getVar('id_kelompok'), // tambah ini
             'waktu_pakan' => $this->request->getVar('waktu_pakan'),
             'jumlah_pakan' => $this->request->getVar('jumlah_pakan'),
             'jumlah_ikan' => $this->request->getVar('jumlah_ikan')

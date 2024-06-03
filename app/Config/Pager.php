@@ -20,16 +20,10 @@ class Pager extends BaseConfig
      *
      * @var array<string, string>
      */
-    public $templates = [
+    public array $templates = [
         'default_full'   => 'CodeIgniter\Pager\Views\default_full',
         'default_simple' => 'CodeIgniter\Pager\Views\default_simple',
         'default_head'   => 'CodeIgniter\Pager\Views\default_head',
-        'pagination_sayur' => 'App\Views\Pagination\pagination_sayur',
-        'pagination_tanamanObat' => 'App\Views\Pagination\pagination_tanamanObat',
-        'pagination_dataPanen' => 'App\Views\Pagination\pagination_dataPanen',
-        'pagination_dataTernak' => 'App\Views\Pagination\pagination_dataTernak',
-        'pagination_dataIkan' => 'App\Views\Pagination\pagination_dataIkan',
-        'pagination_dataBuah' => 'App\Views\Pagination\pagination_dataBuah',
     ];
 
     /**
@@ -38,8 +32,6 @@ class Pager extends BaseConfig
      * --------------------------------------------------------------------------
      *
      * The default number of results shown in a single page.
-     *
-     * @var int
      */
-    public $perPage = 20;
+    public int $perPage = 20;
 }
