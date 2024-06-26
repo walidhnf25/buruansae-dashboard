@@ -33,7 +33,7 @@ class DataKomoditi extends BaseController
             'validation' => \Config\Services::validation()
         ];
 
-        return view('pages/DataKomoditi/createDataKomoditi', $data);
+        return view('pages/datakomoditi/createDataKomoditi', $data);
     }
 
     public function save()
@@ -101,7 +101,7 @@ class DataKomoditi extends BaseController
             'komoditi' => $this->datakomoditiModel->getDataKomoditi($id)
         ];
 
-        return view('pages/DataKomoditi/editDataKomoditi', $data);
+        return view('pages/datakomoditi/editDataKomoditi', $data);
     }
 
     public function update($id)
