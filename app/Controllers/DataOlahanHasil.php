@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\dataKelompokModel;
 use App\Models\dataOlahanHasilModel;
-use App\Models\dataKomoditiModel;
+use App\Models\DataKomoditiModel;
 
 
 class DataOlahanHasil extends BaseController
@@ -17,7 +17,7 @@ class DataOlahanHasil extends BaseController
     {
         $this->dataOlahanHasilModel = new dataOlahanhasilModel();
         $this->dataKelompokModel = new dataKelompokModel();
-        $this->dataKomoditiModel = new dataKomoditiModel();
+        $this->dataKomoditiModel = new DataKomoditiModel();
     }
 
     public function index()

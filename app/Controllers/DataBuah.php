@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\dataBuahModel;
 use App\Models\dataKelompokModel;
-use App\Models\dataKomoditiModel;
+use App\Models\DataKomoditiModel;
 
 
 
@@ -17,7 +17,7 @@ class DataBuah extends BaseController
     {
         $this->dataBuahModel = new dataBuahModel();
         $this->dataKelompokModel = new dataKelompokModel();
-        $this->dataKomoditiModel = new dataKomoditiModel();
+        $this->dataKomoditiModel = new DataKomoditiModel();
     }
 
     public function index()
