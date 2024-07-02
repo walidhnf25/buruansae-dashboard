@@ -26,16 +26,8 @@ class Datakomoditi extends Migration
                 'null' => false,
             ],
             'durasi_tanam' => [
-                'type' => 'VARCHAR',
-                'constraint' => '255',
-                'null' => true,
-            ],
-            'start_date' => [
-                'type' => 'DATE',
-                'null' => true,
-            ],
-            'end_date' => [
-                'type' => 'DATE',
+                'type' => 'INT',
+                'constraint' => 11,
                 'null' => true,
             ],
         ]);

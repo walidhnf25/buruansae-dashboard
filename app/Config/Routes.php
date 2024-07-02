@@ -22,9 +22,8 @@ $routes->get('/DataKomoditi', 'DataKomoditi::index');
 $routes->get('DataPanen', 'DataPanen::index');
 
 //Routing Data Komoditi
-$routes->get('/datakomoditi', 'DataKomoditi::index');
 $routes->get('/DataKomoditi/edit/(:num)', 'DataKomoditi::edit/$1');
-$routes->get('/datakomoditi/edit/(:num)', 'datakomoditi::edit/$1');
+// $routes->get('/datakomoditi/edit/(:num)', 'datakomoditi::edit/$1');
 $routes->post('/DataKomoditi/update/(:num)', 'DataKomoditi::update/$1');
 $routes->get('/DataKomoditi/createDataKomoditi', 'DataKomoditi::createDataKomoditi');
 $routes->post('/DataKomoditi/save', 'DataKomoditi::save');

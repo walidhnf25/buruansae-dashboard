@@ -31,22 +31,18 @@
                 </div>
             </div>
         </div>
-        <div class="form-group mb-4">
-            <label for="start_date" class="form-label">Start Date</label>
-            <input type="date" class="form-control <?= ($validation->hasError('start_date')) ? 'is-invalid' : ''; ?>" id="start_date" name="start_date" required>
-            <div class="invalid-feedback">
-                <?= $validation->getError('start_date'); ?>
-            </div>
-        </div>
-        <div class="form-group mb-4">
-            <label for="end_date" class="form-label">End Date</label>
-            <input type="date" class="form-control <?= ($validation->hasError('end_date')) ? 'is-invalid' : ''; ?>" id="end_date" name="end_date" required>
-            <div class="invalid-feedback">
-                <?= $validation->getError('end_date'); ?>
+        <div class="col mb-2">
+            <label for="durasi_tanam" class="form-label">Durasi Tanam</label>
+            <div class="input-group">
+                <input type="number" min=1 class="form-control" id="durasi_tanam" placeholder="Masukkan Durasi Tanam" <?= ($validation->hasError('durasi_tanam')) ? 'is-invalid' : ''; ?>" id="durasi_tanam" name="durasi_tanam">
+                <div class="invalid-feedback">
+                    <?= $validation->getError('durasi_tanam'); ?>
+                </div>
+                <span class="input-group-text" id="basic-addon2">Hari</span>
             </div>
         </div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-            <a href="<?= base_url(); ?>/DataKomoditi" class="btn btn-secondary" type="button">Kembali</a>
+            <a href="<?= base_url('DataKomoditi'); ?>" class="btn btn-secondary" type="button">Kembali</a>
             <button type="submit" class="btn btn-primary">Tambah</button>
         </div>
     </form>
