@@ -4,8 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\DataKomoditiModel;
-use CodeIgniter\I18n\Time;
-use CodeIgniter\I18n\TimeDifference;
+
 
 
 class DataKomoditi extends BaseController
@@ -23,7 +22,7 @@ class DataKomoditi extends BaseController
             'data_komoditi' => $this->datakomoditiModel->getDataKomoditi()
         ];
 
-        return view('pages/datakomoditi/dataKomoditi', $data);
+        return view('pages/DataKomoditi/dataKomoditi', $data);
     }
 
     public function createDataKomoditi()
@@ -33,7 +32,7 @@ class DataKomoditi extends BaseController
             'validation' => \Config\Services::validation()
         ];
 
-        return view('pages/datakomoditi/createDataKomoditi', $data);
+        return view('pages/DataKomoditi/createDataKomoditi', $data);
     }
 
     public function save()
@@ -53,39 +52,32 @@ class DataKomoditi extends BaseController
                     'required' => 'Sektor harus diisi'
                 ]
             ],
-            'start_date' => [
-                'rules' => 'required|',
+            'durasi_tanam' => [
+                'rules' => 'required|numeric',
                 'errors' => [
-                    'required' => 'Start date harus diisi'
+                    'required' => 'Durasi tanam harus diisi',
+                    'numeric' => 'Durasi tanam harus berupa angka'
                 ]
-            ],
-            'end_date' => [
-                'rules' => 'required|',
-                'errors' => [
-                    'required' => 'End date harus diisi',
-                ]
-            ],
+            ]
         ])) {
             return redirect()->to('/DataKomoditi/createDataKomoditi')->withInput();
         }
 
-        // Get the start and end dates from the request
-        $startDate = $this->request->getPost('start_date');
-        $endDate = $this->request->getPost('end_date');
+        // // Get the start and end dates from the request
+        // $startDate = $this->request->getPost('start_date');
+        // $endDate = $this->request->getPost('end_date');
 
-        // Convert the dates to DateTime objects
-        $start = Time::parse($startDate);
-        $end = Time::parse($endDate);
+        // // Convert the dates to DateTime objects
+        // $start = Time::parse($startDate);
+        // $end = Time::parse($endDate);
 
-        // Calculate the duration
-        $duration = $start->difference($end)->getDays();
+        // // Calculate the duration
+        // $duration = $start->difference($end)->getDays();
 
         $this->datakomoditiModel->save([
             'nama_komoditi' => $this->request->getVar('nama_komoditi'),
             'sektor' => $this->request->getVar('sektor'),
-            'start_date' => $startDate,
-            'end_date' => $endDate,
-            'durasi_tanam' => $duration . ' Hari',
+            'durasi_tanam' => $this->request->getVar('durasi_tanam') . 'Hari'
         ]);
 
         session()->setFlashdata('pesan', 'Data berhasil ditambahkan.');
@@ -101,7 +93,7 @@ class DataKomoditi extends BaseController
             'komoditi' => $this->datakomoditiModel->getDataKomoditi($id)
         ];
 
-        return view('pages/datakomoditi/editDataKomoditi', $data);
+        return view('pages/DataKomoditi/editDataKomoditi', $data);
     }
 
     public function update($id)
@@ -121,40 +113,34 @@ class DataKomoditi extends BaseController
                     'required' => 'Sektor harus diisi'
                 ]
             ],
-            'start_date' => [
-                'rules' => 'required|',
+            'durasi_tanam' => [
+                'rules' => 'required|numeric',
                 'errors' => [
-                    'required' => 'Start date harus diisi'
+                    'required' => 'Durasi tanam harus diisi',
+                    'numeric' => 'Durasi tanam harus berupa angka'
                 ]
-            ],
-            'end_date' => [
-                'rules' => 'required|',
-                'errors' => [
-                    'required' => 'End date harus diisi',
-                ]
-            ],
+            ]
+
         ])) {
             return redirect()->to('/DataKomoditi/edit/' . $id)->withInput();
         }
 
-        // Get the start and end dates from the request
-        $startDate = $this->request->getPost('start_date');
-        $endDate = $this->request->getPost('end_date');
+        // // Get the start and end dates from the request
+        // $startDate = $this->request->getPost('start_date');
+        // $endDate = $this->request->getPost('end_date');
 
-        // Convert the dates to DateTime objects
-        $start = Time::parse($startDate);
-        $end = Time::parse($endDate);
+        // // Convert the dates to DateTime objects
+        // $start = Time::parse($startDate);
+        // $end = Time::parse($endDate);
 
-        // Calculate the duration
-        $duration = $start->difference($end)->getDays();
+        // // Calculate the duration
+        // $duration = $start->difference($end)->getDays();
 
         $this->datakomoditiModel->save([
             'id' => $id,
             'nama_komoditi' => $this->request->getVar('nama_komoditi'),
             'sektor' => $this->request->getVar('sektor'),
-            'start_date' => $startDate,
-            'end_date' => $endDate,
-            'durasi_tanam' => $duration . ' Hari',
+            'durasi_tanam' => $this->request->getVar('durasi_tanam') . 'Hari'
         ]);
 
         session()->setFlashdata('pesan', 'Data berhasil diubah.');

@@ -48,16 +48,16 @@ use App\Controllers\Home;
       <div class="collapse navbar-collapse" id="navbarsExample06">
         <ul class="navbar-nav me-auto mb-2 mb-xl-0">
           <li class="nav-item me-5">
-            <a href="<?= base_url(); ?>/Home" class="nav-font"><strong>Home</strong></a>
+            <a href="<?= base_url('Home'); ?>" class="nav-font"><strong>Home</strong></a>
           </li>
           <li class="nav-item me-5">
-            <a href="<?= base_url(); ?>/DataPanen" class="nav-font"><strong>Data Panen</strong></a>
+            <a href="<?= base_url('DataPanen'); ?>" class="nav-font"><strong>Data Panen</strong></a>
           </li>
           <li class="nav-item me-5">
-            <a href="<?= base_url(); ?>/DataKelompok" class="nav-font"><strong>Data Kelompok</strong></a>
+            <a href="<?= base_url('DataKelompok'); ?>" class="nav-font"><strong>Data Kelompok</strong></a>
           </li>
           <li class="nav-item me-5">
-            <a href="<?= base_url(); ?>/DataKomoditi" class="nav-font"><strong>Data Komoditi</strong></a>
+            <a href="<?= base_url('DataKomoditi'); ?>" class="nav-font"><strong>Data Komoditi</strong></a>
           </li>
         </ul>
         <ul class="nav-item dropdown">
