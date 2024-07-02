@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class dataKomoditiModel extends Model
+class DataKomoditiModel extends Model
 {
     protected $table      = 'data_komoditi';
     protected $primaryKey = 'id';

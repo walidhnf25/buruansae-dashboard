@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\dataTanamanObatModel;
 use App\Models\dataKelompokModel;
-use App\Models\dataKomoditiModel;
+use App\Models\DataKomoditiModel;
 
 class DataTanamanObat extends BaseController
 {
@@ -15,7 +15,7 @@ class DataTanamanObat extends BaseController
     {
         $this->dataTanamanObatModel = new dataTanamanObatModel();
         $this->dataKelompokModel = new dataKelompokModel();
-        $this->dataKomoditiModel = new dataKomoditiModel();
+        $this->dataKomoditiModel = new DataKomoditiModel();
     }
 
     public function index()

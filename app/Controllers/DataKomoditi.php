@@ -9,17 +9,17 @@ use App\Models\DataKomoditiModel;
 
 class DataKomoditi extends BaseController
 {
-    protected $datakomoditiModel;
+    protected $dataKomoditiModel;
     public function __construct()
     {
-        $this->datakomoditiModel = new DataKomoditiModel();
+        $this->dataKomoditiModel = new dataKomoditiModel();
     }
 
     public function index()
     {
         $data = [
             'tittle' => 'Data Komoditi | Buruan SAE',
-            'data_komoditi' => $this->datakomoditiModel->getDataKomoditi()
+            'data_komoditi' => $this->dataKomoditiModel->getDataKomoditi()
         ];
 
         return view('pages/DataKomoditi/dataKomoditi', $data);
@@ -74,7 +74,7 @@ class DataKomoditi extends BaseController
         // // Calculate the duration
         // $duration = $start->difference($end)->getDays();
 
-        $this->datakomoditiModel->save([
+        $this->dataKomoditiModel->save([
             'nama_komoditi' => $this->request->getVar('nama_komoditi'),
             'sektor' => $this->request->getVar('sektor'),
             'durasi_tanam' => $this->request->getVar('durasi_tanam') . 'Hari'
@@ -90,7 +90,7 @@ class DataKomoditi extends BaseController
         $data = [
             'tittle' => 'Form Edit Data Komoditi | Buruan SAE',
             'validation' => \Config\Services::validation(),
-            'komoditi' => $this->datakomoditiModel->getDataKomoditi($id)
+            'komoditi' => $this->dataKomoditiModel->getDataKomoditi($id)
         ];
 
         return view('pages/DataKomoditi/editDataKomoditi', $data);
@@ -136,7 +136,7 @@ class DataKomoditi extends BaseController
         // // Calculate the duration
         // $duration = $start->difference($end)->getDays();
 
-        $this->datakomoditiModel->save([
+        $this->dataKomoditiModel->save([
             'id' => $id,
             'nama_komoditi' => $this->request->getVar('nama_komoditi'),
             'sektor' => $this->request->getVar('sektor'),
@@ -150,7 +150,7 @@ class DataKomoditi extends BaseController
 
     public function delete($id)
     {
-        $this->datakomoditiModel->delete($id);
+        $this->dataKomoditiModel->delete($id);
         session()->setFlashdata('pesan', 'Data berhasil dihapus.');
         return redirect()->to('/DataKomoditi');
     }

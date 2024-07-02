@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\dataKelompokModel;
 use App\Models\dataPengolahanSampahModel;
-use App\Models\dataKomoditiModel;
+use App\Models\DataKomoditiModel;
 
 class DataPengolahanSampah extends BaseController
 {
@@ -15,7 +15,7 @@ class DataPengolahanSampah extends BaseController
     {
         $this->dataPengolahanSampahModel = new dataPengolahanSampahModel();
         $this->dataKelompokModel = new dataKelompokModel();
-        $this->dataKomoditiModel = new dataKomoditiModel();
+        $this->dataKomoditiModel = new DataKomoditiModel();
     }
 
     public function index()
