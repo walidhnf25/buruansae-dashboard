@@ -22,7 +22,7 @@ class DataKomoditi extends BaseController
             'data_komoditi' => $this->dataKomoditiModel->getDataKomoditi()
         ];
 
-        return view('pages/DataKomoditi/dataKomoditi', $data);
+        return view('pages/komoditi/dataKomoditi', $data);
     }
 
     public function createDataKomoditi()
@@ -32,7 +32,7 @@ class DataKomoditi extends BaseController
             'validation' => \Config\Services::validation()
         ];
 
-        return view('pages/DataKomoditi/createDataKomoditi', $data);
+        return view('pages/komoditi/createDataKomoditi', $data);
     }
 
     public function save()
@@ -82,7 +82,7 @@ class DataKomoditi extends BaseController
 
         session()->setFlashdata('pesan', 'Data berhasil ditambahkan.');
 
-        return redirect()->to('/DataKomoditi');
+        return redirect()->to('dataKomoditi');
     }
 
     public function edit($id)
@@ -93,7 +93,7 @@ class DataKomoditi extends BaseController
             'komoditi' => $this->dataKomoditiModel->getDataKomoditi($id)
         ];
 
-        return view('pages/DataKomoditi/editDataKomoditi', $data);
+        return view('pages/komoditi/editDataKomoditi', $data);
     }
 
     public function update($id)
@@ -145,13 +145,13 @@ class DataKomoditi extends BaseController
 
         session()->setFlashdata('pesan', 'Data berhasil diubah.');
 
-        return redirect()->to('/DataKomoditi');
+        return redirect()->to('dataKomoditi');
     }
 
     public function delete($id)
     {
         $this->dataKomoditiModel->delete($id);
         session()->setFlashdata('pesan', 'Data berhasil dihapus.');
-        return redirect()->to('/DataKomoditi');
+        return redirect()->to('dataKomoditi');
     }
 }

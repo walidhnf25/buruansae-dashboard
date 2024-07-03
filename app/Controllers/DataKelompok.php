@@ -3,6 +3,13 @@
 namespace App\Controllers;
 
 use App\Models\dataKelompokModel;
+use App\Models\dataSayurModel;
+use App\Models\dataBuahModel;
+use App\Models\dataTernakModel;
+use App\Models\dataTanamanObatModel;
+use App\Models\dataPengolahanSampahModel;
+use App\Models\dataOlahanhasilModel;
+use App\Models\dataIkanModel;
 
 class DataKelompok extends BaseController
 {
@@ -92,8 +99,27 @@ class DataKelompok extends BaseController
 
     public function delete($id_kelompok)
     {
+        $dataSayurModel = new dataSayurModel();
+        $dataBuahModel = new dataBuahModel();
+        $dataTernakModel = new dataTernakModel();
+        $dataTanamanObatModel = new dataTanamanObatModel();
+        $dataSampahModel = new dataPengolahanSampahModel();
+        $dataOlahanHasilModel = new dataOlahanhasilModel();
+        $dataIkanModel = new dataIkanModel();
+
+        // Hapus baris di tabel terkait
+        $dataSayurModel->where('id_kelompok', $id_kelompok)->delete();
+        $dataBuahModel->where('id_kelompok', $id_kelompok)->delete();
+        $dataTernakModel->where('id_kelompok', $id_kelompok)->delete();
+        $dataTanamanObatModel->where('id_kelompok', $id_kelompok)->delete();
+        $dataSampahModel->where('id_kelompok', $id_kelompok)->delete();
+        $dataOlahanHasilModel->where('id_kelompok', $id_kelompok)->delete();
+        $dataIkanModel->where('id_kelompok', $id_kelompok)->delete();
+
+        // Hapus baris di tabel utama
         $this->dataKelompokModel->delete($id_kelompok);
         session()->setFlashdata('pesan', 'Data Kelompok berhasil dihapus.');
+
         return redirect()->to('/DataKelompok');
     }
 
