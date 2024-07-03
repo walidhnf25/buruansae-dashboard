@@ -10,7 +10,7 @@
                 <div class="mb-3">
                     <label for="nama_sayur" class="form-label">Nama Sayur</label>
                     <select class="form-select <?= ($validation->hasError('nama_sayur')) ? 'is-invalid' : ''; ?>" name="nama_sayur" id="nama_sayur">
-                        <option value="" class="hidden" style="display: none;">Pilih Sayur</option>
+                        <option value="" class="hidden" style="display: none;">--Pilih Sayur--</option>
                         <?php foreach ($komoditi as $k) : ?>
                             <option value="<?= $k['nama_komoditi'] ?>"><?= $k['nama_komoditi'] ?></option>
                         <?php endforeach; ?>

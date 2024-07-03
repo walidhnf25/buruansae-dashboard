@@ -45,7 +45,7 @@
                         <td>
                             <?php if (isset($kelompok['id_kelompok'])) : ?>
                                 <a href="<?= base_url(); ?>/DataKelompok/editDataKelompok/<?= $kelompok['id_kelompok']; ?>" class="btn btn-warning">Edit</a>
-                                <form action="/DataKelompok/<?= $kelompok['id_kelompok']; ?>" method="post" class="d-inline">
+                                <form action="/DataKelompok/delete/ <?= $kelompok['id_kelompok']; ?>" method="post" class="d-inline">
                                     <?= csrf_field(); ?>
                                     <input type="hidden" name="_method" value="DELETE">
                                     <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah anda yakin?');">Delete</button>

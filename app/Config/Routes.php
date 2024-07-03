@@ -18,7 +18,7 @@ $routes->get('/dataBuah', 'DataBuah::index');
 $routes->get('/dataOlahanHasil', 'DataOlahanHasil::index');
 $routes->get('/dataPengolahanSampah', 'DataPengolahanSampah::index');
 $routes->get('/DataKelompok', 'DataKelompok::index');
-$routes->get('/DataKomoditi', 'DataKomoditi::index');
+$routes->get('/dataKomoditi', 'DataKomoditi::index');
 $routes->get('DataPanen', 'DataPanen::index');
 
 //Routing Data Komoditi
@@ -35,6 +35,7 @@ $routes->get('/DataKelompok/editDataKelompok/(:num)', 'DataKelompok::editDataKel
 $routes->post('DataKelompok/update/(:num)', 'DataKelompok::update/$1');
 $routes->get('/DataKelompok/tambahDataKelompok', 'DataKelompok::tambahDataKelompok');
 $routes->post('/DataKelompok/save', 'DataKelompok::save');
+$routes->delete('/DataKelompok/delete/(:num)', 'DataKelompok::delete/$1');
 
 //Routing Data Sayur
 $routes->get('/dataSayur/tambahDataSayur', 'DataSayur::tambahDataSayur');

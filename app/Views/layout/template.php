@@ -136,6 +136,27 @@ use App\Controllers\Home;
     $('select[name="id_kelompok"]').select2({
       theme: 'bootstrap-5'
     });
+    $('select[name="nama_sayur"]').select2({
+      theme: 'bootstrap-5'
+    });
+    $('select[name="nama_buah"]').select2({
+      theme: 'bootstrap-5'
+    });
+    $('select[name="jenis_ikan"]').select2({
+      theme: 'bootstrap-5'
+    });
+    $('select[name="nama_tanaman_obat"]').select2({
+      theme: 'bootstrap-5'
+    });
+    $('select[name="jenis_ternak"]').select2({
+      theme: 'bootstrap-5'
+    });
+    $('select[name="jenis_olahan"]').select2({
+      theme: 'bootstrap-5'
+    });
+    $('select[name="jenis_pengolahan"]').select2({
+      theme: 'bootstrap-5'
+    });
   });
 </script>
 
