@@ -8,7 +8,7 @@ use App\Models\dataBuahModel;
 use App\Models\dataTernakModel;
 use App\Models\dataTanamanObatModel;
 use App\Models\dataPengolahanSampahModel;
-use App\Models\dataOlahanhasilModel;
+use App\Models\dataOlahanHasilModel;
 use App\Models\dataIkanModel;
 
 class DataKelompok extends BaseController
@@ -104,7 +104,7 @@ class DataKelompok extends BaseController
         $dataTernakModel = new dataTernakModel();
         $dataTanamanObatModel = new dataTanamanObatModel();
         $dataSampahModel = new dataPengolahanSampahModel();
-        $dataOlahanHasilModel = new dataOlahanhasilModel();
+        $dataOlahanHasilModel = new dataOlahanHasilModel();
         $dataIkanModel = new dataIkanModel();
 
         // Hapus baris di tabel terkait
