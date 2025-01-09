@@ -20,11 +20,14 @@ class DataTanamanObat extends BaseController
 
     public function index()
     {
+        // Ambil filter dari query string (GET parameter)
+        $filter = $this->request->getGet('filter');
+
         $data = [
             'tittle' => 'Data Tanaman Obat | Buruan SAE',
             // 'data_tanaman_obat' => $this->dataTanamanObatModel->getDataTanamanObat(),
             'validation' => \Config\Services::validation(),
-            'data_tanaman_obat' => $this->dataTanamanObatModel->getDataTanamanObat(),
+            'data_tanaman_obat' => $this->dataTanamanObatModel->getDataTanamanObat(false, $filter),
         ];
 
         return view('pages/dataTanamanObat', $data);
@@ -70,6 +73,12 @@ class DataTanamanObat extends BaseController
                     'required' => 'Masukkan jumlah tanaman obat yang ditanam',
                     'numeric' => 'Masukan berupa angka'
                 ]
+            ],
+            'waktu_prakiraan_panen' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Maukkan Tanggal Waktu Prakiran Panen'
+                ]
             ]
         ])) {
             $validation = \Config\Services::validation();
@@ -81,7 +90,8 @@ class DataTanamanObat extends BaseController
             'id_kelompok' => $this->request->getVar('id_kelompok'),
             'tanggal_tanam' => $this->request->getVar('tanggal_tanam'),
             'kategori_tumbuhan' => $this->request->getVar('kategori_tumbuhan'),
-            'jumlah_tanam' => $this->request->getVar('jumlah_tanam')
+            'jumlah_tanam' => $this->request->getVar('jumlah_tanam'),
+            'waktu_prakiraan_panen' => $this->request->getVar('waktu_prakiraan_panen')
         ]);
 
         session()->setFlashdata('pesan', 'Data berhasil ditambahkan');
@@ -186,45 +196,74 @@ class DataTanamanObat extends BaseController
                     'numeric' => 'Masukan Berupa Angka !!'
                 ]
             ],
-            'konsumsi_lokal_kg' => [
+            'jumlah_berat_kp_kg' => [
                 'rules' => 'required|numeric',
                 'errors' => [
-                    'required' => 'Masukkan Jumlah Konsumsi Lokal !!',
-                    'numeric' => 'Masukan arus berupa angka !!'
+                    'required' => 'Masukkan Jumlah Berat !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
                 ]
             ],
-            'konsumsi_kk' => [
+            'jumlah_kepala_keluarga_kp_kk' => [
                 'rules' => 'required|numeric',
                 'errors' => [
-                    'required' => ' Masukkan Jumlah Konsumsi KK !!',
-                    'numeric' => 'Masukan Harus Berupa Ankga !!'
+                    'required' => 'Masukkan Jumlah Kepala Keluarga !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
                 ]
             ],
-            'konsumsi_orang' => [
+            'jumlah_orang_kp' => [
                 'rules' => 'required|numeric',
                 'errors' => [
-                    'required' => 'Masukkan Jumlah Konsumsi Orang !!',
-                    'numeric' => ' Masukan Harus Berupa Angka'
+                    'required' => 'Masukkan Jumlah Orang !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
                 ]
             ],
-            'jumlah_jual' => [
+            'dibagikan' => [
+                'rules' => 'required|is_array',
+                'errors' => [
+                    'required' => 'Pilih minimal satu kategori untuk dibagikan!',
+                    'is_array' => 'Format input tidak valid!',
+                ]
+            ],
+            'jumlah_berat_dibagikan_kg' => [
                 'rules' => 'required|numeric',
                 'errors' => [
-                    'required' => 'Masukkan Jumlah Penjualan !!',
-                    'numeric' => 'Masukan Harus Berupa Angka !!'
+                    'required' => 'Masukkan Jumlah Berat !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
                 ]
             ],
-            'harga_jual' => [
+            'jumlah_kepala_keluarga_dibagikan_kk' => [
                 'rules' => 'required|numeric',
                 'errors' => [
-                    'required' => 'Masukkan Total Harga Penjualan !!',
-                    'numeric' => 'Masukan Harus Berupa Angka !!'
+                    'required' => 'Masukkan Jumlah Kepala Keluarga !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
                 ]
             ],
-            'lokasi_pembeli' => [
-                'rules' => 'required',
+            'jumlah_orang_dibagikan' => [
+                'rules' => 'required|numeric',
                 'errors' => [
-                    'required' => 'Masukkan Lokasi Pembeli !!'
+                    'required' => 'Masukkan Jumlah Orang !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
+                ]
+            ],
+            'jumlah_berat_dijual_kg' => [
+                'rules' => 'required|numeric',
+                'errors' => [
+                    'required' => 'Masukkan Jumlah Berat !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
+                ]
+            ],
+            'jumlah_kepala_keluarga_dijual_kk' => [
+                'rules' => 'required|numeric',
+                'errors' => [
+                    'required' => 'Masukkan Jumlah Kepala Keluarga !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
+                ]
+            ],
+            'jumlah_orang_dijual' => [
+                'rules' => 'required|numeric',
+                'errors' => [
+                    'required' => 'Masukkan Jumlah Orang !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
                 ]
             ],
             'gambar' => [
@@ -235,18 +274,6 @@ class DataTanamanObat extends BaseController
                     'max_size' => 'Ukuran Gambar Terlalu Besar (MAX 2MB)',
                     'mime_in' => 'Inputan Harus Berupa Gambar',
                     'is_image' => 'Inputan Harus Berupa Gambar',
-                ]
-            ],
-            'dukungan_program_lain' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Masukkan Dukungan Program Lainnya !!'
-                ]
-            ],
-            'data_pendukung' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Masukkan Data Pendukung !!'
                 ]
             ]
         ])) {
@@ -263,15 +290,17 @@ class DataTanamanObat extends BaseController
             'id_tanaman_obat' => $id_tanaman_obat,
             'waktu_panen' => $this->request->getVar('waktu_panen'),
             'jumlah_panen' => $this->request->getVar('jumlah_panen'),
-            'konsumsi_lokal_kg' => $this->request->getVar('konsumsi_lokal_kg'),
-            'konsumsi_kk' => $this->request->getVar('konsumsi_kk'),
-            'konsumsi_orang' => $this->request->getVar('konsumsi_orang'),
-            'jumlah_jual' => $this->request->getVar('jumlah_jual'),
-            'harga_jual' => $this->request->getVar('harga_jual'),
-            'lokasi_pembeli' => $this->request->getVar('lokasi_pembeli'),
+            'jumlah_berat_kp_kg' => $this->request->getVar('jumlah_berat_kp_kg'),
+            'jumlah_kepala_keluarga_kp_kk' => $this->request->getVar('jumlah_kepala_keluarga_kp_kk'),
+            'jumlah_orang_kp' => $this->request->getVar('jumlah_orang_kp'),
+            'dibagikan' => json_encode($this->request->getVar('dibagikan')),
+            'jumlah_berat_dibagikan_kg' => $this->request->getVar('jumlah_berat_dibagikan_kg'),
+            'jumlah_kepala_keluarga_dibagikan_kk' => $this->request->getVar('jumlah_kepala_keluarga_dibagikan_kk'),
+            'jumlah_orang_dibagikan' => $this->request->getVar('jumlah_orang_dibagikan'),
+            'jumlah_berat_dijual_kg' => $this->request->getVar('jumlah_berat_dijual_kg'),
+            'jumlah_kepala_keluarga_dijual_kk' => $this->request->getVar('jumlah_kepala_keluarga_dijual_kk'),
+            'jumlah_orang_dijual' => $this->request->getVar('jumlah_orang_dijual'),
             'gambar' => $namaGambar,
-            'dukungan_program_lain' => $this->request->getVar('dukungan_program_lain'),
-            'data_pendukung' => $this->request->getVar('data_pendukung')
         ]);
 
         session()->setFlashdata('pesan', 'Data panen berhasil disimpan.');

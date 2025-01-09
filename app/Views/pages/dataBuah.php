@@ -11,9 +11,15 @@
     <?php endif; ?>
   </div>
 
-  <!-- Button trigger modal -->
-  <div class="tabel_sayur my-3">
-    <a href="<?= base_url(); ?>/dataBuah/tambahDataBuah" type="button" class="btn btn-primary">Tambah Data </a>
+  <div class="row mt-3">
+    <div class="col-3">
+      <a href="<?= base_url(); ?>/dataBuah/tambahDataBuah" class="btn btn-primary">Tambah Data</a>
+    </div>
+    
+    <div class="col-6 d-flex justify-content-center">
+        <a href="<?= base_url(); ?>/dataBuah?filter=sudah_panen" class="btn btn-success mx-2">Sudah Panen</a>
+        <a href="<?= base_url(); ?>/dataBuah?filter=akan_panen" class="btn btn-primary mx-2">Akan Panen</a>
+    </div>
   </div>
 
   <div class="table-responsive-sm">

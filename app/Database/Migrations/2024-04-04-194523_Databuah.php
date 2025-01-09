@@ -38,6 +38,10 @@ class Databuah extends Migration
                 'type' => 'DOUBLE',
                 'null' => false
             ],
+            'waktu_prakiraan_panen' => [
+                'type' => 'DATE',
+                'null' => false
+            ],
             'jenis_pupuk' => [
                 'type' => 'VARCHAR',
                 'constraint' => '255',
@@ -59,6 +63,56 @@ class Databuah extends Migration
             'jumlah_panen' => [
                 'type' => 'DOUBLE',
                 'null' => true
+            ],
+            'jumlah_berat_kp_kg' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'jumlah_kepala_keluarga_kp_kk' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'jumlah_orang_kp' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'dibagikan' => [
+                'type'       => 'TEXT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'jumlah_berat_dibagikan_kg' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'jumlah_kepala_keluarga_dibagikan_kk' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'jumlah_orang_dibagikan' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'jumlah_berat_dijual_kg' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'jumlah_kepala_keluarga_dijual_kk' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'jumlah_orang_dijual' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
             ],
             'konsumsi_lokal_kg' => [
                 'type' => 'INT',

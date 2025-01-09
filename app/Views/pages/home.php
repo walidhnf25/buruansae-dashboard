@@ -8,8 +8,8 @@
     <header class="banner">
         <div class="teksbanner">
             <h2>Selamat Datang</h2>
-            <h3>di Halaman Buruan Sae</h3>
-            <h4>Buruan Sae program urban farming terintegrasi dari Dinas Pangan dan Pertanian Kota Bandung</h4>
+            <h3>Di Halaman Buruan Sae</h3>
+            <h4>Buruan Sae gerakan urban farming terintegrasi dari Dinas Ketahanan Pangan dan Pertanian Kota Bandung</h4>
         </div>
     </header>
 
@@ -29,6 +29,13 @@
             </div>
         </div>
         <div class="catalog">
+            <img src="asset/buah.jpg" class="card-img-top" alt="asset/buah.jpg">
+            <h4 class="text-center mt-2 mb-3">Data Buah</h4>
+            <div class="d-grid gap-2 col-6 mx-auto mt-5 mb-3">
+                <a href="dataBuah" class="btn btn-primary" type="button">Input Data</a>
+            </div>
+        </div>
+        <div class="catalog">
             <img src="asset/ternak.jpg" class="card-img-top" alt="asset/ternak.jpg" >
             <h4 class="text-center mt-2 mb-3">Data Ternak</h4>
             <div class="d-grid gap-2 col-6 mx-auto mt-5 mb-3">
@@ -40,13 +47,6 @@
             <h4 class="text-center mt-2 mb-3">Data Ikan</h4>
             <div class="d-grid gap-2 col-6 mx-auto mt-5 mb-3">
                 <a href="dataIkan" class="btn btn-primary" type="button">Input Data</a>
-            </div>
-        </div>
-        <div class="catalog">
-            <img src="asset/buah.jpg" class="card-img-top" alt="asset/buah.jpg">
-            <h4 class="text-center mt-2 mb-3">Data Buah</h4>
-            <div class="d-grid gap-2 col-6 mx-auto mt-5 mb-3">
-                <a href="dataBuah" class="btn btn-primary" type="button">Input Data</a>
             </div>
         </div>
         <div class="catalog">

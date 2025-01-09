@@ -22,11 +22,13 @@ class DataBuah extends BaseController
 
     public function index()
     {
+        // Ambil filter dari query string (GET parameter)
+        $filter = $this->request->getGet('filter');
 
         $data = [
             'tittle' => 'Data Buah | Buruan SAE',
             'validation' => \Config\Services::validation(),
-            'data_buah' => $this->dataBuahModel->getDataBuah()
+            'data_buah' => $this->dataBuahModel->getDataBuah(false, $filter)
         ];
 
         return view('pages/dataBuah', $data);
@@ -70,6 +72,12 @@ class DataBuah extends BaseController
                 'rules' => 'required',
                 'errors' => [
                     'required' => 'Masukkan jumlah pohon buah yang ditanam'
+                ]
+            ],
+            'waktu_prakiraan_panen' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Maukkan Tanggal Waktu Prakiran Panen'
                 ]
             ]
         ])) {
@@ -204,57 +212,74 @@ class DataBuah extends BaseController
                     'numeric' => 'Masukkan angka'
                 ]
             ],
-            'konsumsi_lokal_kg' => [
-                'rules' => 'required', 'numeric',
+            'jumlah_berat_kp_kg' => [
+                'rules' => 'required|numeric',
                 'errors' => [
-                    'required' => 'Masukkan jumlah konsumsi lokal',
-                    'numeric' => 'Masukkan angka'
+                    'required' => 'Masukkan Jumlah Konsumsi Lokal !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
                 ]
             ],
-            'konsumsi_kk' => [
-                'rules' => 'required', 'numeric',
+            'jumlah_kepala_keluarga_kp_kk' => [
+                'rules' => 'required|numeric',
                 'errors' => [
-                    'required' => 'Masukkan jumlah konsumsi KK',
-                    'numeric' => 'Masukkan angka'
+                    'required' => 'Masukkan Jumlah Konsumsi KK !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
                 ]
             ],
-            'konsumsi_orang' => [
-                'rules' => 'required', 'numeric',
+            'jumlah_orang_kp' => [
+                'rules' => 'required|numeric',
                 'errors' => [
-                    'required' => 'Masukkan jumlah konsumsi orang',
-                    'numeric' => 'Masukkan angka'
+                    'required' => 'Masukkan Jumlah Konsumsi Orang !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
                 ]
             ],
-            'jumlah_jual' => [
-                'rules' => 'required', 'numeric',
+            'dibagikan' => [
+                'rules' => 'required|is_array',
                 'errors' => [
-                    'required' => 'Masukkan jumlah jumlah penjualan',
-                    'numeric' => 'Masukkan angka'
+                    'required' => 'Pilih minimal satu kategori untuk dibagikan!',
+                    'is_array' => 'Format input tidak valid!',
                 ]
             ],
-            'harga_jual' => [
-                'rules' => 'required', 'numeric',
+            'jumlah_berat_dibagikan_kg' => [
+                'rules' => 'required|numeric',
                 'errors' => [
-                    'required' => 'Masukkan total harga penjualan',
-                    'numeric' => 'Masukkan angka'
+                    'required' => 'Masukkan Total Berat Dibagikan !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
                 ]
             ],
-            'lokasi_pembeli' => [
-                'rules' => 'required',
+            'jumlah_kepala_keluarga_dibagikan_kk' => [
+                'rules' => 'required|numeric',
                 'errors' => [
-                    'required' => 'Masukkan lokasi pembeli'
+                    'required' => 'Masukkan Total Kepala Keluarga Dibagikan !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
                 ]
             ],
-            'dukungan_program_lain' => [
-                'rules' => 'required',
+            'jumlah_orang_dibagikan' => [
+                'rules' => 'required|numeric',
                 'errors' => [
-                    'required' => 'Masukkan dukungan program lainnya'
+                    'required' => 'Masukkan Total Orang Dibagikan !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
                 ]
             ],
-            'data_pendukung' => [
-                'rules' => 'required',
+            'jumlah_berat_dijual_kg' => [
+                'rules' => 'required|numeric',
                 'errors' => [
-                    'required' => 'Masukkan data pendukung'
+                    'required' => 'Masukkan Total Berat Dijual !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
+                ]
+            ],
+            'jumlah_kepala_keluarga_dijual_kk' => [
+                'rules' => 'required|numeric',
+                'errors' => [
+                    'required' => 'Masukkan Total Kepala Keluarga Dijual !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
+                ]
+            ],
+            'jumlah_orang_dijual' => [
+                'rules' => 'required|numeric',
+                'errors' => [
+                    'required' => 'Masukkan Total Orang Dijual !!',
+                    'numeric' => 'Masukan harus berupa angka !!'
                 ]
             ],
             'gambar' => [
@@ -284,14 +309,16 @@ class DataBuah extends BaseController
             'jenis_pupuk' => $this->request->getVar('jenis_pupuk'),
             'jumlah_panen' => $this->request->getVar('jumlah_panen'),
             'jumlah_pupuk' => $this->request->getVar('jumlah_pupuk'),
-            'konsumsi_lokal_kg' => $this->request->getVar('konsumsi_lokal_kg'),
-            'konsumsi_kk' => $this->request->getVar('konsumsi_kk'),
-            'konsumsi_orang' => $this->request->getVar('konsumsi_orang'),
-            'jumlah_jual' => $this->request->getVar('jumlah_jual'),
-            'harga_jual' => $this->request->getVar('harga_jual'),
-            'lokasi_pembeli' => $this->request->getVar('lokasi_pembeli'),
-            'dukungan_program_lain' => $this->request->getVar('dukungan_program_lain'),
-            'data_pendukung' => $this->request->getVar('data_pendukung'),
+            'jumlah_berat_kp_kg' => $this->request->getVar('jumlah_berat_kp_kg'),
+            'jumlah_kepala_keluarga_kp_kk' => $this->request->getVar('jumlah_kepala_keluarga_kp_kk'),
+            'jumlah_orang_kp' => $this->request->getVar('jumlah_orang_kp'),
+            'dibagikan' => json_encode($this->request->getVar('dibagikan')),
+            'jumlah_berat_dibagikan_kg' => $this->request->getVar('jumlah_berat_dibagikan_kg'),
+            'jumlah_kepala_keluarga_dibagikan_kk' => $this->request->getVar('jumlah_kepala_keluarga_dibagikan_kk'),
+            'jumlah_orang_dibagikan' => $this->request->getVar('jumlah_orang_dibagikan'),
+            'jumlah_berat_dijual_kg' => $this->request->getVar('jumlah_berat_dijual_kg'),
+            'jumlah_kepala_keluarga_dijual_kk' => $this->request->getVar('jumlah_kepala_keluarga_dijual_kk'),
+            'jumlah_orang_dijual' => $this->request->getVar('jumlah_orang_dijual'),
             'gambar' => $namaGambar
         ]);
 

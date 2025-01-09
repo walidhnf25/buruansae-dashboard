@@ -9,10 +9,15 @@
                 <?= csrf_field(); ?>
                 <div class="mb-3">
                     <label for="nama_sayur" class="form-label">Nama Sayur</label>
-                    <select class="form-select <?= ($validation->hasError('nama_sayur')) ? 'is-invalid' : ''; ?>" name="nama_sayur" id="nama_sayur">
+                    <select class="form-select <?= ($validation->hasError('nama_sayur')) ? 'is-invalid' : ''; ?>" 
+                            name="nama_sayur" 
+                            id="nama_sayur" 
+                            onchange="updatePrakiraanPanen()">
                         <option value="" class="hidden" style="display: none;">--Pilih Sayur--</option>
                         <?php foreach ($komoditi as $k) : ?>
-                            <option value="<?= $k['nama_komoditi'] ?>"><?= $k['nama_komoditi'] ?></option>
+                            <option value="<?= $k['nama_komoditi'] ?>" data-durasi="<?= $k['durasi_tanam'] ?>">
+                                <?= $k['nama_komoditi'] ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                     <div class="invalid-feedback">
@@ -45,13 +50,6 @@
                     <input type="text" name="kelurahan" id="kelurahan" class="form-control" readonly>
                 </div>
                 <div class="mb-3">
-                    <label for="tanggal_tanam" class="form-label">Tanggal Tanam</label>
-                    <input type="date" class="form-control <?= ($validation->hasError('tanggal_tanam')) ? 'is-invalid' : ''; ?>" id="tanggal_tanam" name="tanggal_tanam">
-                    <div class="invalid-feedback">
-                        <?= $validation->getError('tanggal_tanam'); ?>
-                    </div>
-                </div>
-                <div class="mb-3">
                     <label for="kategori_tumbuhan" class="form-label">Kategori Tumbuhan</label>
                     <input hidden type="text" class="form-control <?= ($validation->hasError('kategori_tumbuhan')) ? 'is-invalid' : ''; ?>" id="kategori_tumbuhan" name="kategori_tumbuhan">
                     <div class="radio">
@@ -75,6 +73,26 @@
                         <?= $validation->getError('jumlah_tanam'); ?>
                     </div>
                 </div>
+                <div class="mb-3">
+                    <label for="tanggal_tanam" class="form-label">Tanggal Tanam</label>
+                    <input type="date" 
+                        class="form-control <?= ($validation->hasError('tanggal_tanam')) ? 'is-invalid' : ''; ?>" 
+                        id="tanggal_tanam" 
+                        name="tanggal_tanam" 
+                        onchange="updatePrakiraanPanen()">
+                    <div class="invalid-feedback">
+                        <?= $validation->getError('tanggal_tanam'); ?>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="waktu_prakiraan_panen" class="form-label">Waktu Prakiraan Panen</label>
+                    <input type="date" 
+                        class="form-control" 
+                        id="waktu_prakiraan_panen" 
+                        name="waktu_prakiraan_panen" 
+                        readonly>
+                </div>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
                     <a href="<?= base_url(); ?>/dataSayur" class="btn btn-secondary" type="button">Kembali</a>
                     <button type="submit" class="btn btn-primary">Tambah</button>
@@ -87,32 +105,55 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
+        // Update input field values when id_kelompok is changed
         $('select[name="id_kelompok"]').change(function() {
-            var selectedOption = $(this).find('option:selected');
-            var penyuluh = selectedOption.data('penyuluh');
-            var pendamping = selectedOption.data('pendamping');
-            var kecamatan = selectedOption.data('kecamatan');
-            var kelurahan = selectedOption.data('kelurahan');
+            const selectedOption = $(this).find('option:selected');
+            const penyuluh = selectedOption.data('penyuluh') || '';
+            const pendamping = selectedOption.data('pendamping') || '';
+            const kecamatan = selectedOption.data('kecamatan') || '';
+            const kelurahan = selectedOption.data('kelurahan') || '';
+            
+            // Set the values in the respective input fields
             $('input[name="penyuluh"]').val(penyuluh);
             $('input[name="pendamping"]').val(pendamping);
             $('input[name="kecamatan"]').val(kecamatan);
             $('input[name="kelurahan"]').val(kelurahan);
         });
+
+        // Update waktu_prakiraan_panen when nama_sayur or tanggal_tanam changes
+        $('#nama_sayur, #tanggal_tanam').on('change', updatePrakiraanPanen);
     });
-</script>
 
-<!-- <script>
-    $('#nama_kelompok', on('change', (event) => {
-        getnamakelompok(event.target.kelompok).then(data_sayur => {
-            $('kecamatan').val(data_sayur.kecamatan);
-            $('kelurahan').val(data_sayur.kelurahan);
-        });
-    }));
-    async function getnamakelompok(id_sayur){
-        let response = await fetch('/api/DataSayur/' + id_sayur);
-        let data = await response.json();
+    // Function to calculate and update waktu_prakiraan_panen
+    function updatePrakiraanPanen() {
+        // Get elements
+        const namaSayurSelect = document.getElementById('nama_sayur');
+        const tanggalTanamInput = document.getElementById('tanggal_tanam');
+        const waktuPrakiraanPanenInput = document.getElementById('waktu_prakiraan_panen');
+        
+        // Get durasi tanam from selected option
+        const selectedOption = namaSayurSelect.options[namaSayurSelect.selectedIndex];
+        const durasiTanam = parseInt(selectedOption.getAttribute('data-durasi')) || 0;
+        
+        // Get tanggal_tanam value
+        const tanggalTanam = tanggalTanamInput.value;
 
-        return data;
+        if (tanggalTanam && durasiTanam) {
+            // Parse tanggal_tanam into a date object
+            const tanamDate = new Date(tanggalTanam);
+
+            // Add durasiTanam days to the date
+            tanamDate.setDate(tanamDate.getDate() + durasiTanam);
+
+            // Format date into yyyy-mm-dd
+            const panenDate = tanamDate.toISOString().split('T')[0];
+
+            // Set value to waktu_prakiraan_panen input
+            waktuPrakiraanPanenInput.value = panenDate;
+        } else {
+            // Clear waktu_prakiraan_panen if inputs are invalid
+            waktuPrakiraanPanenInput.value = '';
+        }
     }
-</script> -->
+</script>
 <?= $this->endSection(); ?>

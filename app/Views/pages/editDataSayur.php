@@ -74,6 +74,10 @@
                         <?= $validation->getError('jumlah_tanam'); ?>
                     </div>
                 </div>
+                <div class="mb-3">
+                    <label for="waktu_prakiraan_panen" class="form-label">Waktu Prakiraan Panen</label>
+                    <input type="date" class="form-control <?= ($validation->hasError('waktu_prakiraan_panen')) ? 'is-invalid' : ''; ?>" id="waktu_prakiraan_panen" name="waktu_prakiraan_panen" value="<?= old('waktu_prakiraan_panen'); ?>">
+                </div>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
                     <a href="<?= base_url(); ?>/dataSayur" class="btn btn-secondary" type="button">Kembali</a>
                     <button class="btn btn-primary me-md-2" type="submit">Ubah</button>
