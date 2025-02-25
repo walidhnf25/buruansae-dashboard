@@ -17,6 +17,7 @@ class DataSayur extends BaseController
         $this->dataSayurModel = new dataSayurModel();
         $this->dataKelompokModel = new dataKelompokModel();
         $this->dataKomoditiModel = new DataKomoditiModel();
+        $this->db = \Config\Database::connect();
     }
 
     public function index()
@@ -26,8 +27,9 @@ class DataSayur extends BaseController
 
         $data = [
             'tittle' => 'Data Sayur | Buruan SAE',
-            // Kirim filter ke model
             'data_sayur' => $this->dataSayurModel->getDataSayur(false, $filter),
+            'komoditi' => $this->db->table('data_komoditi')->get()->getResultArray(),
+            'filter' => $filter,
             'validation' => \Config\Services::validation()
         ];
 
@@ -49,69 +51,76 @@ class DataSayur extends BaseController
     }
 
     public function save()
-{
-    // validasi input
-    if (!$this->validate([
-        'nama_sayur' => [
-            'rules' => 'required',
-            'errors' => [
-                'required' => 'Pilih sayur terlebih dahulu'
+    {
+        // validasi input
+        if (!$this->validate([
+            'nama_sayur' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Pilih sayur terlebih dahulu'
+                ]
+            ],
+            'tanggal_tanam' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Pilih tanggal'
+                ]
+            ],
+            'kategori_tumbuhan' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Pilih kategori tumbuhan'
+                ]
+            ],
+            'jumlah_tanam' => [
+                'rules' => 'required|numeric',
+                'errors' => [
+                    'required' => 'Masukkan jumlah sayur yang ditanam',
+                    'numeric' => 'Masukan berupa angka'
+                ]
+            ],
+            'prakiraan_jumlah_panen' => [
+                'rules' => 'required|decimal',
+                'errors' => [
+                    'required' => 'Masukkan prakiraan jumlah panen yang dihasilkan',
+                    'decimal' => 'Masukan berupa angka'
+                ]
             ]
-        ],
-        'tanggal_tanam' => [
-            'rules' => 'required',
-            'errors' => [
-                'required' => 'Pilih tanggal'
-            ]
-        ],
-        'kategori_tumbuhan' => [
-            'rules' => 'required',
-            'errors' => [
-                'required' => 'Pilih kategori tumbuhan'
-            ]
-        ],
-        'jumlah_tanam' => [
-            'rules' => 'required|numeric',
-            'errors' => [
-                'required' => 'Masukkan jumlah sayur yang ditanam',
-                'numeric' => 'Masukan berupa angka'
-            ]
-        ]
-    ])) {
-        $validation = \Config\Services::validation();
-        return redirect()->to('/dataSayur/tambahDataSayur')->withInput()->with('validation', $validation);
+        ])) {
+            $validation = \Config\Services::validation();
+            return redirect()->to('/dataSayur/tambahDataSayur')->withInput()->with('validation', $validation);
+        }
+
+        // Ambil data durasi tanam dari tabel data_komoditi
+        $nama_sayur = $this->request->getVar('nama_sayur');
+        $tanggal_tanam = $this->request->getVar('tanggal_tanam');
+        $komoditiModel = new \App\Models\DataKomoditiModel(); // Asumsikan model untuk tabel data_komoditi
+        $komoditi = $komoditiModel->where('nama_komoditi', $nama_sayur)->first();
+
+        if (!$komoditi) {
+            session()->setFlashdata('error', 'Data komoditi tidak ditemukan.');
+            return redirect()->to('/dataSayur/tambahDataSayur')->withInput();
+        }
+
+        $durasi_tanam = $komoditi['durasi_tanam']; // Ambil durasi_tanam dari tabel data_komoditi
+
+        // Hitung waktu prakiraan panen
+        $waktu_prakiraan_panen = date('Y-m-d', strtotime($tanggal_tanam . " + $durasi_tanam days"));
+
+        // Simpan data ke database
+        $this->dataSayurModel->save([
+            'nama_sayur' => $nama_sayur,
+            'id_kelompok' => $this->request->getVar('id_kelompok'),
+            'tanggal_tanam' => $tanggal_tanam,
+            'kategori_tumbuhan' => $this->request->getVar('kategori_tumbuhan'),
+            'jumlah_tanam' => $this->request->getVar('jumlah_tanam'),
+            'prakiraan_jumlah_panen' => $this->request->getVar('prakiraan_jumlah_panen'),
+            'waktu_prakiraan_panen' => $waktu_prakiraan_panen
+        ]);
+
+        session()->setFlashdata('pesan', 'Data berhasil ditambahkan.');
+        return redirect()->to('/dataSayur');
     }
-
-    // Ambil data durasi tanam dari tabel data_komoditi
-    $nama_sayur = $this->request->getVar('nama_sayur');
-    $tanggal_tanam = $this->request->getVar('tanggal_tanam');
-    $komoditiModel = new \App\Models\KomoditiModel(); // Asumsikan model untuk tabel data_komoditi
-    $komoditi = $komoditiModel->where('nama_komoditi', $nama_sayur)->first();
-
-    if (!$komoditi) {
-        session()->setFlashdata('error', 'Data komoditi tidak ditemukan.');
-        return redirect()->to('/dataSayur/tambahDataSayur')->withInput();
-    }
-
-    $durasi_tanam = $komoditi['durasi_tanam']; // Ambil durasi_tanam dari tabel data_komoditi
-
-    // Hitung waktu prakiraan panen
-    $waktu_prakiraan_panen = date('Y-m-d', strtotime($tanggal_tanam . " + $durasi_tanam days"));
-
-    // Simpan data ke database
-    $this->dataSayurModel->save([
-        'nama_sayur' => $nama_sayur,
-        'id_kelompok' => $this->request->getVar('id_kelompok'),
-        'tanggal_tanam' => $tanggal_tanam,
-        'kategori_tumbuhan' => $this->request->getVar('kategori_tumbuhan'),
-        'jumlah_tanam' => $this->request->getVar('jumlah_tanam'),
-        'waktu_prakiraan_panen' => $waktu_prakiraan_panen
-    ]);
-
-    session()->setFlashdata('pesan', 'Data berhasil ditambahkan.');
-    return redirect()->to('/dataSayur');
-}
-
 
     public function delete($id_sayur)
     {
@@ -124,13 +133,19 @@ class DataSayur extends BaseController
 
     public function editDataSayur($id_sayur)
     {
+        $sayur = $this->dataSayurModel->getDataSayur($id_sayur);
+
+        // Ambil data `durasi_tanam` dari tabel `data_komoditi` berdasarkan nama sayur
+        $komoditi = $this->dataKomoditiModel->where('nama_komoditi', $sayur['nama_sayur'])->first();
+        $durasi_tanam = $komoditi['durasi_tanam'] ?? null;
+    
         $data = [
             'tittle' => 'Data Sayur | Buruan SAE',
             'validation' => \Config\Services::validation(),
-            'sayur' => $this->dataSayurModel->getDataSayur($id_sayur),
+            'sayur' => $sayur,
+            'durasi_tanam' => $durasi_tanam,
             'kelompok' => $this->dataKelompokModel->getDataKelompok(),
             'komoditi' => $this->dataKomoditiModel->where('sektor', 'SAYUR')->findAll(),
-
         ];
 
         return view('pages/editDataSayur', $data);
@@ -164,6 +179,13 @@ class DataSayur extends BaseController
                     'numeric' => 'Masukan berupa angka'
                 ]
             ],
+            'prakiraan_jumlah_panen' => [
+                'rules' => 'required|decimal',
+                'errors' => [
+                    'required' => 'Masukkan prakiraan jumlah panen yang dihasilkan',
+                    'decimal' => 'Masukan berupa angka'
+                ]
+            ],
             'waktu_prakiraan_panen' => [
                 'rules' => 'required',
                 'errors' => [
@@ -181,6 +203,7 @@ class DataSayur extends BaseController
             'tanggal_tanam' => $this->request->getVar('tanggal_tanam'),
             'kategori_tumbuhan' => $this->request->getVar('kategori_tumbuhan'),
             'jumlah_tanam' => $this->request->getVar('jumlah_tanam'),
+            'prakiraan_jumlah_panen' => $this->request->getVar('prakiraan_jumlah_panen'),
             'waktu_prakiraan_panen' => $this->request->getVar('waktu_prakiraan_panen'),
         ];
 
@@ -242,27 +265,84 @@ class DataSayur extends BaseController
                     'decimal' => 'Masukan harus berupa angka !!'
                 ]
             ],
-            'dibagikan' => [
-                'rules' => 'is_array|permit_empty',
-                'errors' => [
-                    'is_array' => 'Format input tidak valid!',
-                ]
-            ],
-            'jumlah_berat_dibagikan_kg' => [
+            'jumlah_berat_dibagikan_stunting_kg' => [
                 'rules' => 'required|decimal',
                 'errors' => [
                     'required' => 'Masukkan Total Berat Dibagikan !!',
                     'decimal' => 'Masukan harus berupa angka !!'
                 ]
             ],
-            'jumlah_kepala_keluarga_dibagikan_kk' => [
+            'jumlah_kepala_keluarga_dibagikan_stunting' => [
                 'rules' => 'required|decimal',
                 'errors' => [
                     'required' => 'Masukkan Total Kepala Keluarga Dibagikan !!',
                     'decimal' => 'Masukan harus berupa angka !!'
                 ]
             ],
-            'jumlah_orang_dibagikan' => [
+            'jumlah_orang_dibagikan_stunting' => [
+                'rules' => 'required|decimal',
+                'errors' => [
+                    'required' => 'Masukkan Total Orang Dibagikan !!',
+                    'decimal' => 'Masukan harus berupa angka !!'
+                ]
+            ],
+            'jumlah_berat_dibagikan_mm_kg' => [
+                'rules' => 'required|decimal',
+                'errors' => [
+                    'required' => 'Masukkan Total Berat Dibagikan !!',
+                    'decimal' => 'Masukan harus berupa angka !!'
+                ]
+            ],
+            'jumlah_kepala_keluarga_dibagikan_mm' => [
+                'rules' => 'required|decimal',
+                'errors' => [
+                    'required' => 'Masukkan Total Kepala Keluarga Dibagikan !!',
+                    'decimal' => 'Masukan harus berupa angka !!'
+                ]
+            ],
+            'jumlah_orang_dibagikan_mm' => [
+                'rules' => 'required|decimal',
+                'errors' => [
+                    'required' => 'Masukkan Total Orang Dibagikan !!',
+                    'decimal' => 'Masukan harus berupa angka !!'
+                ]
+            ],
+            'jumlah_berat_dibagikan_lansia_kg' => [
+                'rules' => 'required|decimal',
+                'errors' => [
+                    'required' => 'Masukkan Total Berat Dibagikan !!',
+                    'decimal' => 'Masukan harus berupa angka !!'
+                ]
+            ],
+            'jumlah_kepala_keluarga_dibagikan_lansia' => [
+                'rules' => 'required|decimal',
+                'errors' => [
+                    'required' => 'Masukkan Total Kepala Keluarga Dibagikan !!',
+                    'decimal' => 'Masukan harus berupa angka !!'
+                ]
+            ],
+            'jumlah_orang_dibagikan_lansia' => [
+                'rules' => 'required|decimal',
+                'errors' => [
+                    'required' => 'Masukkan Total Orang Dibagikan !!',
+                    'decimal' => 'Masukan harus berupa angka !!'
+                ]
+            ],
+            'jumlah_berat_dibagikan_posyandu_kg' => [
+                'rules' => 'required|decimal',
+                'errors' => [
+                    'required' => 'Masukkan Total Berat Dibagikan !!',
+                    'decimal' => 'Masukan harus berupa angka !!'
+                ]
+            ],
+            'jumlah_kepala_keluarga_dibagikan_posyandu' => [
+                'rules' => 'required|decimal',
+                'errors' => [
+                    'required' => 'Masukkan Total Kepala Keluarga Dibagikan !!',
+                    'decimal' => 'Masukan harus berupa angka !!'
+                ]
+            ],
+            'jumlah_orang_dibagikan_posyandu' => [
                 'rules' => 'required|decimal',
                 'errors' => [
                     'required' => 'Masukkan Total Orang Dibagikan !!',
@@ -304,10 +384,28 @@ class DataSayur extends BaseController
             return redirect()->to('dataSayur/dataPanenSayur/' . $this->request->getVar('id_sayur'))->withInput()->with('validation', $validation);
         }
 
-        // ambil gambar
+        // Ambil file gambar
         $fileGambar = $this->request->getFile('gambar');
-        $namaGambar = $fileGambar->getRandomName();
-        $fileGambar->move('asset', $namaGambar);
+
+        // Jika ukuran gambar lebih dari 3 MB, kompres gambar
+        $maxSize = 3 * 1024 * 1024; // 3 MB dalam byte
+        if ($fileGambar->getSize() > $maxSize) {
+            // Buat nama baru untuk gambar
+            $namaGambar = $fileGambar->getRandomName();
+
+            // Kompres gambar menggunakan Intervention Image
+            $image = Image::make($fileGambar->getTempName());
+            $image->resize(1920, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+            $image->save('asset/' . $namaGambar, 80); // Simpan dengan kualitas 80
+
+        } else {
+            // Jika ukuran gambar sudah sesuai, langsung pindahkan
+            $namaGambar = $fileGambar->getRandomName();
+            $fileGambar->move('asset', $namaGambar);
+        }
 
         $this->dataSayurModel->save([
             'id_sayur' => $id_sayur,
@@ -316,14 +414,21 @@ class DataSayur extends BaseController
             'jumlah_berat_kp_kg' => $this->request->getVar('jumlah_berat_kp_kg'),
             'jumlah_kepala_keluarga_kp_kk' => $this->request->getVar('jumlah_kepala_keluarga_kp_kk'),
             'jumlah_orang_kp' => $this->request->getVar('jumlah_orang_kp'),
-            'dibagikan' => json_encode($this->request->getVar('dibagikan')),
-            'jumlah_berat_dibagikan_kg' => $this->request->getVar('jumlah_berat_dibagikan_kg'),
-            'jumlah_kepala_keluarga_dibagikan_kk' => $this->request->getVar('jumlah_kepala_keluarga_dibagikan_kk'),
-            'jumlah_orang_dibagikan' => $this->request->getVar('jumlah_orang_dibagikan'),
+            'jumlah_berat_dibagikan_stunting_kg' => $this->request->getVar('jumlah_berat_dibagikan_stunting_kg'),
+            'jumlah_kepala_keluarga_dibagikan_stunting' => $this->request->getVar('jumlah_kepala_keluarga_dibagikan_stunting'),
+            'jumlah_orang_dibagikan_stunting' => $this->request->getVar('jumlah_orang_dibagikan_stunting'),
+            'jumlah_berat_dibagikan_mm_kg' => $this->request->getVar('jumlah_berat_dibagikan_mm_kg'),
+            'jumlah_kepala_keluarga_dibagikan_mm' => $this->request->getVar('jumlah_kepala_keluarga_dibagikan_mm'),
+            'jumlah_orang_dibagikan_mm' => $this->request->getVar('jumlah_orang_dibagikan_mm'),
+            'jumlah_berat_dibagikan_lansia_kg' => $this->request->getVar('jumlah_berat_dibagikan_lansia_kg'),
+            'jumlah_kepala_keluarga_dibagikan_lansia' => $this->request->getVar('jumlah_kepala_keluarga_dibagikan_lansia'),
+            'jumlah_orang_dibagikan_lansia' => $this->request->getVar('jumlah_orang_dibagikan_lansia'),
+            'jumlah_berat_dibagikan_posyandu_kg' => $this->request->getVar('jumlah_berat_dibagikan_posyandu_kg'),
+            'jumlah_kepala_keluarga_dibagikan_posyandu' => $this->request->getVar('jumlah_kepala_keluarga_dibagikan_posyandu'),
+            'jumlah_orang_dibagikan_posyandu' => $this->request->getVar('jumlah_orang_dibagikan_posyandu'),
             'jumlah_berat_dijual_kg' => $this->request->getVar('jumlah_berat_dijual_kg'),
             'jumlah_kepala_keluarga_dijual_kk' => $this->request->getVar('jumlah_kepala_keluarga_dijual_kk'),
             'jumlah_orang_dijual' => $this->request->getVar('jumlah_orang_dijual'),
-            'jumlah_jual' => $this->request->getVar('jumlah_jual'),
             'harga_jual' => $this->request->getVar('harga_jual'),
             'gambar' => $namaGambar
         ]);

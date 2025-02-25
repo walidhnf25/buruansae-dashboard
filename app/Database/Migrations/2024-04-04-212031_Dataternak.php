@@ -29,11 +29,6 @@ class Dataternak extends Migration
                 'constraint' => '255',
                 'null' => false
             ],
-            'jumlah_pakan' => [
-                'type' => 'INT',
-                'constraint' => 11,
-                'null' => false
-            ],
             'jumlah_ternak' => [
                 'type' => 'double',
                 'null' => false
@@ -42,9 +37,55 @@ class Dataternak extends Migration
                 'type' => 'DATE',
                 'null' => true
             ],
-            'jumlah_panen' => [
-                'type' => 'DOUBLE',
+            'jumlah_panen_kg' => [
+                'type' => 'FLOAT',
                 'null' => true
+            ],
+            'jumlah_panen_ekor' => [
+                'type' => 'double',
+                'null' => true
+            ],
+            'jumlah_berat_kp_kg' => [
+                'type'       => 'FLOAT',
+                'null'       => true,
+            ],
+            'jumlah_kepala_keluarga_kp_kk' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'jumlah_orang_kp' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'dibagikan' => [
+                'type'       => 'TEXT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'jumlah_berat_dibagikan_kg' => [
+                'type'       => 'FLOAT',
+                'null'       => true,
+            ],
+            'jumlah_kepala_keluarga_dibagikan_kk' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'jumlah_orang_dibagikan' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'jumlah_berat_dijual_kg' => [
+                'type'       => 'FLOAT',
+                'null'       => true,
+            ],
+            'jumlah_orang_dijual' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
             ],
             'konsumsi_lokal_kg' => [
                 'type' => 'INT',

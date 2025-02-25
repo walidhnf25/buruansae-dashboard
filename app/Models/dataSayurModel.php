@@ -9,10 +9,8 @@ class dataSayurModel extends Model
     protected $table      = 'data_sayur';
     protected $primaryKey = 'id_sayur';
     protected $allowedFields = [
-        'id_kelompok', 'nama_sayur', 'tanggal_tanam', 'kategori_tumbuhan', 'jumlah_tanam', 'waktu_prakiraan_panen', 'waktu_panen',
-        'jumlah_panen', 'konsumsi_lokal_kg', 'konsumsi_kk', 'konsumsi_orang', 'jumlah_jual', 'harga_jual',
-        'lokasi_pembeli', 'dukungan_program_lain', 'data_pendukung', 'gambar', 'jumlah_berat_kp_kg', 'jumlah_kepala_keluarga_kp_kk', 'jumlah_orang_kp', 'dibagikan', 'jumlah_berat_dibagikan_kg', 'jumlah_kepala_keluarga_dibagikan_kk',
-        'jumlah_orang_dibagikan', 'jumlah_berat_dijual_kg', 'jumlah_kepala_keluarga_dijual_kk', 'jumlah_orang_dijual',
+        'id_kelompok', 'nama_sayur', 'tanggal_tanam', 'kategori_tumbuhan', 'jumlah_tanam', 'prakiraan_jumlah_panen', 'waktu_prakiraan_panen', 'waktu_panen', 'jumlah_panen', 'harga_jual', 'gambar', 'jumlah_berat_kp_kg', 'jumlah_kepala_keluarga_kp_kk', 'jumlah_orang_kp', 'jumlah_berat_dibagikan_stunting_kg', 'jumlah_kepala_keluarga_dibagikan_stunting',
+        'jumlah_orang_dibagikan_stunting', 'jumlah_berat_dibagikan_mm_kg', 'jumlah_kepala_keluarga_dibagikan_mm', 'jumlah_orang_dibagikan_mm', 'jumlah_berat_dibagikan_lansia_kg', 'jumlah_kepala_keluarga_dibagikan_lansia', 'jumlah_orang_dibagikan_lansia', 'jumlah_berat_dibagikan_posyandu_kg', 'jumlah_kepala_keluarga_dibagikan_posyandu', 'jumlah_orang_dibagikan_posyandu', 'jumlah_berat_dijual_kg', 'jumlah_orang_dijual'
     ];
 
     public function getDataSayur($id_sayur = false, $filter = null)
@@ -23,7 +21,7 @@ class dataSayurModel extends Model
 
         // Jika ID sayur diberikan, ambil data spesifik
         if ($id_sayur) {
-            return $builder->where('id_sayur', $id_sayur)->get()->getRowArray();
+            return $builder->where('id_sayur', $id_sayur)->get()->getRowArray() ?: [];
         }
 
         // Filter berdasarkan kondisi waktu_panen
@@ -34,7 +32,8 @@ class dataSayurModel extends Model
         }
 
         // Kembalikan semua data dengan filter (jika ada)
-        return $builder->get()->getResultArray();
+        $data = $builder->get()->getResultArray();
+        return !empty($data) ? $data : []; // Kembalikan array kosong jika tidak ada data
     }
 
     public function AlldataKelompok()

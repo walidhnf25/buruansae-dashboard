@@ -27,6 +27,7 @@
                     <th scope="col">Kecamatan</th>
                     <th scope="col">Kelurahan</th>
                     <th scope="col">RW</th>
+                    <th scope="col">Alamat</th>
                     <th scope="col">Kelompok</th>
                     <th scope="col">Status</th>
                 </tr>
@@ -41,6 +42,15 @@
                         <td><?= $kelompok['kecamatan']; ?></td>
                         <td><?= $kelompok['kelurahan']; ?></td>
                         <td><?= $kelompok['rw']; ?></td>
+                        <td>
+                            <?php if (!empty($kelompok['map'])) : ?>
+                                <a href="<?= $kelompok['map']; ?>" target="_blank" class="btn btn-primary btn-sm">
+                                    Lihat Maps
+                                </a>
+                            <?php else : ?>
+                                <span class="text-muted">-</span>
+                            <?php endif; ?>
+                        </td>
                         <td><?= $kelompok['nama_kelompok']; ?></td>
                         <td>
                             <?php if (isset($kelompok['id_kelompok'])) : ?>

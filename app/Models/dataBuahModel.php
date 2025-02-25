@@ -8,8 +8,8 @@ class dataBuahModel extends Model
 {
     protected $table      = 'data_buah';
     protected $primaryKey = 'id_buah';
-    protected $allowedFields = ['nama_buah', 'id_kelompok', 'tanggal_tanam', 'kategori_tumbuhan', 'jumlah_tanam','waktu_panen', 'jumlah_panen', 'konsumsi_lokal_kg', 'konsumsi_kk', 'konsumsi_orang', 'jumlah_jual', 'harga_jual', 'lokasi_pembeli', 'dukungan_program_lain', 'data_pendukung', 'gambar','jenis_pupuk','waktu_pupuk','jumlah_pupuk', 'jumlah_berat_kp_kg', 'jumlah_kepala_keluarga_kp_kk', 'jumlah_orang_kp', 'dibagikan', 'jumlah_berat_dibagikan_kg', 'jumlah_kepala_keluarga_dibagikan_kk',
-        'jumlah_orang_dibagikan', 'jumlah_berat_dijual_kg', 'jumlah_kepala_keluarga_dijual_kk', 'jumlah_orang_dijual',
+    protected $allowedFields = ['nama_buah', 'id_kelompok', 'tanggal_tanam', 'kategori_tumbuhan', 'jumlah_tanam','waktu_panen', 'jumlah_panen', 'harga_jual', 'gambar','jenis_pupuk','waktu_pupuk','jumlah_pupuk', 'prakiraan_jumlah_panen', 'waktu_prakiraan_panen', 'jumlah_berat_kp_kg', 'jumlah_kepala_keluarga_kp_kk', 'jumlah_orang_kp', 'jumlah_berat_dibagikan_stunting_kg', 'jumlah_kepala_keluarga_dibagikan_stunting',
+        'jumlah_orang_dibagikan_stunting', 'jumlah_berat_dibagikan_mm_kg', 'jumlah_kepala_keluarga_dibagikan_mm', 'jumlah_orang_dibagikan_mm', 'jumlah_berat_dibagikan_lansia_kg', 'jumlah_kepala_keluarga_dibagikan_lansia', 'jumlah_orang_dibagikan_lansia', 'jumlah_berat_dibagikan_posyandu_kg', 'jumlah_kepala_keluarga_dibagikan_posyandu', 'jumlah_orang_dibagikan_posyandu', 'jumlah_berat_dijual_kg', 'jumlah_orang_dijual',
     ];
 
     public function getDataBuah($id_buah = false, $filter = null)

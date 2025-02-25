@@ -9,10 +9,17 @@
                 <?= csrf_field(); ?>
                 <div class="mb-3">
                     <label for="nama_sayur" class="form-label">Nama Sayur</label>
-                    <select class="form-select <?= ($validation->hasError('nama_sayur')) ? 'is-invalid' : ''; ?>" name="nama_sayur" id="nama_sayur">
+                    <select class="form-select <?= ($validation->hasError('nama_sayur')) ? 'is-invalid' : ''; ?>" 
+                            name="nama_sayur" 
+                            id="nama_sayur" 
+                            onchange="updateDurasiTanam()">
                         <option value="" class="hidden" style="display: none;" disabled>Pilih Sayur</option>
                         <?php foreach ($komoditi as $k) : ?>
-                            <option value="<?= $k['nama_komoditi'] ?>" <?= old('nama_sayur') == $k['nama_komoditi'] ? 'selected' : ''; ?>><?= $k['nama_komoditi'] ?></option>
+                            <option value="<?= $k['nama_komoditi'] ?>" 
+                                    data-durasi="<?= $k['durasi_tanam'] ?>" 
+                                    <?= old('nama_sayur') == $k['nama_komoditi'] ? 'selected' : ''; ?>>
+                                <?= $k['nama_komoditi'] ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                     <div class="invalid-feedback">
@@ -75,8 +82,29 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="waktu_prakiraan_panen" class="form-label">Waktu Prakiraan Panen</label>
-                    <input type="date" class="form-control <?= ($validation->hasError('waktu_prakiraan_panen')) ? 'is-invalid' : ''; ?>" id="waktu_prakiraan_panen" name="waktu_prakiraan_panen" value="<?= old('waktu_prakiraan_panen'); ?>">
+                    <label for="prakiraan_jumlah_panen" class="form-label">Prakiraan Jumlah Panen (kg)</label>
+                    <input type="number" min="0" step="any" class="form-control <?= ($validation->hasError('prakiraan_jumlah_panen')) ? 'is-invalid' : ''; ?>" id="prakiraan_jumlah_panen" name="prakiraan_jumlah_panen" value="<?= (old('prakiraan_jumlah_panen')) ? old('prakiraan_jumlah_panen') : $sayur['prakiraan_jumlah_panen']; ?>">
+                    <div class="invalid-feedback">
+                        <?= $validation->getError('prakiraan_jumlah_panen'); ?>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="waktu_prakiraan_panen" class="form-label">Waktu Prakiraan Panen</label>
+                        <input type="date" class="form-control <?= ($validation->hasError('waktu_prakiraan_panen')) ? 'is-invalid' : ''; ?>" id="waktu_prakiraan_panen" name="waktu_prakiraan_panen" value="<?= (old('waktu_prakiraan_panen')) ? old('waktu_prakiraan_panen') : $sayur['waktu_prakiraan_panen']; ?>">
+                        <div class="invalid-feedback">
+                            <?= $validation->getError('waktu_prakiraan_panen'); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="durasi_tanam" class="form-label">Durasi Tanam (Hari)</label>
+                        <input type="number" min="1" class="form-control <?= ($validation->hasError('durasi_tanam')) ? 'is-invalid' : ''; ?>" 
+                            id="durasi_tanam" name="durasi_tanam" 
+                            value="<?= (old('durasi_tanam')) ? old('durasi_tanam') : $durasi_tanam; ?>">
+                        <div class="invalid-feedback">
+                            <?= $validation->getError('durasi_tanam'); ?>
+                        </div>
+                    </div>
                 </div>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
                     <a href="<?= base_url(); ?>/dataSayur" class="btn btn-secondary" type="button">Kembali</a>
@@ -87,6 +115,49 @@
     </div>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function updateDurasiTanam() {
+        const namaSayurSelect = document.getElementById('nama_sayur');
+        const durasiTanamInput = document.getElementById('durasi_tanam');
 
+        // Ambil data durasi dari opsi yang dipilih
+        const selectedOption = namaSayurSelect.options[namaSayurSelect.selectedIndex];
+        const durasiTanam = parseInt(selectedOption.getAttribute('data-durasi')) || 0;
 
+        // Update field durasi tanam
+        durasiTanamInput.value = durasiTanam;
+
+        // Panggil updatePrakiraanPanen untuk memperbarui prakiraan panen
+        updatePrakiraanPanen();
+    }
+
+    function updatePrakiraanPanen() {
+        const tanggalTanamInput = document.getElementById('tanggal_tanam');
+        const waktuPrakiraanPanenInput = document.getElementById('waktu_prakiraan_panen');
+        const durasiTanamInput = document.getElementById('durasi_tanam');
+
+        const tanggalTanam = tanggalTanamInput.value;
+        const durasiTanam = parseInt(durasiTanamInput.value) || 0;
+
+        if (tanggalTanam && durasiTanam) {
+            const tanamDate = new Date(tanggalTanam);
+
+            // Tambahkan durasi tanam ke tanggal tanam
+            tanamDate.setDate(tanamDate.getDate() + durasiTanam);
+
+            // Format tanggal menjadi yyyy-mm-dd
+            const panenDate = tanamDate.toISOString().split('T')[0];
+
+            // Update field waktu prakiraan panen
+            waktuPrakiraanPanenInput.value = panenDate;
+        } else {
+            // Kosongkan field jika input tidak valid
+            waktuPrakiraanPanenInput.value = '';
+        }
+    }
+
+    // Pasang event listener untuk input tanggal_tanam
+    document.getElementById('tanggal_tanam').addEventListener('change', updatePrakiraanPanen);
+</script>
 <?= $this->endSection(); ?>

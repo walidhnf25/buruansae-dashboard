@@ -73,6 +73,12 @@ class DataKelompok extends BaseController
                     'required' => 'Masukkan Nama RW'
                 ]
             ],
+            'map' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Masukkan Link Alamat'
+                ]
+            ],
             'nama_kelompok' => [
                 'rules' => 'required',
                 'errors' => [
@@ -89,6 +95,7 @@ class DataKelompok extends BaseController
             'kecamatan' => $this->request->getVar('kecamatan'),
             'kelurahan' => $this->request->getVar('kelurahan'),
             'rw' => $this->request->getVar('rw'),
+            'map' => $this->request->getVar('map'),
             'nama_kelompok' => $this->request->getVar('nama_kelompok'),
         ]);
 
@@ -165,6 +172,12 @@ class DataKelompok extends BaseController
                     'required' => 'Masukkan Nama RW'
                 ]
             ],
+            'map' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Masukkan Link Alamat'
+                ]
+            ],
             'nama_kelompok' => [
                 'rules' => 'required',
                 'errors' => [
@@ -182,6 +195,7 @@ class DataKelompok extends BaseController
             'kecamatan' => $this->request->getVar('kecamatan'),
             'kelurahan' => $this->request->getVar('kelurahan'),
             'rw' => $this->request->getVar('rw'),
+            'map' => $this->request->getVar('map'),
             'nama_kelompok' => $this->request->getVar('nama_kelompok'),
         ]);
 

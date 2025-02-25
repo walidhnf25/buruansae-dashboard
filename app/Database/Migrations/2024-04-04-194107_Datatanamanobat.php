@@ -47,12 +47,11 @@ class Datatanamanobat extends Migration
                 'null' => true
             ],
             'jumlah_panen' => [
-                'type' => 'DOUBLE',
+                'type' => 'FLOAT',
                 'null' => true
             ],
             'jumlah_berat_kp_kg' => [
-                'type'       => 'INT',
-                'constraint' => 255,
+                'type'       => 'FLOAT',
                 'null'       => true,
             ],
             'jumlah_kepala_keluarga_kp_kk' => [
@@ -71,8 +70,7 @@ class Datatanamanobat extends Migration
                 'null'       => true,
             ],
             'jumlah_berat_dibagikan_kg' => [
-                'type'       => 'INT',
-                'constraint' => 255,
+                'type'       => 'FLOAT',
                 'null'       => true,
             ],
             'jumlah_kepala_keluarga_dibagikan_kk' => [
@@ -86,12 +84,7 @@ class Datatanamanobat extends Migration
                 'null'       => true,
             ],
             'jumlah_berat_dijual_kg' => [
-                'type'       => 'INT',
-                'constraint' => 255,
-                'null'       => true,
-            ],
-            'jumlah_kepala_keluarga_dijual_kk' => [
-                'type'       => 'INT',
+                'type'       => 'FLOAT',
                 'constraint' => 255,
                 'null'       => true,
             ],

@@ -13,7 +13,6 @@
 
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="style.css"/>
-
     
     <title><?= $tittle ?></title>
   </head>

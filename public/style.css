@@ -369,3 +369,10 @@ img {
   width: 15rem;
   object-fit: cover;
 }
+
+a.btn.active {
+  background-color: #004085;
+  color: white;
+  font-weight: bold;
+  border-color: #003768;
+}

@@ -44,6 +44,13 @@
                     </div>
                 </div>
                 <div class="mb-3">
+                    <label for="map" class="form-label">Link Alamat</label>
+                    <input type="text" class="form-control <?= ($validation->hasError('map')) ? 'is-invalid' : ''; ?>" id="map" name="map" value="<?= (old('map')) ? old('map') : $kelompok['map']; ?>">
+                    <div class="invalid-feedback">
+                        <?= $validation->getError('map'); ?>
+                    </div>
+                </div>
+                <div class="mb-3">
                     <label for="nama_kelompok" class="form-label
                     ">Nama Kelompok</label>
                     <input type="text" class="form-control <?= ($validation->hasError('nama_kelompok')) ? 'is-invalid' : ''; ?>" id="nama_kelompok" name="nama_kelompok" value="<?= (old('nama_kelompok')) ? old('nama_kelompok') : $kelompok['nama_kelompok']; ?>">

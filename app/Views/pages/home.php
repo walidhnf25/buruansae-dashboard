@@ -8,8 +8,8 @@
     <header class="banner">
         <div class="teksbanner">
             <h2>Selamat Datang</h2>
-            <h3>Di Halaman Buruan Sae</h3>
-            <h4>Buruan Sae gerakan urban farming terintegrasi dari Dinas Ketahanan Pangan dan Pertanian Kota Bandung</h4>
+            <h3>Di Halaman BURUAN SAE</h3>
+            <h4>BURUAN SAE gerakan urban farming terintegrasi dari Dinas Ketahanan Pangan dan Pertanian Kota Bandung</h4>
         </div>
     </header>
 

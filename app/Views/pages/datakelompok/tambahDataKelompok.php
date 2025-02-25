@@ -41,6 +41,13 @@
             </div>
         </div>
         <div class="col-12 mb-3">
+            <label for="map" class="form-label">Tambahkan Link Alamat</label>
+            <input type="text" class="form-control <?= ($validation->hasError('map')) ? 'is-invalid' : ''; ?>" id="map" name="map" required>
+            <div class="invalid-feedback">
+                <?= $validation->getError('map'); ?>
+            </div>
+        </div>
+        <div class="col-12 mb-3">
             <label for="nama_kelompok" class="form-label">Insert Nama Kelompok</label>
             <input type="text" class="form-control <?= ($validation->hasError('nama_kelompok')) ? 'is-invalid' : ''; ?>" id="nama_kelompok" name="nama_kelompok" required>
             <div class="invalid-feedback">

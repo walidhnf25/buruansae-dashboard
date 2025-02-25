@@ -3,7 +3,7 @@
 <?= $this->section('content'); ?>
 <div class="container">
   <div class="tittle">
-    <h1 class="label-tambah-data"><b>Data Buah</b></h1>
+    <h1 class="label-tambah-data"><b id="headerTitle">Data Buah</b></h1>
     <?php if (session()->getFlashdata('pesan')) : ?>
       <div class="alert alert-success" role="alert">
         <?= session()->getFlashdata('pesan'); ?>
@@ -17,8 +17,27 @@
     </div>
     
     <div class="col-6 d-flex justify-content-center">
-        <a href="<?= base_url(); ?>/dataBuah?filter=sudah_panen" class="btn btn-success mx-2">Sudah Panen</a>
-        <a href="<?= base_url(); ?>/dataBuah?filter=akan_panen" class="btn btn-primary mx-2">Akan Panen</a>
+      <!-- Tombol Sudah Panen -->
+      <a href="<?= base_url(); ?>/dataBuah?filter=sudah_panen" 
+        class="btn btn-primary mx-2 d-flex align-items-center" 
+        id="btnSudahPanen">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-check me-2">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <path d="M5 12l5 5l10 -10" />
+          </svg>
+          Sudah Panen
+      </a>
+
+      <!-- Tombol Akan Panen -->
+      <a href="<?= base_url(); ?>/dataBuah?filter=akan_panen" 
+        class="btn btn-primary mx-2 d-flex align-items-center" 
+        id="btnAkanPanen">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icon-tabler-clock-hour-4 me-2">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <path d="M17 3.34a10 10 0 1 1 -15 8.66l.005 -.324a10 10 0 0 1 14.995 -8.336m-5 2.66a1 1 0 0 0 -1 1v5.026l.009 .105l.02 .107l.04 .129l.048 .102l.046 .078l.042 .06l.069 .08l.088 .083l.083 .062l3 2a1 1 0 1 0 1.11 -1.664l-2.555 -1.704v-4.464a1 1 0 0 0 -.883 -.993z"/>
+          </svg>
+          Akan Panen
+      </a>
     </div>
   </div>
 
@@ -35,8 +54,38 @@
           <th scope="col">Kelurahan</th>
           <th scope="col">RW</th>
           <th scope="col">Tanggal Tanam</th>
-          <th scope="col">Kategori Tumbuhan</th>
           <th scope="col">Jumlah Tanam</th>
+
+          <th scope="col">
+            <?php if (!empty($data_buah)) : ?>
+                <?php 
+                    $hasNull = false;
+                    $hasNonNull = false;
+                    
+                    foreach ($data_buah as $item) {
+                        if ($item['waktu_panen'] === null) {
+                            $hasNull = true;
+                        } else {
+                            $hasNonNull = true;
+                        }
+                        
+                        // Jika sudah ditemukan kedua kondisi, tidak perlu lanjut
+                        if ($hasNull && $hasNonNull) break;
+                    }
+                ?>
+                
+                <?php if ($hasNull && $hasNonNull) : ?>
+                    Waktu Panen/Waktu Prakiraan Panen
+                <?php elseif ($hasNull) : ?>
+                    Waktu Prakiraan Panen
+                <?php elseif ($hasNonNull) : ?>
+                    Waktu Panen
+                <?php endif; ?>
+            <?php else : ?>
+                Waktu Panen/Waktu Prakiraan Panen
+            <?php endif; ?>
+          </th>
+
           <th scope="col">Status</th>
         </tr>
       </thead>
@@ -53,29 +102,56 @@
             <td><?= $buah['kelurahan']; ?></td>
             <td><?= $buah['rw']; ?></td>
             <td><?= $buah['tanggal_tanam']; ?></td>
-            <td><?= $buah['kategori_tumbuhan']; ?></td>
-            <td><?= $buah['jumlah_tanam']; ?></td>
+            <td><?= $buah['jumlah_tanam'] . ' ' . $buah['kategori_tumbuhan'] . ''; ?></td>
+
+            <!-- Waktu Panen / Prakiraan Panen -->
+            <td>
+              <?php if ($buah['waktu_panen'] === null) : ?>
+                <!-- If waktu_panen is null, display Waktu Prakiraan Panen -->
+                <?= $buah['waktu_prakiraan_panen'] ?? '-'; ?>
+              <?php else : ?>
+                <!-- If waktu_panen is not null, display Waktu Panen -->
+                <?= $buah['waktu_panen'] ?? '-'; ?>
+              <?php endif; ?>
+            </td>
+
             <td>
               <?php if (!isset($buah['waktu_panen']) || $buah['waktu_panen'] == null) : ?>
-                <a href="<?= base_url(); ?>/dataBuah/dataPanenBuah/<?= $buah['id_buah']; ?>" class="btn btn-success mb-2">Panen</a>
-                <a href="<?= base_url(); ?>/dataBuah/editBuah/<?= $buah['id_buah']; ?>" class="btn btn-warning mb-2">Edit</a>
-                <?php if (isset($buah['id_buah'])) : ?>
-                  <form action="/dataBuah/<?= $buah['id_buah']; ?>" method="post" class="d-inline">
-                    <?= csrf_field(); ?>
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah anda yakin?');">Delete</button>
-                  </form>
-                <?php endif; ?>
+                  <!-- Ikon Panen -->
+                  <a href="<?= base_url(); ?>/dataBuah/dataPanenBuah/<?= $buah['id_buah']; ?>" class="text-success mx-2" title="Panen">
+                      <i class="fas fa-seedling"></i>
+                  </a>
+                  <!-- Ikon Edit -->
+                  <a href="<?= base_url(); ?>/dataBuah/editBuah/<?= $buah['id_buah']; ?>" class="text-warning mx-2" title="Edit">
+                      <i class="fas fa-edit"></i>
+                  </a>
+                  <!-- Ikon Delete -->
+                  <?php if (isset($buah['id_buah'])) : ?>
+                      <form action="/dataBuah/<?= $buah['id_buah']; ?>" method="post" class="d-inline">
+                          <?= csrf_field(); ?>
+                          <input type="hidden" name="_method" value="DELETE">
+                          <button type="submit" class="btn btn-link text-danger p-0 mx-2" title="Delete" onclick="return confirm('Apakah anda yakin?');">
+                              <i class="fas fa-trash-alt"></i>
+                          </button>
+                      </form>
+                  <?php endif; ?>
               <?php else : ?>
-                <span class="badge bg-success mb-2">Sudah Panen</span>
-                <a href="<?= base_url(); ?>/dataBuah/dataPanenBuah/<?= $buah['id_buah']; ?>" class="btn btn-warning mb-2">Edit Data Buah</a>
-                <?php if (isset($buah['id_buah'])) : ?>
-                  <form action="/dataBuah/<?= $buah['id_buah']; ?>" method="post" class="d-inline">
-                    <?= csrf_field(); ?>
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah anda yakin?');">Delete</button>
-                  </form>
-                <?php endif; ?>
+                  <!-- Badge Sudah Panen -->
+                  <span class="badge bg-success p-2" title="Sudah Panen">Sudah Panen</span>
+                  <!-- Ikon Edit Data Panen -->
+                  <a href="<?= base_url(); ?>/dataBuah/dataPanenBuah/<?= $buah['id_buah']; ?>" class="text-warning mx-2" title="Edit Data Panen">
+                      <i class="fas fa-edit"></i>
+                  </a>
+                  <!-- Ikon Delete -->
+                  <?php if (isset($buah['id_buah'])) : ?>
+                      <form action="/dataBuah/<?= $buah['id_buah']; ?>" method="post" class="d-inline">
+                          <?= csrf_field(); ?>
+                          <input type="hidden" name="_method" value="DELETE">
+                          <button type="submit" class="btn btn-link text-danger p-0 mx-2" title="Delete" onclick="return confirm('Apakah anda yakin?');">
+                              <i class="fas fa-trash-alt"></i>
+                          </button>
+                      </form>
+                  <?php endif; ?>
               <?php endif; ?>
             </td>
           </tr>
@@ -85,4 +161,33 @@
   </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+      // Ambil parameter filter dari URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const filter = urlParams.get('filter') || ''; // Default kosong jika tidak ada filter
+
+      // Tambahkan class 'active' pada tombol yang sesuai
+      if (filter === 'sudah_panen') {
+          $('#btnSudahPanen').addClass('active');
+      } else if (filter === 'akan_panen') {
+          $('#btnAkanPanen').addClass('active');
+      }
+
+      // Perbarui header berdasarkan filter
+      updateHeaderTitle(filter);
+
+      // Fungsi untuk memperbarui header
+      function updateHeaderTitle(filter) {
+          let headerText = 'Data Buah'; // Default
+          if (filter === 'sudah_panen') {
+              headerText = 'Data Buah Sudah Panen';
+          } else if (filter === 'akan_panen') {
+              headerText = 'Data Buah Akan Panen';
+          }
+          $('#headerTitle').text(headerText);
+      }
+  });
+</script>
 <?= $this->endSection(); ?>

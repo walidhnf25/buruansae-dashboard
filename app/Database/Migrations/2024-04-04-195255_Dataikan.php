@@ -30,11 +30,6 @@ class Dataikan extends Migration
                 'constraint' => '255',
                 'null' => false
             ],
-            'jumlah_pakan' => [
-                'type' => 'INT',
-                'constraint'=> 11,
-                'null' => false
-            ],
             'jumlah_ikan' => [
                 'type' => 'DOUBLE',
                 'null' => false
@@ -44,8 +39,50 @@ class Dataikan extends Migration
                 'null' => true
             ],
             'jumlah_panen' => [
-                'type' => 'DOUBLE',
+                'type' => 'FLOAT',
                 'null' => true
+            ],
+            'jumlah_berat_kp_kg' => [
+                'type'       => 'FLOAT',
+                'null'       => true,
+            ],
+            'jumlah_kepala_keluarga_kp_kk' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'jumlah_orang_kp' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'dibagikan' => [
+                'type'       => 'TEXT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'jumlah_berat_dibagikan_kg' => [
+                'type'       => 'FLOAT',
+                'null'       => true,
+            ],
+            'jumlah_kepala_keluarga_dibagikan_kk' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'jumlah_orang_dibagikan' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'jumlah_berat_dijual_kg' => [
+                'type'       => 'FLOAT',
+                'null'       => true,
+            ],
+            'jumlah_orang_dijual' => [
+                'type'       => 'INT',
+                'constraint' => 255,
+                'null'       => true,
             ],
             'konsumsi_lokal_kg' => [
                 'type' => 'INT',

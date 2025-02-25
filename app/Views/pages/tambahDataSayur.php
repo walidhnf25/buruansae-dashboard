@@ -84,14 +84,22 @@
                         <?= $validation->getError('tanggal_tanam'); ?>
                     </div>
                 </div>
-
                 <div class="mb-3">
-                    <label for="waktu_prakiraan_panen" class="form-label">Waktu Prakiraan Panen</label>
-                    <input type="date" 
-                        class="form-control" 
-                        id="waktu_prakiraan_panen" 
-                        name="waktu_prakiraan_panen" 
-                        readonly>
+                    <label for="prakiraan_jumlah_panen" class="form-label">Prakiraan Jumlah Panen (kg)</label>
+                    <input type="number" min="0" step="any" class="form-control <?= ($validation->hasError('prakiraan_jumlah_panen')) ? 'is-invalid' : ''; ?>" id="prakiraan_jumlah_panen" name="prakiraan_jumlah_panen">
+                    <div class="invalid-feedback">
+                        <?= $validation->getError('prakiraan_jumlah_panen'); ?>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="waktu_prakiraan_panen" class="form-label">Waktu Prakiraan Panen</label>
+                        <input type="date" class="form-control" id="waktu_prakiraan_panen" name="waktu_prakiraan_panen" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="durasi_tanam" class="form-label">Durasi Tanam (Hari)</label>
+                        <input type="text" class="form-control" id="durasi_tanam" readonly>
+                    </div>
                 </div>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
                     <a href="<?= base_url(); ?>/dataSayur" class="btn btn-secondary" type="button">Kembali</a>
@@ -126,32 +134,30 @@
 
     // Function to calculate and update waktu_prakiraan_panen
     function updatePrakiraanPanen() {
-        // Get elements
         const namaSayurSelect = document.getElementById('nama_sayur');
         const tanggalTanamInput = document.getElementById('tanggal_tanam');
         const waktuPrakiraanPanenInput = document.getElementById('waktu_prakiraan_panen');
-        
-        // Get durasi tanam from selected option
+        const durasiTanamInput = document.getElementById('durasi_tanam');
+
         const selectedOption = namaSayurSelect.options[namaSayurSelect.selectedIndex];
         const durasiTanam = parseInt(selectedOption.getAttribute('data-durasi')) || 0;
-        
-        // Get tanggal_tanam value
         const tanggalTanam = tanggalTanamInput.value;
 
-        if (tanggalTanam && durasiTanam) {
-            // Parse tanggal_tanam into a date object
-            const tanamDate = new Date(tanggalTanam);
+        if (tanggalTanam) {
+            // Update durasi tanam field only if tanggal_tanam is filled
+            durasiTanamInput.value = durasiTanam || '';
 
-            // Add durasiTanam days to the date
-            tanamDate.setDate(tanamDate.getDate() + durasiTanam);
-
-            // Format date into yyyy-mm-dd
-            const panenDate = tanamDate.toISOString().split('T')[0];
-
-            // Set value to waktu_prakiraan_panen input
-            waktuPrakiraanPanenInput.value = panenDate;
+            if (durasiTanam) {
+                const tanamDate = new Date(tanggalTanam);
+                tanamDate.setDate(tanamDate.getDate() + durasiTanam);
+                const panenDate = tanamDate.toISOString().split('T')[0];
+                waktuPrakiraanPanenInput.value = panenDate;
+            } else {
+                waktuPrakiraanPanenInput.value = '';
+            }
         } else {
-            // Clear waktu_prakiraan_panen if inputs are invalid
+            // Clear durasi_tanam and waktu_prakiraan_panen if tanggal_tanam is empty
+            durasiTanamInput.value = '';
             waktuPrakiraanPanenInput.value = '';
         }
     }

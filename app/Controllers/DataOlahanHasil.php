@@ -18,11 +18,11 @@ class DataOlahanHasil extends BaseController
         $this->dataOlahanHasilModel = new dataOlahanhasilModel();
         $this->dataKelompokModel = new dataKelompokModel();
         $this->dataKomoditiModel = new DataKomoditiModel();
+        $this->db = \Config\Database::connect();
     }
 
     public function index()
     {
-
         $data = [
             'tittle' => 'Data Olahan Hasil | Buruan SAE',
             'data_olahan_hasil' => $this->dataOlahanHasilModel->getDataOlahanHasil(),
