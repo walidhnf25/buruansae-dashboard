@@ -25,6 +25,8 @@ class Home extends BaseController
             'jumlahTernak' => $this->db->table('data_ternak')->where('waktu_prakiraan_panen <=', $tanggalHariIni)->where('waktu_panen IS NULL')->countAllResults() ?? 0,
             'jumlahIkan' => $this->db->table('data_ikan')->where('waktu_prakiraan_panen <=', $tanggalHariIni)->where('waktu_panen IS NULL')->countAllResults() ?? 0,
             'jumlahOlahanHasil' => $this->db->table('data_olahan_hasil')->where('tanggal_produksi <=', $tanggalHariIni)->where('waktu_panen IS NULL')->countAllResults() ?? 0,
+            'jumlahOlahanSampah' => $this->db->table('data_olahan_hasil')->where('tanggal_produksi <=', $tanggalHariIni)->where('waktu_panen IS NULL')->countAllResults() ?? 0,
+            'jumlahBibit' => $this->db->table('data_olahan_hasil')->where('tanggal_produksi <=', $tanggalHariIni)->where('waktu_panen IS NULL')->countAllResults() ?? 0,
         ];
 
         return view('pages/home', $data);
