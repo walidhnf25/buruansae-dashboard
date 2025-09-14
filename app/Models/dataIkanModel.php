@@ -15,25 +15,28 @@ class dataIkanModel extends Model
     public function getDataIkan($id_ikan = false, $filter = null)
     {
         $builder = $this->db->table('data_ikan')
-            ->select('data_ikan.*, data_kelompok.nama_kelompok, data_kelompok.penyuluh, data_kelompok.pendamping, data_kelompok.kecamatan, data_kelompok.kelurahan, data_kelompok.rw')
-            ->join('data_kelompok', 'data_kelompok.id_kelompok = data_ikan.id_kelompok', 'left')
-            ->orderBy('id_ikan', 'DESC');
+            ->join('data_kelompok', 'data_kelompok.id_kelompok = data_ikan.id_kelompok', 'left');
 
-        // Jika ID ikan diberikan, ambil data spesifik
+        // Jika ID sayur diberikan, ambil data spesifik
         if ($id_ikan) {
-            return $builder->where('id_ikan', $id_ikan)->get()->getRowArray();
+            return $builder->where('id_ikan', $id_ikan)->get()->getRowArray() ?: [];
         }
 
         // Filter berdasarkan kondisi waktu_panen
-        if (!empty($filter)) {
-            if ($filter == 'sudah_panen') {
-                $builder->where('data_ikan.waktu_panen IS NOT NULL');
-            } elseif ($filter == 'akan_panen') {
-                $builder->where('data_ikan.waktu_panen IS NULL');
-            }
+        if ($filter == 'sudah_panen') {
+            $builder->where('waktu_panen IS NOT NULL')
+                    ->orderBy('waktu_panen', 'DESC'); // Urutkan yang sudah dipanen berdasarkan waktu panen terbaru
+        } elseif ($filter == 'akan_panen') {
+            $builder->where('waktu_panen IS NULL')
+                    ->orderBy('waktu_prakiraan_panen', 'ASC'); // Urutkan yang belum dipanen berdasarkan waktu prakiraan panen
+        } else {
+            // Jika tanpa filter, urutkan berdasarkan kondisi waktu_panen dan waktu_prakiraan_panen
+            $builder->orderBy("CASE WHEN waktu_panen IS NULL THEN waktu_prakiraan_panen ELSE waktu_panen END", "ASC", false)
+                    ->orderBy("waktu_panen IS NOT NULL", "DESC", false); // Prioritaskan yang sudah dipanen di bawah
         }
 
-        // Kembalikan semua data
-        return $builder->get()->getResultArray();
+        // Kembalikan semua data dengan filter (jika ada)
+        $data = $builder->get()->getResultArray();
+        return !empty($data) ? $data : []; // Kembalikan array kosong jika tidak ada data
     }
 }

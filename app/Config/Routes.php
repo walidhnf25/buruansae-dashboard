@@ -99,3 +99,12 @@ $routes->get('/dataPengolahanSampah/editDataSampah/(:num)', 'DataPengolahanSampa
 $routes->post('/dataPengolahanSampah/update/(:num)', 'DataPengolahanSampah::update/$1');
 $routes->get('/dataPengolahanSampah/dataProduksiSampah/(:num)', 'DataPengolahanSampah::dataProduksiSampah/$1');
 $routes->post('/dataPengolahanSampah/tambah_data_produksi/(:num)', 'DataPengolahanSampah::tambah_data_produksi/$1');
+
+//Routing Data Pembibitan
+$routes->get('/dataPembibitan/tambahDataPembibitan', 'DataSayur::tambahDataPembibitan');
+$routes->post('/dataPembibitan/save', 'DataPembibitan::save');
+$routes->delete('/dataPembibitan/(:num)', 'DataPembibitan::delete/$1');
+$routes->get('/dataPembibitan/editDataPembibitan/(:num)', 'DataPembibitan::editDataPembibitan/$1');
+$routes->post('/dataPembibitan/update/(:num)', 'DataPembibitan::update/$1');
+$routes->get('/dataPembibitan/dataPanenPembibitan/(:num)', 'DataPembibitan::dataPanenPembibitan/$1');
+$routes->post('/dataPembibitan/updateDataPembibitan/(:num)', 'DataPembibitan::dataPanenPembibitan/$1');

@@ -25,11 +25,18 @@ class DataSayur extends BaseController
         // Ambil filter dari query string (GET parameter)
         $filter = $this->request->getGet('filter');
 
+        // Hitung jumlah komoditi yang sudah melewati waktu panen (waktu_prakiraan_panen <= hari ini DAN waktu_panen masih NULL)
+        $jumlahTerlambatPanen = $this->db->table('data_sayur')
+            ->where('waktu_prakiraan_panen <=', date('Y-m-d'))
+            ->where('waktu_panen IS NULL')
+            ->countAllResults();
+
         $data = [
             'tittle' => 'Data Sayur | Buruan SAE',
             'data_sayur' => $this->dataSayurModel->getDataSayur(false, $filter),
             'komoditi' => $this->db->table('data_komoditi')->get()->getResultArray(),
             'filter' => $filter,
+            'jumlahTerlambatPanen' => $jumlahTerlambatPanen,
             'validation' => \Config\Services::validation()
         ];
 
@@ -371,9 +378,8 @@ class DataSayur extends BaseController
                 ]
             ],
             'gambar' => [
-                'rules' => 'uploaded[gambar]|max_size[gambar,2048]|is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png]',
+                'rules' => 'max_size[gambar,2048]|is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png]',
                 'errors' => [
-                    'uploaded' => 'Pilih Gambar Terlebih Dahulu',
                     'max_size' => 'Ukuran Gambar Terlalu Besar, (MAX 2MB)',
                     'is_image' => 'Inputan Harus Berupa Gambar',
                     'mime_in' => 'Inputan Harus Berupa File'
@@ -387,24 +393,30 @@ class DataSayur extends BaseController
         // Ambil file gambar
         $fileGambar = $this->request->getFile('gambar');
 
-        // Jika ukuran gambar lebih dari 3 MB, kompres gambar
-        $maxSize = 3 * 1024 * 1024; // 3 MB dalam byte
-        if ($fileGambar->getSize() > $maxSize) {
-            // Buat nama baru untuk gambar
-            $namaGambar = $fileGambar->getRandomName();
+        // Ambil data panen lama
+        $dataLama = $this->dataSayurModel->find($id_sayur);
 
-            // Kompres gambar menggunakan Intervention Image
-            $image = Image::make($fileGambar->getTempName());
-            $image->resize(1920, null, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
-            $image->save('asset/' . $namaGambar, 80); // Simpan dengan kualitas 80
+        // Cek apakah pengguna mengunggah gambar baru
+        if ($fileGambar && !$fileGambar->hasMoved() && $fileGambar->isValid()) {
+            // Jika ukuran gambar lebih dari 3 MB, kompres gambar
+            $maxSize = 3 * 1024 * 1024; // 3 MB dalam byte
+            if ($fileGambar->getSize() > $maxSize) {
+                // Buat nama baru untuk gambar
+                $namaGambar = $fileGambar->getRandomName();
 
+                // Kompres gambar menggunakan Intervention Image
+                $image = \Config\Services::image()
+                    ->withFile($fileGambar->getTempName())
+                    ->resize(1920, null, true)
+                    ->save('asset/' . $namaGambar, 80); // Simpan dengan kualitas 80
+            } else {
+                // Jika ukuran gambar sudah sesuai, langsung pindahkan
+                $namaGambar = $fileGambar->getRandomName();
+                $fileGambar->move('asset', $namaGambar);
+            }
         } else {
-            // Jika ukuran gambar sudah sesuai, langsung pindahkan
-            $namaGambar = $fileGambar->getRandomName();
-            $fileGambar->move('asset', $namaGambar);
+            // Jika tidak ada gambar baru, gunakan gambar lama
+            $namaGambar = $dataLama['gambar'] ?? null;
         }
 
         $this->dataSayurModel->save([

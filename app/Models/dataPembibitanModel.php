@@ -4,22 +4,22 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class dataPengolahanSampahModel extends Model
+class dataPembibitanModel extends Model
 {
-    protected $table      = 'data_sampah';
-    protected $primaryKey = 'id_data_sampah';
+    protected $table      = 'data_bibit';
+    protected $primaryKey = 'id_bibit';
     protected $allowedFields = [
-        'id_kelompok', 'jenis_pengolahan', 'tanggal_masuk', 'jumlah_sampah', 'harga_jual', 'waktu_prakiraan_panen', 'prakiraan_jumlah_panen', 'waktu_panen', 'jumlah_panen', 'jumlah_kp', 'jumlah_ms', 'jumlah_sekolah', 'jumlah_pkk', 'jumlah_posyandu', 'jumlah_lainnya', 'jumlah_kk', 'jumlah_orang', 'jumlah_dijual_kg', 'jumlah_dijual_orang', 'jumlah_dijual_kk', 'gambar'
+        'id_kelompok', 'nama_sayur', 'tanggal_tanam', 'asal_bibit', 'keterangan', 'jumlah_semai', 'waktu_prakiraan_panen', 'prakiraan_jumlah_panen', 'waktu_panen', 'jumlah_panen', 'jumlah_kp', 'jumlah_ms', 'jumlah_sekolah', 'jumlah_pkk', 'jumlah_posyandu', 'jumlah_lainnya', 'jumlah_kk', 'jumlah_orang', 'jumlah_dijual_pohon', 'jumlah_dijual_orang', 'jumlah_dijual_kk', 'harga_jual','gambar'
     ];
 
-    public function getDataSampah($id_data_sampah = false, $filter = null)
+    public function getDataBibit($id_bibit = false, $filter = null)
     {
-        $builder = $this->db->table('data_sampah')
-            ->join('data_kelompok', 'data_kelompok.id_kelompok = data_sampah.id_kelompok', 'left');
+        $builder = $this->db->table('data_bibit')
+            ->join('data_kelompok', 'data_kelompok.id_kelompok = data_bibit.id_kelompok', 'left');
 
-        // Jika ID sampah diberikan, ambil data spesifik
-        if ($id_data_sampah) {
-            return $builder->where('id_data_sampah', $id_data_sampah)->get()->getRowArray() ?: [];
+        // Jika ID bibit diberikan, ambil data spesifik
+        if ($id_bibit) {
+            return $builder->where('id_bibit', $id_bibit)->get()->getRowArray() ?: [];
         }
 
         // Filter berdasarkan kondisi waktu_panen

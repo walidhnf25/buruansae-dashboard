@@ -11,96 +11,279 @@
                     <!-- <label for="data_panen">Data Panen</label> -->
                     <div class="container mt-3">
                         <div class="row mb-3">
-                            <label for="jenis_pengolahan" class="col-sm-2 col-form-label">Jenis Olahan</label>
+                            <label for="jenis_pengolahan" class="col-sm-2 col-form-label">Jenis Pengolahan</label>
                             <div class="col-sm-10">
-                                <input disabled type="text" class="form-control" value="<?= $id_data_sampah['jenis_pengolahan']; ?>" name="jenis_pengolahan">
+                                <input disabled type="text" class="form-control" value="<?= $id_data_sampah['jenis_pengolahan']; ?>">
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="produk_hasil" class="col-sm-2 col-form-label">Produk Hasil</label>
+                            <label for="waktu_panen" class="col-sm-2 col-form-label">Waktu Panen</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control <?= ($validation->hasError('produk_hasil')) ? 'is-invalid' : ''; ?>" name="produk_hasil" id="produk_hasil" value="<?= $id_data_sampah['produk_hasil']; ?>">
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="waktu_sebaran" class="col-sm-2 col-form-label">Waktu Sebaran</label>
-                            <div class="col-sm-10">
-                                <input type="date" class="form-control <?= ($validation->hasError('waktu_sebaran')) ? 'is-invalid' : ''; ?>" id="waktu_sebaran" name="waktu_sebaran" value="<?= $id_data_sampah['waktu_sebaran']; ?>">
+                                <input type="date" class="form-control <?= ($validation->hasError('waktu_panen')) ? 'is-invalid' : ''; ?>" id="waktu_panen" name="waktu_panen" value="<?= (old('waktu_panen')) ? old('waktu_panen') : $id_data_sampah['waktu_panen']; ?>">
                                 <div class="invalid-feedback">
-                                    <?= $validation->getError('waktu_sebaran'); ?>
+                                    <?= $validation->getError('waktu_panen'); ?>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
-                <section>
-                    <!-- <label for="sebaran_hasil">Sebaran Hasil</label> -->
-                    <div class="container">
-                        <div class="row mb-3">
-                            <label for="penggunaan_lokal" class="col-sm-2 col-form-label">Pengunaan Lokal (kg)</label>
-                            <div class="col-sm-10">
-                                <input type="number" min="1" class="form-control <?= ($validation->hasError('penggunaan_lokal')) ? 'is-invalid' : ''; ?>" id="penggunaan_lokal" name="penggunaan_lokal" value="<?= $id_data_sampah['penggunaan_lokal']; ?>">
-                                <div class="invalid-feedback">
-                                    <?= $validation->getError('penggunaan_lokal'); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="jumlah_jual" class="col-sm-2 col-form-label">Jumlah Jual (kg)</label>
-                            <div class="col-sm-10">
-                                <input type="number" min="1" class="form-control <?= ($validation->hasError('jumlah_jual')) ? 'is-invalid' : ''; ?>" id="jumlah_jual" name="jumlah_jual" value="<?= $id_data_sampah['jumlah_jual']; ?>">
-                                <div class="invalid-feedback">
-                                    <?= $validation->getError('jumlah_jual'); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="harga_jual" class="col-sm-2 col-form-label">Total Harga Jual (Rp)</label>
-                            <div class="col-sm-10">
-                                <input type="number" min="1000" class="form-control <?= ($validation->hasError('harga_jual')) ? 'is-invalid' : ''; ?>" id="harga_jual" name="harga_jual" value="<?= $id_data_sampah['harga_jual']; ?>">
-                                <div class="invalid-feedback">
-                                    <?= $validation->getError('harga_jual'); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="lokasi_pembeli" class="col-sm-2 col-form-label">Lokasi Pembeli</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control <?= ($validation->hasError('lokasi_pembeli')) ? 'is-invalid' : ''; ?>" name="lokasi_pembeli" value="<?= $id_data_sampah['lokasi_pembeli']; ?>">
-                                <div class="invalid-feedback">
-                                    <?= $validation->getError('lokasi_pembeli'); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section>
-                    <!-- <label for="program_pendukung">Data Pendukung</label> -->
-                    <div class="container">
                         <div class="row mb-3">
                             <label for="gambar" class="col-sm-2 col-form-label">Upload Foto Hasil Panen</label>
                             <div class="col-sm-10">
-                                <input class="form-control <?= ($validation->hasError('gambar')) ? 'is-invalid' : ''; ?>" type="file" id="gambar" name="gambar">
+                                <input type="file" class="form-control <?= ($validation->hasError('gambar')) ? 'is-invalid' : ''; ?>" id="gambar" name="gambar">
                                 <div class="invalid-feedback">
                                     <?= $validation->getError('gambar'); ?>
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <label for="dukungan_program_lain" class="col-sm-2 col-form-label">Dukungan Program Lainnya</label>
-                            <div class="col-sm-10">
-                                <textarea class="form-control <?= ($validation->hasError('dukungan_program_lain')) ? 'is-invalid' : ''; ?>" id="dukungan_program_lain" rows="3" id="dukungan_program_lain" name="dukungan_program_lain"></textarea>
-                                <div class="invalid-feedback">
-                                    <?= $validation->getError('dukungan_program_lain'); ?>
+                        <div class="accordion-item mb-3">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Konsumsi Pribadi
+                                </button>
+                            </h2>
+
+                            <div id="collapseOne" class="accordion-collapse collapse" 
+                                aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <div class="row mb-3">
+                                        <label for="jumlah_kp" class="col-sm-2 col-form-label">
+                                            Jumlah Konsumsi Sendiri (kg)
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="number" min="0" step="any" 
+                                                class="form-control <?= ($validation->hasError('jumlah_kp')) ? 'is-invalid' : ''; ?>" 
+                                                id="jumlah_kp" 
+                                                name="jumlah_kp" 
+                                                value="<?= (old('jumlah_kp')) 
+                                                    ? old('jumlah_kp') 
+                                                    : ($id_sayur['jumlah_kp'] ?? 0); ?>" 
+                                                oninput="calculateJumlahPanen()">
+
+                                            <div class="invalid-feedback">
+                                                <?= $validation->getError('jumlah_kp'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item mb-3">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                    Dibagikan
+                                </button>
+                            </h2>
+
+                            <div id="collapseTwo" class="accordion-collapse collapse" 
+                                aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <div class="row mb-3">
+                                        <label for="jumlah_ms" class="col-sm-2 col-form-label">
+                                            Jumlah Masyarakat Sekitar (kg)
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="number" min="0" step="any" 
+                                                class="form-control <?= ($validation->hasError('jumlah_ms')) ? 'is-invalid' : ''; ?>" 
+                                                id="jumlah_ms" 
+                                                name="jumlah_ms" 
+                                                value="<?= (old('jumlah_ms')) 
+                                                    ? old('jumlah_ms') 
+                                                    : ($id_sayur['jumlah_ms'] ?? 0); ?>" 
+                                                oninput="calculateJumlahPanen()">
+
+                                            <div class="invalid-feedback">
+                                                <?= $validation->getError('jumlah_ms'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="jumlah_sekolah" class="col-sm-2 col-form-label">
+                                            Jumlah Sekolah (kg)
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="number" min="0" step="any" 
+                                                class="form-control <?= ($validation->hasError('jumlah_sekolah')) ? 'is-invalid' : ''; ?>" 
+                                                id="jumlah_sekolah" 
+                                                name="jumlah_sekolah" 
+                                                value="<?= (old('jumlah_sekolah')) 
+                                                    ? old('jumlah_sekolah') 
+                                                    : ($id_sayur['jumlah_sekolah'] ?? 0); ?>" 
+                                                oninput="calculateJumlahPanen()">
+
+                                            <div class="invalid-feedback">
+                                                <?= $validation->getError('jumlah_sekolah'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="jumlah_pkk" class="col-sm-2 col-form-label">
+                                            Jumlah PKK (kg)
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="number" min="0" step="any" 
+                                                class="form-control <?= ($validation->hasError('jumlah_pkk')) ? 'is-invalid' : ''; ?>" 
+                                                id="jumlah_pkk" 
+                                                name="jumlah_pkk" 
+                                                value="<?= (old('jumlah_pkk')) 
+                                                    ? old('jumlah_pkk') 
+                                                    : ($id_sayur['jumlah_pkk'] ?? 0); ?>" 
+                                                oninput="calculateJumlahPanen()">
+
+                                            <div class="invalid-feedback">
+                                                <?= $validation->getError('jumlah_pkk'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="jumlah_posyandu" class="col-sm-2 col-form-label">
+                                            Jumlah Posyandu (kg)
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="number" min="0" step="any" 
+                                                class="form-control <?= ($validation->hasError('jumlah_posyandu')) ? 'is-invalid' : ''; ?>" 
+                                                id="jumlah_posyandu" 
+                                                name="jumlah_posyandu" 
+                                                value="<?= (old('jumlah_posyandu')) 
+                                                    ? old('jumlah_posyandu') 
+                                                    : ($id_sayur['jumlah_posyandu'] ?? 0); ?>" 
+                                                oninput="calculateJumlahPanen()">
+
+                                            <div class="invalid-feedback">
+                                                <?= $validation->getError('jumlah_posyandu'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="jumlah_lainnya" class="col-sm-2 col-form-label">
+                                            Jumlah Lainnya (kg)
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="number" min="0" step="any" 
+                                                class="form-control <?= ($validation->hasError('jumlah_lainnya')) ? 'is-invalid' : ''; ?>" 
+                                                id="jumlah_lainnya" 
+                                                name="jumlah_lainnya" 
+                                                value="<?= (old('jumlah_lainnya')) 
+                                                    ? old('jumlah_lainnya') 
+                                                    : ($id_sayur['jumlah_lainnya'] ?? 0); ?>" 
+                                                oninput="calculateJumlahPanen()">
+
+                                            <div class="invalid-feedback">
+                                                <?= $validation->getError('jumlah_lainnya'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="jumlah_kk" class="col-sm-2 col-form-label">
+                                            Jumlah Dibagikan (kk)
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="number" min="0" step="any" 
+                                                class="form-control <?= ($validation->hasError('jumlah_kk')) ? 'is-invalid' : ''; ?>" 
+                                                id="jumlah_kk" 
+                                                name="jumlah_kk" 
+                                                value="<?= (old('jumlah_kk')) 
+                                                    ? old('jumlah_kk') 
+                                                    : ($id_sayur['jumlah_kk'] ?? 0); ?>" 
+                                                oninput="calculateJumlahPanen()">
+
+                                            <div class="invalid-feedback">
+                                                <?= $validation->getError('jumlah_kk'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="jumlah_orang" class="col-sm-2 col-form-label">
+                                            Jumlah Orang (orang)
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="number" min="0" step="any" 
+                                                class="form-control <?= ($validation->hasError('jumlah_orang')) ? 'is-invalid' : ''; ?>" 
+                                                id="jumlah_orang" 
+                                                name="jumlah_orang" 
+                                                value="<?= (old('jumlah_orang')) 
+                                                    ? old('jumlah_orang') 
+                                                    : ($id_sayur['jumlah_orang'] ?? 0); ?>" 
+                                                oninput="calculateJumlahPanen()">
+
+                                            <div class="invalid-feedback">
+                                                <?= $validation->getError('jumlah_orang'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item mb-3">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                    Dijual
+                                </button>
+                            </h2>
+
+                            <div id="collapseThree" class="accordion-collapse collapse" 
+                                aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <div class="row mb-3">
+                                        <label for="jumlah_dijual_kg" class="col-sm-2 col-form-label">
+                                            Jumlah Dijual (kg)
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="number" min="0" step="any" 
+                                                class="form-control <?= ($validation->hasError('jumlah_dijual_kg')) ? 'is-invalid' : ''; ?>" 
+                                                id="jumlah_dijual_kg" 
+                                                name="jumlah_dijual_kg" 
+                                                value="<?= (old('jumlah_dijual_kg')) 
+                                                    ? old('jumlah_dijual_kg') 
+                                                    : ($id_sayur['jumlah_dijual_kg'] ?? 0); ?>" 
+                                                oninput="calculateJumlahPanen()">
+
+                                            <div class="invalid-feedback">
+                                                <?= $validation->getError('jumlah_dijual_kg'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="jumlah_dijual_orang" class="col-sm-2 col-form-label">
+                                            Jumlah Dijual (orang)
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="number" min="0" step="any" 
+                                                class="form-control <?= ($validation->hasError('jumlah_dijual_orang')) ? 'is-invalid' : ''; ?>" 
+                                                id="jumlah_dijual_orang" 
+                                                name="jumlah_dijual_orang" 
+                                                value="<?= (old('jumlah_dijual_orang')) 
+                                                    ? old('jumlah_dijual_orang') 
+                                                    : ($id_sayur['jumlah_dijual_orang'] ?? 0); ?>" 
+                                                oninput="calculateJumlahPanen()">
+
+                                            <div class="invalid-feedback">
+                                                <?= $validation->getError('jumlah_dijual_orang'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="harga_jual" class="col-sm-2 col-form-label">Total Harga Jual (Rp)</label>
+                                            <div class="col-sm-10">
+                                                <input type="number" min="0" class="form-control <?= ($validation->hasError('harga_jual')) ? 'is-invalid' : ''; ?>" id="harga_jual" name="harga_jual" value="<?= old('harga_jual') ?: 0; ?>">
+                                            <div class="invalid-feedback">
+                                                <?= $validation->getError('harga_jual'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="program_pendukung" class="col-sm-2 col-form-label">Data Pendukung</label>
+                            <label for="jumlah_panen" class="col-sm-2 col-form-label">Jumlah Panen (kg)</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control <?= ($validation->hasError('program_pendukung')) ? 'is-invalid' : ''; ?>" id="program_pendukung" name="program_pendukung" rows="3"></textarea>
+                            <input type="number" min="0" step="any" class="form-control <?= ($validation->hasError('jumlah_panen')) ? 'is-invalid' : ''; ?>" 
+                                id="jumlah_panen" name="jumlah_panen" 
+                                value="<?= (old('jumlah_panen')) ? old('jumlah_panen') : ($id_data_sampah['jumlah_panen'] ?? 0); ?>" 
+                                readonly>
                                 <div class="invalid-feedback">
-                                    <?= $validation->getError('program_pendukung'); ?>
+                                    <?= $validation->getError('jumlah_panen'); ?>
                                 </div>
                             </div>
                         </div>
@@ -115,4 +298,23 @@
     </div>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function calculateJumlahPanen() {
+        // Ambil nilai dari setiap input yang ada di accordion
+        const jumlahKp        = parseFloat(document.getElementById('jumlah_kp').value) || 0;
+        const jumlahMmMs      = parseFloat(document.getElementById('jumlah_ms').value) || 0;
+        const jumlahSekolah   = parseFloat(document.getElementById('jumlah_sekolah').value) || 0;
+        const jumlahPkk       = parseFloat(document.getElementById('jumlah_pkk').value) || 0;
+        const jumlahPosyandu  = parseFloat(document.getElementById('jumlah_posyandu').value) || 0;
+        const jumlahLainnya   = parseFloat(document.getElementById('jumlah_lainnya').value) || 0;
+        const jumlahDijualKg    = parseFloat(document.getElementById('jumlah_dijual_kg').value) || 0;
+
+        // Hitung total jumlah panen
+        const totalPanen = jumlahKp + jumlahMmMs + jumlahSekolah + jumlahPkk + jumlahPosyandu + jumlahLainnya + jumlahDijualKg;
+
+        // Set nilai ke field jumlah_panen (pastikan ada field hidden / readonly di form)
+        document.getElementById('jumlah_panen').value = totalPanen;
+    }
+</script>
 <?= $this->endSection(); ?>

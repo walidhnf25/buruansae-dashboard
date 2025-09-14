@@ -8,7 +8,7 @@ class dataKelompokModel extends Model
 {
     protected $table      = 'data_kelompok';
     protected $primaryKey = 'id_kelompok';
-    protected $allowedFields = ['nama_kelompok', 'penyuluh', 'pendamping', 'kecamatan', 'kelurahan', 'rw', 'map'];
+    protected $allowedFields = ['nama_kelompok', 'nama_ketua', 'nomor_kontak', 'luas_lahan', 'status_lahan', 'status_keaktifan', 'keterangan_status', 'penyuluh', 'pendamping', 'kecamatan', 'kelurahan', 'rw', 'latitude', 'longtitude', 'link_deskripsi', 'foto_lahan', 'foto_ketua'];
 
     public function getDataKelompok($id_kelompok = false)
     {

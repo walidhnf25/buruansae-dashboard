@@ -16,8 +16,7 @@ class dataSayurModel extends Model
     public function getDataSayur($id_sayur = false, $filter = null)
     {
         $builder = $this->db->table('data_sayur')
-            ->join('data_kelompok', 'data_kelompok.id_kelompok = data_sayur.id_kelompok', 'left')
-            ->orderBy('id_sayur', 'DESC');
+            ->join('data_kelompok', 'data_kelompok.id_kelompok = data_sayur.id_kelompok', 'left');
 
         // Jika ID sayur diberikan, ambil data spesifik
         if ($id_sayur) {
@@ -26,9 +25,15 @@ class dataSayurModel extends Model
 
         // Filter berdasarkan kondisi waktu_panen
         if ($filter == 'sudah_panen') {
-            $builder->where('waktu_panen IS NOT NULL');
+            $builder->where('waktu_panen IS NOT NULL')
+                    ->orderBy('waktu_panen', 'DESC'); // Urutkan yang sudah dipanen berdasarkan waktu panen terbaru
         } elseif ($filter == 'akan_panen') {
-            $builder->where('waktu_panen IS NULL');
+            $builder->where('waktu_panen IS NULL')
+                    ->orderBy('waktu_prakiraan_panen', 'ASC'); // Urutkan yang belum dipanen berdasarkan waktu prakiraan panen
+        } else {
+            // Jika tanpa filter, urutkan berdasarkan kondisi waktu_panen dan waktu_prakiraan_panen
+            $builder->orderBy("CASE WHEN waktu_panen IS NULL THEN waktu_prakiraan_panen ELSE waktu_panen END", "ASC", false)
+                    ->orderBy("waktu_panen IS NOT NULL", "DESC", false); // Prioritaskan yang sudah dipanen di bawah
         }
 
         // Kembalikan semua data dengan filter (jika ada)

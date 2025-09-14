@@ -58,26 +58,48 @@ class DataKomoditi extends BaseController
                     'required' => 'Durasi tanam harus diisi',
                     'numeric' => 'Durasi tanam harus berupa angka'
                 ]
+            ],
+            'gambar' => [
+                'rules' => 'uploaded[gambar]|max_size[gambar,2048]|is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png]',
+                'errors' => [
+                    'uploaded' => 'Pilih Gambar Terlebih Dahulu',
+                    'max_size' => 'Ukuran Gambar Terlalu Besar, (MAX 2MB)',
+                    'is_image' => 'Inputan Harus Berupa Gambar',
+                    'mime_in' => 'Inputan Harus Berupa File'
+                ]
             ]
         ])) {
             return redirect()->to('/DataKomoditi/createDataKomoditi')->withInput();
         }
 
-        // // Get the start and end dates from the request
-        // $startDate = $this->request->getPost('start_date');
-        // $endDate = $this->request->getPost('end_date');
+        // Ambil file gambar
+        $fileGambar = $this->request->getFile('gambar');
 
-        // // Convert the dates to DateTime objects
-        // $start = Time::parse($startDate);
-        // $end = Time::parse($endDate);
+        // Jika ukuran gambar lebih dari 3 MB, kompres gambar
+        $maxSize = 3 * 1024 * 1024; // 3 MB dalam byte
+        if ($fileGambar->getSize() > $maxSize) {
+            // Buat nama baru untuk gambar
+            $namaGambar = $fileGambar->getRandomName();
 
-        // // Calculate the duration
-        // $duration = $start->difference($end)->getDays();
+            // Kompres gambar menggunakan Intervention Image
+            $image = Image::make($fileGambar->getTempName());
+            $image->resize(1920, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+            $image->save('asset/' . $namaGambar, 80); // Simpan dengan kualitas 80
+
+        } else {
+            // Jika ukuran gambar sudah sesuai, langsung pindahkan
+            $namaGambar = $fileGambar->getRandomName();
+            $fileGambar->move('asset', $namaGambar);
+        }
 
         $this->dataKomoditiModel->save([
             'nama_komoditi' => $this->request->getVar('nama_komoditi'),
             'sektor' => $this->request->getVar('sektor'),
-            'durasi_tanam' => $this->request->getVar('durasi_tanam') . 'Hari'
+            'durasi_tanam' => $this->request->getVar('durasi_tanam') . 'Hari',
+            'gambar' => $namaGambar
         ]);
 
         session()->setFlashdata('pesan', 'Data berhasil ditambahkan.');
@@ -119,28 +141,49 @@ class DataKomoditi extends BaseController
                     'required' => 'Durasi tanam harus diisi',
                     'numeric' => 'Durasi tanam harus berupa angka'
                 ]
+            ],
+            'gambar' => [
+                'rules' => 'uploaded[gambar]|max_size[gambar,2048]|is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png]',
+                'errors' => [
+                    'uploaded' => 'Pilih Gambar Terlebih Dahulu',
+                    'max_size' => 'Ukuran Gambar Terlalu Besar, (MAX 2MB)',
+                    'is_image' => 'Inputan Harus Berupa Gambar',
+                    'mime_in' => 'Inputan Harus Berupa File'
+                ]
             ]
-
         ])) {
             return redirect()->to('/DataKomoditi/edit/' . $id)->withInput();
         }
 
-        // // Get the start and end dates from the request
-        // $startDate = $this->request->getPost('start_date');
-        // $endDate = $this->request->getPost('end_date');
+        // Ambil file gambar
+        $fileGambar = $this->request->getFile('gambar');
 
-        // // Convert the dates to DateTime objects
-        // $start = Time::parse($startDate);
-        // $end = Time::parse($endDate);
+        // Jika ukuran gambar lebih dari 3 MB, kompres gambar
+        $maxSize = 3 * 1024 * 1024; // 3 MB dalam byte
+        if ($fileGambar->getSize() > $maxSize) {
+            // Buat nama baru untuk gambar
+            $namaGambar = $fileGambar->getRandomName();
 
-        // // Calculate the duration
-        // $duration = $start->difference($end)->getDays();
+            // Kompres gambar menggunakan Intervention Image
+            $image = Image::make($fileGambar->getTempName());
+            $image->resize(1920, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+            $image->save('asset/' . $namaGambar, 80); // Simpan dengan kualitas 80
+
+        } else {
+            // Jika ukuran gambar sudah sesuai, langsung pindahkan
+            $namaGambar = $fileGambar->getRandomName();
+            $fileGambar->move('asset', $namaGambar);
+        }
 
         $this->dataKomoditiModel->save([
             'id' => $id,
             'nama_komoditi' => $this->request->getVar('nama_komoditi'),
             'sektor' => $this->request->getVar('sektor'),
-            'durasi_tanam' => $this->request->getVar('durasi_tanam') . 'Hari'
+            'durasi_tanam' => $this->request->getVar('durasi_tanam') . 'Hari',
+            'gambar' => $namaGambar
         ]);
 
         session()->setFlashdata('pesan', 'Data berhasil diubah.');

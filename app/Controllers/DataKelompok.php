@@ -42,65 +42,81 @@ class DataKelompok extends BaseController
 
     public function save()
     {
+        // validasi input
         if (!$this->validate([
-            'penyuluh' => [
-                'rules' => 'required',
+            'nama_kelompok' => 'required',
+            'nama_ketua' => 'required',
+            'nomor_kontak' => 'required',
+            'penyuluh' => 'required',
+            'pendamping' => 'required',
+            'kecamatan' => 'required',
+            'kelurahan' => 'required',
+            'rw' => 'required',
+            'luas_lahan' => 'required|numeric',
+            'status_lahan' => 'required',
+            'latitude' => 'required',
+            'lontitude' => 'required',
+            'link_deskripsi' => 'required',
+            'foto_lahan' => [
+                'rules' => 'if_exist|max_size[foto_lahan,2048]|is_image[foto_lahan]|mime_in[foto_lahan,image/jpg,image/jpeg,image/png]',
                 'errors' => [
-                    'required' => 'Masukkan Nama Penyuluh'
+                    'max_size' => 'Ukuran foto lahan terlalu besar (max 2MB)',
+                    'is_image' => 'Foto lahan harus berupa gambar',
+                    'mime_in'  => 'Format foto lahan harus jpg/jpeg/png'
                 ]
             ],
-            'pendamping' => [
-                'rules' => 'required',
+            'foto_ketua' => [
+                'rules' => 'if_exist|max_size[foto_ketua,2048]|is_image[foto_ketua]|mime_in[foto_ketua,image/jpg,image/jpeg,image/png]',
                 'errors' => [
-                    'required' => 'Masukkan Nama Pendamping'
+                    'max_size' => 'Ukuran foto ketua terlalu besar (max 2MB)',
+                    'is_image' => 'Foto ketua harus berupa gambar',
+                    'mime_in'  => 'Format foto ketua harus jpg/jpeg/png'
                 ]
-            ],
-            'kecamatan' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Masukkan Nama Kecamatan'
-                ]
-            ],
-            'kelurahan' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Masukkan Nama Kelurahan'
-                ]
-            ],
-            'rw' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Masukkan Nama RW'
-                ]
-            ],
-            'map' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Masukkan Link Alamat'
-                ]
-            ],
-            'nama_kelompok' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Masukkan Nama Kelompok'
-                ]
-            ],
+            ]
         ])) {
-            $validation = \Config\Services::validation();
-            return redirect()->to('/DataKelompok/tambahDataKelompok')->withInput()->with('validation', $validation);
+            return redirect()->to('/DataKelompok')->withInput();
         }
+
+        // ==== Upload Foto Lahan ====
+        $fotoLahan = $this->request->getFile('foto_lahan');
+        if ($fotoLahan && $fotoLahan->isValid() && !$fotoLahan->hasMoved()) {
+            $namaFotoLahan = $fotoLahan->getRandomName();
+            $fotoLahan->move('asset', $namaFotoLahan);
+        } else {
+            $namaFotoLahan = null;
+        }
+
+        // ==== Upload Foto Ketua ====
+        $fotoKetua = $this->request->getFile('foto_ketua');
+        if ($fotoKetua && $fotoKetua->isValid() && !$fotoKetua->hasMoved()) {
+            $namaFotoKetua = $fotoKetua->getRandomName();
+            $fotoKetua->move('asset', $namaFotoKetua);
+        } else {
+            $namaFotoKetua = null;
+        }
+
+        // ==== Simpan ke Database ====
         $this->dataKelompokModel->save([
+            'nama_kelompok' => $this->request->getVar('nama_kelompok'),
+            'nama_ketua' => $this->request->getVar('nama_ketua'),
+            'nomor_kontak' => $this->request->getVar('nomor_kontak'),
             'penyuluh' => $this->request->getVar('penyuluh'),
             'pendamping' => $this->request->getVar('pendamping'),
             'kecamatan' => $this->request->getVar('kecamatan'),
             'kelurahan' => $this->request->getVar('kelurahan'),
             'rw' => $this->request->getVar('rw'),
-            'map' => $this->request->getVar('map'),
-            'nama_kelompok' => $this->request->getVar('nama_kelompok'),
+            'luas_lahan' => $this->request->getVar('luas_lahan'),
+            'status_lahan' => $this->request->getVar('status_lahan'),
+            'status_keaktifan' => $this->request->getVar('status_keaktifan'),
+            'keterangan_status' => $this->request->getVar('keterangan_status'),
+            'longtitude' => $this->request->getVar('longtitude'),
+            'latitude' => $this->request->getVar('latitude'),
+            'link_deskripsi' => $this->request->getVar('link_deskripsi'),
+            'foto_lahan' => $namaFotoLahan,
+            'foto_ketua' => $namaFotoKetua
         ]);
 
-        session()->setFlashdata('pesan', 'Data Kelompok berhasil ditambahkan.');
-
+        session()->setFlashdata('pesan', 'Data berhasil ditambahkan.');
         return redirect()->to('/DataKelompok');
     }
 
@@ -140,67 +156,110 @@ class DataKelompok extends BaseController
         return view('pages/datakelompok/editDataKelompok', $data);
     }
 
-    public function update($id_kelompok){
+    public function update($id_kelompok)
+    {
         if (!$this->validate([
+            'nama_kelompok' => [
+                'rules' => 'required',
+                'errors' => ['required' => 'Masukkan Nama Kelompok']
+            ],
+            'nama_ketua' => [
+                'rules' => 'required',
+                'errors' => ['required' => 'Masukkan Nama Ketua']
+            ],
+            'nomor_kontak' => [
+                'rules' => 'required',
+                'errors' => ['required' => 'Masukkan Nomor Kontak']
+            ],
             'penyuluh' => [
                 'rules' => 'required',
-                'errors' => [
-                    'required' => 'Masukkan Nama Penyuluh'
-                ]
+                'errors' => ['required' => 'Masukkan Nama Penyuluh']
             ],
             'pendamping' => [
                 'rules' => 'required',
-                'errors' => [
-                    'required' => 'Masukkan Nama Pendamping'
-                ]
+                'errors' => ['required' => 'Masukkan Nama Pendamping']
             ],
             'kecamatan' => [
                 'rules' => 'required',
-                'errors' => [
-                    'required' => 'Masukkan Nama Kecamatan'
-                ]
+                'errors' => ['required' => 'Masukkan Nama Kecamatan']
             ],
             'kelurahan' => [
                 'rules' => 'required',
-                'errors' => [
-                    'required' => 'Masukkan Nama Kelurahan'
-                ]
+                'errors' => ['required' => 'Masukkan Nama Kelurahan']
             ],
             'rw' => [
                 'rules' => 'required',
-                'errors' => [
-                    'required' => 'Masukkan Nama RW'
-                ]
+                'errors' => ['required' => 'Masukkan RW']
             ],
-            'map' => [
+            'luas_lahan' => [
                 'rules' => 'required',
-                'errors' => [
-                    'required' => 'Masukkan Link Alamat'
-                ]
+                'errors' => ['required' => 'Masukkan Luas Lahan']
             ],
-            'nama_kelompok' => [
+            'status_lahan' => [
                 'rules' => 'required',
-                'errors' => [
-                    'required' => 'Masukkan Nama Kelompok'
-                ]
+                'errors' => ['required' => 'Masukkan Status Lahan']
+            ],
+            'latitude' => [
+                'rules' => 'required',
+                'errors' => ['required' => 'Masukkan Latitude']
+            ],
+            'longtitude' => [
+                'rules' => 'required',
+                'errors' => ['required' => 'Masukkan Longtitude']
+            ],
+            'link_deskripsi' => [
+                'rules' => 'required',
+                'errors' => ['required' => 'Masukkan Link Deskripsi']
             ],
         ])) {
             $validation = \Config\Services::validation();
-            return redirect()->to('/DataKelompok/editDataKelompok')->withInput()->with('validation', $validation);
+            return redirect()->to('/DataKelompok/editDataKelompok/' . $id_kelompok)->withInput()->with('validation', $validation);
         }
+
+        // Ambil data lama
+        $dataLama = $this->dataKelompokModel->find($id_kelompok);
+
+        // === Upload Foto Lahan ===
+        $fileLahan = $this->request->getFile('foto_lahan');
+        if ($fileLahan && $fileLahan->isValid() && !$fileLahan->hasMoved()) {
+            $namaFotoLahan = $fileLahan->getRandomName();
+            $fileLahan->move('asset', $namaFotoLahan);
+        } else {
+            $namaFotoLahan = $dataLama['foto_lahan'] ?? null;
+        }
+
+        // === Upload Foto Ketua ===
+        $fileKetua = $this->request->getFile('foto_ketua');
+        if ($fileKetua && $fileKetua->isValid() && !$fileKetua->hasMoved()) {
+            $namaFotoKetua = $fileKetua->getRandomName();
+            $fileKetua->move('asset', $namaFotoKetua);
+        } else {
+            $namaFotoKetua = $dataLama['foto_ketua'] ?? null;
+        }
+
+        // Simpan ke database
         $this->dataKelompokModel->save([
-            'id_kelompok' => $id_kelompok,
-            'penyuluh' => $this->request->getVar('penyuluh'),
-            'pendamping' => $this->request->getVar('pendamping'),
-            'kecamatan' => $this->request->getVar('kecamatan'),
-            'kelurahan' => $this->request->getVar('kelurahan'),
-            'rw' => $this->request->getVar('rw'),
-            'map' => $this->request->getVar('map'),
-            'nama_kelompok' => $this->request->getVar('nama_kelompok'),
+            'id_kelompok'       => $id_kelompok,
+            'nama_kelompok'     => $this->request->getVar('nama_kelompok'),
+            'nama_ketua'        => $this->request->getVar('nama_ketua'),
+            'nomor_kontak'      => $this->request->getVar('nomor_kontak'),
+            'penyuluh'          => $this->request->getVar('penyuluh'),
+            'pendamping'        => $this->request->getVar('pendamping'),
+            'kecamatan'         => $this->request->getVar('kecamatan'),
+            'kelurahan'         => $this->request->getVar('kelurahan'),
+            'rw'                => $this->request->getVar('rw'),
+            'luas_lahan'        => $this->request->getVar('luas_lahan'),
+            'status_lahan'      => $this->request->getVar('status_lahan'),
+            'status_keaktifan'  => $this->request->getVar('status_keaktifan'),
+            'keterangan_status' => $this->request->getVar('keterangan_status'),
+            'latitude' => $this->request->getVar('latitude'),
+            'longtitude' => $this->request->getVar('longtitude'),
+            'link_deskripsi'    => $this->request->getVar('link_deskripsi'),
+            'foto_lahan'        => $namaFotoLahan,
+            'foto_ketua'        => $namaFotoKetua,
         ]);
 
         session()->setFlashdata('pesan', 'Data Kelompok berhasil diubah.');
-
         return redirect()->to('/DataKelompok');
     }
 }

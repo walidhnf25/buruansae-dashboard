@@ -24,6 +24,7 @@
                         <th scope="col">Nama Komoditi</th>
                         <th scope="col">Sektor</th>
                         <th scope="col">Durasi Tanam</th>
+                        <th scope="col">Gambar</th>
                         <th scope="col">Aksi</th>
                     </tr>
                 </thead>
@@ -35,6 +36,13 @@
                             <td><?= $dk['nama_komoditi']; ?></td>
                             <td><?= $dk['sektor']; ?></td>
                             <td><?= $dk['durasi_tanam']; ?></td>
+                            <td>
+                                <?php if (!empty($dk['gambar']) && file_exists('asset/' . $dk['gambar'])) : ?>
+                                    <img src="<?= base_url('asset/' . $dk['gambar']); ?>" alt="Gambar Komoditi" width="50" height="50">
+                                <?php else : ?>
+                                    -
+                                <?php endif; ?>
+                            </td>
                             <td>
                                 <a href="/DataKomoditi/edit/<?= $dk['id']; ?>" class="btn btn-warning">Edit</a>
                                 <form action="/DataKomoditi/delete/<?= $dk['id']; ?>" method="post" class="d-inline">

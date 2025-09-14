@@ -24,6 +24,7 @@
                 <option value="BUAH" <?= old('sektor', $komoditi['sektor']) == 'BUAH' ? 'selected' : '' ?>>BUAH</option>
                 <option value="OLAHAN HASIL" <?= old('sektor', $komoditi['sektor']) == 'OLAHAN HASIL' ? 'selected' : '' ?>>OLAHAN HASIL</option>
                 <option value="OLAHAN SAMPAH" <?= old('sektor', $komoditi['sektor']) == 'OLAHAN SAMPAH' ? 'selected' : '' ?>>OLAHAN SAMPAH</option>
+                <option value="BIBIT" <?= old('sektor', $komoditi['sektor']) == 'BIBIT' ? 'selected' : '' ?>>BIBIT</option>
             </select>
             <div class="invalid-feedback">
                 <?= $validation->getError('sektor'); ?>
@@ -32,11 +33,23 @@
         <div class="col mb-2">
             <label for="durasi_tanam" class="form-label">Durasi Tanam</label>
             <div class="input-group">
-                <input type="number" class="form-control" id="durasi_tanam" placeholder="Masukkan Durasi Tanam" <?= ($validation->hasError('durasi_tanam')) ? 'is-invalid' : ''; ?> id="durasi_tanam" name="durasi_tanam" value="<? (old('durasi_tanam')) ? old('durasi_tanam') : $komoditi['durasi_tanam']; ?>" required>
+                <input type="number" class="form-control <?= ($validation->hasError('durasi_tanam')) ? 'is-invalid' : ''; ?>" 
+                    id="durasi_tanam" name="durasi_tanam" 
+                    value="<?= old('durasi_tanam', $komoditi['durasi_tanam']); ?>" 
+                    placeholder="Masukkan Durasi Tanam" required>
                 <div class="invalid-feedback">
                     <?= $validation->getError('durasi_tanam'); ?>
                 </div>
                 <span class="input-group-text" id="basic-addon2">Hari</span>
+            </div>
+        </div>
+        <div class="col mb-2">
+            <label for="gambar" class="col-sm-2 col-form-label">Upload Foto Komoditi</label>
+            <div class="col-sm-12">
+                <input type="file" class="form-control <?= ($validation->hasError('gambar')) ? 'is-invalid' : ''; ?>" id="gambar" name="gambar">
+                <div class="invalid-feedback">
+                    <?= $validation->getError('gambar'); ?>
+                </div>
             </div>
         </div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">

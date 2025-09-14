@@ -15,22 +15,28 @@ class dataTanamanObatModel extends Model
     public function getDataTanamanObat($id_tanaman_obat = false, $filter = null)
     {
         $builder = $this->db->table('data_tanaman_obat')
-            ->join('data_kelompok', 'data_kelompok.id_kelompok = data_tanaman_obat.id_kelompok', 'left')
-            ->orderBy('id_tanaman_obat', 'DESC');
+            ->join('data_kelompok', 'data_kelompok.id_kelompok = data_tanaman_obat.id_kelompok', 'left');
 
-        // Jika ID tanaman obat diberikan, ambil data spesifik
+        // Jika ID sayur diberikan, ambil data spesifik
         if ($id_tanaman_obat) {
-            return $builder->where('id_tanaman_obat', $id_tanaman_obat)->get()->getRowArray();
+            return $builder->where('id_tanaman_obat', $id_tanaman_obat)->get()->getRowArray() ?: [];
         }
 
         // Filter berdasarkan kondisi waktu_panen
         if ($filter == 'sudah_panen') {
-            $builder->where('waktu_panen IS NOT NULL');
+            $builder->where('waktu_panen IS NOT NULL')
+                    ->orderBy('waktu_panen', 'DESC'); // Urutkan yang sudah dipanen berdasarkan waktu panen terbaru
         } elseif ($filter == 'akan_panen') {
-            $builder->where('waktu_panen IS NULL');
+            $builder->where('waktu_panen IS NULL')
+                    ->orderBy('waktu_prakiraan_panen', 'ASC'); // Urutkan yang belum dipanen berdasarkan waktu prakiraan panen
+        } else {
+            // Jika tanpa filter, urutkan berdasarkan kondisi waktu_panen dan waktu_prakiraan_panen
+            $builder->orderBy("CASE WHEN waktu_panen IS NULL THEN waktu_prakiraan_panen ELSE waktu_panen END", "ASC", false)
+                    ->orderBy("waktu_panen IS NOT NULL", "DESC", false); // Prioritaskan yang sudah dipanen di bawah
         }
 
         // Kembalikan semua data dengan filter (jika ada)
-        return $builder->get()->getResultArray();
+        $data = $builder->get()->getResultArray();
+        return !empty($data) ? $data : []; // Kembalikan array kosong jika tidak ada data
     }
 }

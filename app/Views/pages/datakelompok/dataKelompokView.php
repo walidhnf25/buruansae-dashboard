@@ -22,13 +22,16 @@
             <thead class="align-middle ">
                 <tr class="align-middle">
                     <th scope="col">No</th>
+                    <th scope="col">Kelompok</th>
+                    <th scope="col">Ketua</th>
                     <th scope="col">Penyuluh</th>
                     <th scope="col">Pendamping</th>
                     <th scope="col">Kecamatan</th>
                     <th scope="col">Kelurahan</th>
                     <th scope="col">RW</th>
-                    <th scope="col">Alamat</th>
-                    <th scope="col">Kelompok</th>
+                    <th scope="col">Luas Lahan</th>
+                    <th scope="col">Status Keaktifan</th>
+                    <th scope="col">Link Deskripsi</th>
                     <th scope="col">Status</th>
                 </tr>
             </thead>
@@ -37,21 +40,22 @@
                 <?php foreach ($data_kelompok as $kelompok) : ?>
                     <tr class="table-light align-middle">
                         <th scope="row"><?= $i++; ?></th>
+                        <td><?= $kelompok['nama_kelompok']; ?></td>
+                        <td><?= $kelompok['nama_ketua']; ?></td>
                         <td><?= $kelompok['penyuluh']; ?></td>
                         <td><?= $kelompok['pendamping']; ?></td>
                         <td><?= $kelompok['kecamatan']; ?></td>
                         <td><?= $kelompok['kelurahan']; ?></td>
                         <td><?= $kelompok['rw']; ?></td>
-                        <td>
-                            <?php if (!empty($kelompok['map'])) : ?>
-                                <a href="<?= $kelompok['map']; ?>" target="_blank" class="btn btn-primary btn-sm">
-                                    Lihat Maps
+                        <td><?= $kelompok['luas_lahan']; ?></td>
+                        <td><?= $kelompok['status_keaktifan']; ?></td>
+                        <td class="text-center">
+                            <?php if (!empty($kelompok['link_deskripsi'])): ?>
+                                <a href="<?= $kelompok['link_deskripsi']; ?>" target="_blank" class="btn btn-primary btn-sm">
+                                    Visit
                                 </a>
-                            <?php else : ?>
-                                <span class="text-muted">-</span>
                             <?php endif; ?>
                         </td>
-                        <td><?= $kelompok['nama_kelompok']; ?></td>
                         <td>
                             <?php if (isset($kelompok['id_kelompok'])) : ?>
                                 <a href="<?= base_url(); ?>/DataKelompok/editDataKelompok/<?= $kelompok['id_kelompok']; ?>" class="btn btn-warning">Edit</a>

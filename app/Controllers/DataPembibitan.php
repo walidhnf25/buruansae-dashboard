@@ -3,17 +3,17 @@
 namespace App\Controllers;
 
 use App\Models\dataKelompokModel;
-use App\Models\dataPengolahanSampahModel;
+use App\Models\dataPembibitanModel;
 use App\Models\DataKomoditiModel;
 
-class DataPengolahanSampah extends BaseController
+class DataPembibitan extends BaseController
 {
-    protected $dataPengolahanSampahModel;
+    protected $dataPembibitanModel;
     protected $dataKelompokModel;
     protected $dataKomoditiModel;
     public function __construct()
     {
-        $this->dataPengolahanSampahModel = new dataPengolahanSampahModel();
+        $this->dataPembibitanModel = new dataPembibitanModel();
         $this->dataKelompokModel = new dataKelompokModel();
         $this->dataKomoditiModel = new DataKomoditiModel();
         $this->db = \Config\Database::connect();
@@ -25,55 +25,67 @@ class DataPengolahanSampah extends BaseController
         $filter = $this->request->getGet('filter');
 
         // Hitung jumlah komoditi yang sudah melewati waktu panen (waktu_prakiraan_panen <= hari ini DAN waktu_panen masih NULL)
-        $jumlahTerlambatPanen = $this->db->table('data_sampah')
+        $jumlahTerlambatPanen = $this->db->table('data_bibit')
             ->where('waktu_prakiraan_panen <=', date('Y-m-d'))
             ->where('waktu_panen IS NULL')
             ->countAllResults();
 
         $data = [
-            'tittle' => 'Data Pengolahan Sampah | Buruan SAE',
-            'data_sampah' => $this->dataPengolahanSampahModel->getDataSampah(false, $filter),
+            'tittle' => 'Data Bibit | Buruan SAE',
+            'data_bibit' => $this->dataPembibitanModel->getDataBibit(false, $filter),
             'komoditi' => $this->db->table('data_komoditi')->get()->getResultArray(),
             'filter' => $filter,
             'jumlahTerlambatPanen' => $jumlahTerlambatPanen,
             'validation' => \Config\Services::validation()
         ];
 
-        return view('pages/dataPengolahanSampah', $data);
+        return view('pages/dataPembibitan', $data);
     }
 
-    public function tambahDataSampah()
+    public function tambahDataPembibitan()
     {
         $data = [
-            'tittle' => 'Data Sampah | Buruan SAE',
+            'tittle' => 'Data Bibit | Buruan SAE',
             'validation' => \Config\Services::validation(),
             'kelompok' => $this->dataKelompokModel->getDataKelompok(),
-            'sampah' => $this->dataPengolahanSampahModel->getDataSampah(),
-            'komoditi' => $this->dataKomoditiModel->where('sektor', 'OLAHAN SAMPAH')->findAll()
+            'bibit' => $this->dataPembibitanModel->getDataBibit(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'BIBIT')->findAll()
         ];
-        return view('pages/tambahDataSampah', $data);
+        return view('pages/tambahDataPembibitan', $data);
     }
 
     public function save()
     {
         // validasi input
         if (!$this->validate([
-            'tanggal_masuk' => [
+            'tanggal_tanam' => [
                 'rules' => 'required',
                 'errors' => [
                     'required' => 'Pilih tanggal'
                 ]
             ],
-            'jenis_pengolahan' => [
+            'nama_sayur' => [
                 'rules' => 'required',
                 'errors' => [
-                    'required' => 'Masukkan jenis pengolahan sampah'
+                    'required' => 'Masukkan nama sayur'
                 ]
             ],
-            'jumlah_sampah' => [
+            'asal_bibit' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Masukkan asal bibit'
+                ]
+            ],
+            'keterangan' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Masukkan keterangan asal bibit'
+                ]
+            ],
+            'jumlah_semai' => [
                 'rules' => 'required', 'numeric',
                 'errors' => [
-                    'required' => 'Masukkan jumlah sampah',
+                    'required' => 'Masukkan jumlah semai',
                     'numeric' => 'Masukan berupa angka'
                 ]
             ],
@@ -86,86 +98,100 @@ class DataPengolahanSampah extends BaseController
             ],
         ])) {
             $validation = \Config\Services::validation();
-            return redirect()->to('/dataPengolahanSampah/tambahDataSampah')->withInput()->with('validation', $validation);
+            return redirect()->to('/DataPembibitan/tambahDataPembibitan')->withInput()->with('validation', $validation);
         }
 
         // Ambil data durasi tanam dari tabel data_komoditi
-        $jenis_pengolahan = $this->request->getVar('jenis_pengolahan');
-        $tanggal_masuk = $this->request->getVar('tanggal_masuk');
+        $nama_sayur = $this->request->getVar('nama_sayur');
+        $tanggal_tanam = $this->request->getVar('tanggal_tanam');
         $komoditiModel = new \App\Models\DataKomoditiModel(); // Asumsikan model untuk tabel data_komoditi
-        $komoditi = $komoditiModel->where('nama_komoditi', $jenis_pengolahan)->first();
+        $komoditi = $komoditiModel->where('nama_komoditi', $nama_sayur)->first();
 
         if (!$komoditi) {
             session()->setFlashdata('error', 'Data komoditi tidak ditemukan.');
-            return redirect()->to('/dataBibit/tambahDataSampah')->withInput();
+            return redirect()->to('/dataBibit/tambahDataPembibitan')->withInput();
         }
 
         $durasi_tanam = $komoditi['durasi_tanam']; // Ambil durasi_tanam dari tabel data_komoditi
 
         // Hitung waktu prakiraan panen
-        $waktu_prakiraan_panen = date('Y-m-d', strtotime($tanggal_masuk . " + $durasi_tanam days"));
+        $waktu_prakiraan_panen = date('Y-m-d', strtotime($tanggal_tanam . " + $durasi_tanam days"));
 
-        $this->dataPengolahanSampahModel->save([
-            'jenis_pengolahan' => $jenis_pengolahan,
+        $this->dataPembibitanModel->save([
+            'nama_sayur' => $nama_sayur,
             'id_kelompok' => $this->request->getVar('id_kelompok'),
-            'tanggal_masuk' => $tanggal_masuk,
-            'jumlah_sampah' => $this->request->getVar('jumlah_sampah'),
+            'tanggal_tanam' => $tanggal_tanam,
+            'asal_bibit' => $this->request->getVar('asal_bibit'),
+            'keterangan' => $this->request->getVar('keterangan'),
+            'jumlah_semai' => $this->request->getVar('jumlah_semai'),
             'prakiraan_jumlah_panen' => $this->request->getVar('prakiraan_jumlah_panen'),
             'waktu_prakiraan_panen' => $waktu_prakiraan_panen
         ]);
 
         session()->setFlashdata('pesan', 'Data berhasil ditambahkan.');
 
-        return redirect()->to('/dataPengolahanSampah');
+        return redirect()->to('/DataPembibitan');
     }
 
-    public function delete($id_data_sampah)
+    public function delete($id_bibit)
     {
-        $this->dataPengolahanSampahModel->delete($id_data_sampah);
+        $this->dataPembibitanModel->delete($id_bibit);
         session()->setFlashdata('pesan', 'Data berhasil dihapus.');
-        return redirect()->to('/dataPengolahanSampah');
+        return redirect()->to('/dataPembibitan');
     }
 
-    public function editDataSampah($id_data_sampah)
+    public function editDataPembibitan($id_bibit)
     {
-        $sampah = $this->dataPengolahanSampahModel->getDataSampah($id_data_sampah);
+        $bibit = $this->dataPembibitanModel->getDataBibit($id_bibit);
 
         // Ambil data `durasi_tanam` dari tabel `data_komoditi` berdasarkan nama sayur
-        $komoditi = $this->dataKomoditiModel->where('nama_komoditi', $sampah['jenis_pengolahan'])->first();
+        $komoditi = $this->dataKomoditiModel->where('nama_komoditi', $bibit['nama_sayur'])->first();
         $durasi_tanam = $komoditi['durasi_tanam'] ?? null;
-        
+
         $data = [
-            'tittle' => 'Data Sampah | Buruan SAE',
+            'tittle' => 'Data Bibit | Buruan SAE',
             'validation' => \Config\Services::validation(),
-            'sampah' => $sampah,
+            'bibit' => $bibit,
             'durasi_tanam' => $durasi_tanam,
             'kelompok' => $this->dataKelompokModel->getDataKelompok(),
-            'komoditi' => $this->dataKomoditiModel->where('sektor', 'OLAHAN SAMPAH')->findAll(),
+            'komoditi' => $this->dataKomoditiModel->where('sektor', 'BIBIT')->findAll(),
         ];
 
-        return view('pages/editDataSampah', $data);
+        return view('pages/editDataPembibitan', $data);
     }
 
-    public function update($id_data_sampah)
+    public function update($id_bibit)
     {
         // validasi input
         if (!$this->validate([
-            'tanggal_masuk' => [
+            'tanggal_tanam' => [
                 'rules' => 'required',
                 'errors' => [
                     'required' => 'Pilih tanggal'
                 ]
             ],
-            'jenis_pengolahan' => [
+            'nama_sayur' => [
                 'rules' => 'required',
                 'errors' => [
-                    'required' => 'Masukkan jenis pengolahan sampah'
+                    'required' => 'Masukkan nama sayur'
                 ]
             ],
-            'jumlah_sampah' => [
+            'asal_bibit' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Masukkan asal bibit'
+                ]
+            ],
+            'keterangan' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Masukkan keterangan asal bibit'
+                ]
+            ],
+            'jumlah_semai' => [
                 'rules' => 'required', 'numeric',
                 'errors' => [
-                    'required' => 'Masukkan jumlah sampah',
+                    'required' => 'Masukkan jumlah semai',
                     'numeric' => 'Masukan berupa angka'
                 ]
             ],
@@ -178,37 +204,39 @@ class DataPengolahanSampah extends BaseController
             ],
         ])) {
             $validation = \Config\Services::validation();
-            return redirect()->to('/dataPengolahanSampah/editDataSampah' . $this->request->getVar('id_data_sampah'))->withInput()->with('validation', $validation);
+            return redirect()->to('/DataPembibitan/editDataBibit' . $this->request->getVar('id_bibit'))->withInput()->with('validation', $validation);
         }
 
-        $this->dataPengolahanSampahModel->save([
-            'jenis_pengolahan' => $this->request->getVar('jenis_pengolahan'),
+        $this->dataPembibitanModel->save([
+            'nama_sayur' => $this->request->getVar('nama_sayur'),
             'id_kelompok' => $this->request->getVar('id_kelompok'),
-            'tanggal_masuk' => $this->request->getVar('tanggal_masuk'),
-            'jumlah_sampah' => $this->request->getVar('jumlah_sampah'),
+            'tanggal_tanam' => $this->request->getVar('tanggal_tanam'),
+            'asal_bibit' => $this->request->getVar('asal_bibit'),
+            'keterangan' => $this->request->getVar('keterangan'),
+            'jumlah_semai' => $this->request->getVar('jumlah_semai'),
             'prakiraan_jumlah_panen' => $this->request->getVar('prakiraan_jumlah_panen'),
             'waktu_prakiraan_panen' => $this->request->getVar('waktu_prakiraan_panen'),
         ]);
 
         session()->setFlashdata('pesan', 'Data berhasil diubah.');
 
-        return redirect()->to('/dataPengolahanSampah');
+        return redirect()->to('/DataPembibitan');
     }
 
-
-    public function dataProduksiSampah($id_data_sampah)
+    public function dataPanenPembibitan($id_bibit)
     {
         session();
         $data = [
-            'tittle' => 'Data Sampah | Buruan SAE',
+            'tittle' => 'Data Bibit | Buruan SAE',
             'validation' => \Config\Services::validation(),
-            'id_data_sampah' => $this->dataPengolahanSampahModel->getDataSampah($id_data_sampah),
+            'id_bibit' => $this->dataPembibitanModel->getDataBibit($id_bibit)
         ];
-        return view('pages/dataProduksiSampah', $data);
+        return view('pages/dataPanenPembibitan', $data);
     }
 
-    public function tambah_data_panen($id_data_sampah)
+    public function updateDataPanen($id_bibit)
     {
+
         if (!$this->validate([
             'waktu_panen' => [
                 'rules' => 'required',
@@ -217,7 +245,7 @@ class DataPengolahanSampah extends BaseController
                 ]
             ],
             'jumlah_panen' => [
-                'rules' => 'required|numeric[id_data_sampah.jumlah_panen]',
+                'rules' => 'required|numeric[id_bibit.jumlah_panen]',
                 'errors' => [
                     'required' => 'Masukkan Jumlah Panen !!',
                     'numeric' => 'Masukan Berupa Angka !!'
@@ -279,7 +307,7 @@ class DataPengolahanSampah extends BaseController
                     'decimal' => 'Masukan harus berupa angka !!'
                 ]
             ],
-            'jumlah_dijual_kg' => [
+            'jumlah_dijual_pohon' => [
                 'rules' => 'required|decimal',
                 'errors' => [
                     'required' => 'Masukkan Jumlah Pohon Dijual !!',
@@ -296,7 +324,7 @@ class DataPengolahanSampah extends BaseController
             'jumlah_dijual_kk' => [
                 'rules' => 'required|decimal',
                 'errors' => [
-                    'required' => 'Masukkan Jumlah Orang !!',
+                    'required' => 'Masukkan Jumlah KK !!',
                     'decimal' => 'Masukan harus berupa angka !!'
                 ]
             ],
@@ -317,14 +345,14 @@ class DataPengolahanSampah extends BaseController
             ]
         ])) {
             $validation = \Config\Services::validation();
-            return redirect()->to('/dataPengolahanSampah/dataProduksiSampah/' . $id_data_sampah)->withInput()->with('validation', $validation);
+            return redirect()->to('dataSayur/dataPanenSayur/' . $this->request->getVar('id_bibit'))->withInput()->with('validation', $validation);
         }
 
         // Ambil file gambar
         $fileGambar = $this->request->getFile('gambar');
 
         // Ambil data panen lama
-        $dataLama = $this->dataPengolahanSampahModel->find($id_data_sampah);
+        $dataLama = $this->dataPembibitanModel->find($id_bibit);
 
         // Cek apakah pengguna mengunggah gambar baru
         if ($fileGambar && !$fileGambar->hasMoved() && $fileGambar->isValid()) {
@@ -349,8 +377,8 @@ class DataPengolahanSampah extends BaseController
             $namaGambar = $dataLama['gambar'] ?? null;
         }
 
-        $this->dataPengolahanSampahModel->save([
-            'id_data_sampah' => $id_data_sampah,
+        $this->dataPembibitanModel->save([
+            'id_bibit' => $id_bibit,
             'waktu_panen' => $this->request->getVar('waktu_panen'),
             'jumlah_panen' => $this->request->getVar('jumlah_panen'),
             'jumlah_kp' => $this->request->getVar('jumlah_kp'),
@@ -361,7 +389,7 @@ class DataPengolahanSampah extends BaseController
             'jumlah_lainnya' => $this->request->getVar('jumlah_lainnya'),
             'jumlah_kk' => $this->request->getVar('jumlah_kk'),
             'jumlah_orang' => $this->request->getVar('jumlah_orang'),
-            'jumlah_dijual_kg' => $this->request->getVar('jumlah_dijual_kg'),
+            'jumlah_dijual_pohon' => $this->request->getVar('jumlah_dijual_pohon'),
             'jumlah_dijual_orang' => $this->request->getVar('jumlah_dijual_orang'),
             'jumlah_dijual_kk' => $this->request->getVar('jumlah_dijual_kk'),
             'harga_jual' => $this->request->getVar('harga_jual'),
@@ -370,6 +398,6 @@ class DataPengolahanSampah extends BaseController
 
         session()->setFlashdata('pesan', 'Data panen berhasil disimpan.');
 
-        return redirect()->to('/dataPengolahanSampah');
+        return redirect()->to('/dataPembibitan');
     }
 }

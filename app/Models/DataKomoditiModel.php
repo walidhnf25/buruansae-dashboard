@@ -8,7 +8,7 @@ class DataKomoditiModel extends Model
 {
     protected $table      = 'data_komoditi';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nama_komoditi', 'sektor', 'durasi_tanam'];
+    protected $allowedFields = ['nama_komoditi', 'sektor', 'durasi_tanam', 'gambar'];
 
     public function getDataKomoditi($id_komoditi = false)
     {

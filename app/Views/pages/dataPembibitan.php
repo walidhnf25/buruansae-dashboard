@@ -3,7 +3,7 @@
 <?= $this->section('content'); ?>
 <div class="container">
   <div class="tittle">
-    <h2 class="label-tambah-data"><b>Data Pengolahan Sampah</b></h2>
+    <h2 class="label-tambah-data"><b>Data Bibit</b></h2>
     <?php if (session()->getFlashdata('pesan')) : ?>
       <div class="alert alert-success" role="alert">
         <?= session()->getFlashdata('pesan'); ?>
@@ -13,12 +13,12 @@
 
   <div class="row mt-3">
     <div class="col-3">
-      <a href="<?= base_url(); ?>/dataPengolahanSampah/tambahDataSampah" class="btn btn-primary">Tambah Data</a>
+      <a href="<?= base_url(); ?>/dataPembibitan/tambahdataPembibitan" class="btn btn-primary">Tambah Data</a>
     </div>
     
     <div class="col-6 d-flex justify-content-center">
       <!-- Tombol Sudah Panen -->
-      <a href="<?= base_url(); ?>/dataPengolahanSampah?filter=sudah_panen" 
+      <a href="<?= base_url(); ?>/dataPembibitan?filter=sudah_panen" 
         class="btn btn-primary mx-2 d-flex align-items-center" 
         id="btnSudahPanen">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-check me-2">
@@ -29,7 +29,7 @@
       </a>
 
       <!-- Tombol Akan Panen -->
-      <a href="<?= base_url(); ?>/dataPengolahanSampah?filter=akan_panen" 
+      <a href="<?= base_url(); ?>/dataPembibitan?filter=akan_panen" 
         class="btn btn-primary position-relative mx-2 d-flex align-items-center" 
         id="btnAkanPanen">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icon-tabler-clock-hour-4 me-2">
@@ -55,22 +55,19 @@
       <thead class="table-dark align-middle ">
         <tr class="align-middle">
           <th scope="col">No</th>
-          <th scope="col">Jenis Pengolahan</th>
-          <th scope="col">Kelompok</th>
-          <th scope="col">Penyuluh</th>
-          <th scope="col">Pendamping</th>
-          <th scope="col">Kecamatan</th>
-          <th scope="col">Kelurahan</th>
-          <th scope="col">RW</th>
-          <th scope="col">Jumlah Sampah</th>
+          <th scope="col">Tanggal Tanam</th>
+          <th scope="col">Nama bibit/Tanaman</th>
+          <th scope="col">Asal Bibit</th>
+          <th scope="col">Keterangan</th>
+          <th scope="col">Jumlah Semai (Biji)</th>
           <th scope="col">Prakiraan Jumlah Panen</th>
           <th scope="col">
-            <?php if (!empty($data_sampah)) : ?>
+            <?php if (!empty($data_bibit)) : ?>
                 <?php 
                     $hasNull = false;
                     $hasNonNull = false;
                     
-                    foreach ($data_sampah as $item) {
+                    foreach ($data_bibit as $item) {
                         if ($item['waktu_panen'] === null) {
                             $hasNull = true;
                         } else {
@@ -98,43 +95,41 @@
       </thead>
       <tbody>
         <?php $i = 1; ?>
-        <?php foreach ($data_sampah as $sampah) : ?>
+        <?php foreach ($data_bibit as $bibit) : ?>
           <?php
             // Konversi waktu_prakiraan_panen ke timestamp
-            $waktuPrakiraanPanen = isset($sampah['waktu_prakiraan_panen']) ? strtotime($sampah['waktu_prakiraan_panen']) : null;
+            $waktuPrakiraanPanen = isset($bibit['waktu_prakiraan_panen']) ? strtotime($bibit['waktu_prakiraan_panen']) : null;
             $hariIni = strtotime(date('Y-m-d'));
 
             // Jika waktu_panen NULL dan waktu_prakiraan_panen adalah hari ini atau sudah lewat, beri warna merah
-            $highlight = (is_null($sampah['waktu_panen']) && $waktuPrakiraanPanen !== null && $waktuPrakiraanPanen <= $hariIni) ? 'table-color' : '';
+            $highlight = (is_null($bibit['waktu_panen']) && $waktuPrakiraanPanen !== null && $waktuPrakiraanPanen <= $hariIni) ? 'table-color' : '';
           ?>
           <tr class="table-light align-middle">
             <th scope="row"><?= $i++; ?></th>
-            <td><?= $sampah['jenis_pengolahan']; ?></td>
-            <td><?= $sampah['nama_kelompok']; ?></td>
-            <td><?= $sampah['penyuluh']; ?></td>
-            <td><?= $sampah['pendamping']; ?></td>
-            <td><?= $sampah['kecamatan']; ?></td>
-            <td><?= $sampah['kelurahan']; ?></td>
-            <td><?= $sampah['rw']; ?></td>
-            <td><?= $sampah['jumlah_sampah']; ?></td>
-            <td><?= $sampah['prakiraan_jumlah_panen']; ?></td>
+            <td><?= $bibit['tanggal_tanam']; ?></td>
+            <td><?= $bibit['nama_sayur']; ?></td>
+            <td><?= $bibit['asal_bibit']; ?></td>
+            <td><?= $bibit['keterangan']; ?></td>
+            <td><?= $bibit['jumlah_semai']; ?></td>
+            <td><?= $bibit['prakiraan_jumlah_panen']; ?></td>
+
             <!-- Waktu Prakiraan Panen -->
-            <td class="<?= (is_null($sampah['waktu_panen']) && $waktuPrakiraanPanen !== null && $waktuPrakiraanPanen <= $hariIni) ? 'table-color' : ''; ?>">
-              <?= $sampah['waktu_panen'] ?? ($sampah['waktu_prakiraan_panen'] ?? '-'); ?>
+            <td class="<?= (is_null($bibit['waktu_panen']) && $waktuPrakiraanPanen !== null && $waktuPrakiraanPanen <= $hariIni) ? 'table-color' : ''; ?>">
+              <?= $bibit['waktu_panen'] ?? ($bibit['waktu_prakiraan_panen'] ?? '-'); ?>
             </td>
             <td>
-              <?php if (is_null($sampah['waktu_panen'])) : ?>
+              <?php if (is_null($bibit['waktu_panen'])) : ?>
               <!-- Tombol Panen -->
-              <a href="<?= base_url(); ?>/dataPengolahanSampah/dataProduksiSampah/<?= $sampah['id_data_sampah']; ?>" class="text-success mx-2" title="Panen">
+              <a href="<?= base_url(); ?>/dataPembibitan/dataPanenPembibitan/<?= $bibit['id_bibit']; ?>" class="text-success mx-2" title="Panen">
                 <i class="fas fa-seedling"></i>
               </a>
               <!-- Tombol Edit -->
-              <a href="<?= base_url(); ?>/dataPengolahanSampah/editdataSampah/<?= $sampah['id_data_sampah']; ?>" class="text-warning mx-2" title="Edit">
+              <a href="<?= base_url(); ?>/dataPembibitan/editDataPembibitan/<?= $bibit['id_bibit']; ?>" class="text-warning mx-2" title="Edit">
                 <i class="fas fa-edit"></i>
               </a>
               <!-- Tombol Delete -->
-              <?php if (isset($sampah['id_data_sampah'])) : ?>
-                <form action="/dataPengolahanSampah/<?= $sampah['id_data_sampah']; ?>" method="post" class="d-inline">
+              <?php if (isset($bibit['id_bibit'])) : ?>
+                <form action="/dataPembibitan/<?= $bibit['id_bibit']; ?>" method="post" class="d-inline">
                   <?= csrf_field(); ?>
                   <input type="hidden" name="_method" value="DELETE">
                   <button type="submit" class="btn btn-link text-danger p-0 mx-2" title="Delete" onclick="return confirm('Apakah anda yakin?');">
@@ -146,12 +141,12 @@
                     <!-- Badge Sudah Panen -->
                     <span class="badge bg-success p-2" title="Sudah Panen">Sudah Panen</span>
                     <!-- Tombol Edit Data Panen -->
-                    <a href="<?= base_url(); ?>/dataPengolahanSampah/dataProduksiSampah/<?= $sampah['id_data_sampah']; ?>" class="text-warning mx-2" title="Edit Data Panen">
+                    <a href="<?= base_url(); ?>/dataPembibitan/dataPanenPembibitan/<?= $bibit['id_bibit']; ?>" class="text-warning mx-2" title="Edit Data Panen">
                       <i class="fas fa-edit"></i>
                     </a>
                     <!-- Tombol Delete -->
-                    <?php if (isset($sampah['id_data_sampah'])) : ?>
-                      <form action="/dataPengolahanSampah/<?= $sampah['id_data_sampah']; ?>" method="post" class="d-inline">
+                    <?php if (isset($bibit['id_bibit'])) : ?>
+                      <form action="/dataPembibitan/<?= $bibit['id_bibit']; ?>" method="post" class="d-inline">
                         <?= csrf_field(); ?>
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit" class="btn btn-link text-danger p-0 mx-2" title="Delete" onclick="return confirm('Apakah anda yakin?');">

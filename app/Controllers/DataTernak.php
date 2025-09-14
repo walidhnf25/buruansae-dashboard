@@ -25,10 +25,17 @@ class DataTernak extends BaseController
         // Ambil filter dari query string (GET parameter)
         $filter = $this->request->getGet('filter');
 
+        $jumlahTerlambatPanen = $this->db->table('data_ternak')
+            ->where('waktu_prakiraan_panen <=', date('Y-m-d'))
+            ->where('waktu_panen IS NULL')
+            ->countAllResults();
+
         $data = [
             'tittle' => 'Data Ternak | Buruan SAE',
             'validation' => \Config\Services::validation(),
             'data_ternak' => $this->dataTernakModel->getDataTernak(false, $filter),
+            'filter' => $filter,
+            'jumlahTerlambatPanen' => $jumlahTerlambatPanen,
             'komoditi' => $this->db->table('data_komoditi')->where('sektor', 'TERNAK')->get()->getResultArray(), // Pastikan sektor adalah "TERNAK"
         ];
 
@@ -346,12 +353,11 @@ class DataTernak extends BaseController
                 ]
             ],
             'gambar' => [
-                'rules' => 'uploaded[gambar]|max_size[gambar,2048]|is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png]',
+                'rules' => 'max_size[gambar,2048]|is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png]',
                 'errors' => [
-                    'uploaded' => 'Pilih gambar terlebih dahulu',
-                    'max_size' => 'Ukuran gambar terlalu besar',
-                    'is_image' => 'Yang anda pilih bukan gambar',
-                    'mime_in' => 'Yang anda pilih bukan gambar'
+                    'max_size' => 'Ukuran Gambar Terlalu Besar, (MAX 2MB)',
+                    'is_image' => 'Inputan Harus Berupa Gambar',
+                    'mime_in' => 'Inputan Harus Berupa File'
                 ]
             ]
         ])) {
@@ -360,26 +366,33 @@ class DataTernak extends BaseController
             // return redirect()->to('/dataTernak/dataPanenTernak/' . $id_ternak)->withInput()->with('validation', $validation);
         }
 
+        // Ambil file gambar
         $fileGambar = $this->request->getFile('gambar');
 
-        // Jika ukuran gambar lebih dari 3 MB, kompres gambar
-        $maxSize = 3 * 1024 * 1024; // 3 MB dalam byte
-        if ($fileGambar->getSize() > $maxSize) {
-            // Buat nama baru untuk gambar
-            $namaGambar = $fileGambar->getRandomName();
+        // Ambil data panen lama
+        $dataLama = $this->dataSayurModel->find($id_sayur);
 
-            // Kompres gambar menggunakan Intervention Image
-            $image = Image::make($fileGambar->getTempName());
-            $image->resize(1920, null, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
-            $image->save('asset/' . $namaGambar, 80); // Simpan dengan kualitas 80
+        // Cek apakah pengguna mengunggah gambar baru
+        if ($fileGambar && !$fileGambar->hasMoved() && $fileGambar->isValid()) {
+            // Jika ukuran gambar lebih dari 3 MB, kompres gambar
+            $maxSize = 3 * 1024 * 1024; // 3 MB dalam byte
+            if ($fileGambar->getSize() > $maxSize) {
+                // Buat nama baru untuk gambar
+                $namaGambar = $fileGambar->getRandomName();
 
+                // Kompres gambar menggunakan Intervention Image
+                $image = \Config\Services::image()
+                    ->withFile($fileGambar->getTempName())
+                    ->resize(1920, null, true)
+                    ->save('asset/' . $namaGambar, 80); // Simpan dengan kualitas 80
+            } else {
+                // Jika ukuran gambar sudah sesuai, langsung pindahkan
+                $namaGambar = $fileGambar->getRandomName();
+                $fileGambar->move('asset', $namaGambar);
+            }
         } else {
-            // Jika ukuran gambar sudah sesuai, langsung pindahkan
-            $namaGambar = $fileGambar->getRandomName();
-            $fileGambar->move('asset', $namaGambar);
+            // Jika tidak ada gambar baru, gunakan gambar lama
+            $namaGambar = $dataLama['gambar'] ?? null;
         }
 
         $this->dataTernakModel->save([

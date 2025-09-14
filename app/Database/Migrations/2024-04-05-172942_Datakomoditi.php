@@ -30,6 +30,11 @@ class Datakomoditi extends Migration
                 'constraint' => 11,
                 'null' => true,
             ],
+            'gambar' => [
+                'type' => 'VARCHAR',
+                'constraint' => '255',
+                'null' => true,
+            ],
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('data_komoditi');

@@ -30,20 +30,30 @@
 
       <!-- Tombol Akan Panen -->
       <a href="<?= base_url(); ?>/dataSayur?filter=akan_panen" 
-        class="btn btn-primary mx-2 d-flex align-items-center" 
+        class="btn btn-primary position-relative mx-2 d-flex align-items-center" 
         id="btnAkanPanen">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icon-tabler-clock-hour-4 me-2">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
               <path d="M17 3.34a10 10 0 1 1 -15 8.66l.005 -.324a10 10 0 0 1 14.995 -8.336m-5 2.66a1 1 0 0 0 -1 1v5.026l.009 .105l.02 .107l.04 .129l.048 .102l.046 .078l.042 .06l.069 .08l.088 .083l.083 .062l3 2a1 1 0 1 0 1.11 -1.664l-2.555 -1.704v-4.464a1 1 0 0 0 -.883 -.993z"/>
           </svg>
           Akan Panen
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger fs-6">
+            <?= $jumlahTerlambatPanen; ?>
+        </span>
       </a>
     </div>
   </div>
 
+    <?php if ($filter == 'akan_panen' && $jumlahTerlambatPanen > 0) : ?>
+        <div class="alert alert-light shadow-sm rounded-pill px-4 py-3 mt-4 text-center custom-alert-text" role="alert">
+            <strong>Terdapat <?= $jumlahTerlambatPanen; ?> Komoditi yang Sudah Melewati Waktu Panen</strong>
+        </div>
+    <?php endif; ?>
+
+
   <!-- Button trigger modal -->
   <div class="table-responsive-lg">
-  <table id="tablehome" class="table table-bordered table-hover ">
+    <table id="tablehome" class="table table-bordered table-hover ">
       <thead class="table-dark align-middle ">
         <tr class="align-middle">
           <th scope="col">No</th>
@@ -91,71 +101,73 @@
         </tr>
       </thead>
       <tbody>
-        <?php $i = 1; ?>
+      <?php $i = 1; ?>
         <?php foreach ($data_sayur as $sayur) : ?>
-          <tr class="table-light align-middle">
-            <th scope="row"><?= $i++; ?></th>
-            <td><?= $sayur['nama_sayur']; ?></td>
-            <td><?= $sayur['nama_kelompok']; ?></td>
-            <td><?= $sayur['penyuluh']; ?></td>
-            <td><?= $sayur['pendamping']; ?></td>
-            <td><?= $sayur['kecamatan']; ?></td>
-            <td><?= $sayur['kelurahan']; ?></td>
-            <td><?= $sayur['rw']; ?></td>
-            <td><?= $sayur['tanggal_tanam']; ?></td>
-            <td><?= $sayur['jumlah_tanam'] . ' ' . $sayur['kategori_tumbuhan'] . ''; ?></td>
+            <?php
+                // Konversi waktu_prakiraan_panen ke timestamp
+                $waktuPrakiraanPanen = isset($sayur['waktu_prakiraan_panen']) ? strtotime($sayur['waktu_prakiraan_panen']) : null;
+                $hariIni = strtotime(date('Y-m-d'));
 
-            <!-- Waktu Panen / Prakiraan Panen -->
-            <td>
-              <?php if ($sayur['waktu_panen'] === null) : ?>
-                <!-- If waktu_panen is null, display Waktu Prakiraan Panen -->
-                <?= $sayur['waktu_prakiraan_panen'] ?? '-'; ?>
-              <?php else : ?>
-                <!-- If waktu_panen is not null, display Waktu Panen -->
-                <?= $sayur['waktu_panen'] ?? '-'; ?>
-              <?php endif; ?>
-            </td>
+                // Jika waktu_panen NULL dan waktu_prakiraan_panen adalah hari ini atau sudah lewat, beri warna merah
+                $highlight = (is_null($sayur['waktu_panen']) && $waktuPrakiraanPanen !== null && $waktuPrakiraanPanen <= $hariIni) ? 'table-color' : '';
+            ?>
+            <tr class="align-middle table-light">
+                <th scope="row"><?= $i++; ?></th>
+                <td><?= $sayur['nama_sayur']; ?></td>
+                <td><?= $sayur['nama_kelompok']; ?></td>
+                <td><?= $sayur['penyuluh']; ?></td>
+                <td><?= $sayur['pendamping']; ?></td>
+                <td><?= $sayur['kecamatan']; ?></td>
+                <td><?= $sayur['kelurahan']; ?></td>
+                <td><?= $sayur['rw']; ?></td>
+                <td><?= $sayur['tanggal_tanam']; ?></td>
+                <td><?= $sayur['jumlah_tanam'] . ' ' . $sayur['kategori_tumbuhan']; ?></td>
 
-            <td>
-              <?php if (!isset($sayur['waktu_panen']) || $sayur['waktu_panen'] == null) : ?>
-                  <!-- Tombol Panen -->
-                  <a href="<?= base_url(); ?>/dataSayur/dataPanenSayur/<?= $sayur['id_sayur']; ?>" class="text-success mx-2" title="Panen">
-                      <i class="fas fa-seedling"></i>
-                  </a>
-                  <!-- Tombol Edit -->
-                  <a href="<?= base_url(); ?>/dataSayur/editDataSayur/<?= $sayur['id_sayur']; ?>" class="text-warning mx-2" title="Edit">
-                      <i class="fas fa-edit"></i>
-                  </a>
-                  <!-- Tombol Delete -->
-                  <?php if (isset($sayur['id_sayur'])) : ?>
-                      <form action="/dataSayur/<?= $sayur['id_sayur']; ?>" method="post" class="d-inline">
-                          <?= csrf_field(); ?>
-                          <input type="hidden" name="_method" value="DELETE">
-                          <button type="submit" class="btn btn-link text-danger p-0 mx-2" title="Delete" onclick="return confirm('Apakah anda yakin?');">
-                              <i class="fas fa-trash-alt"></i>
-                          </button>
-                      </form>
-                  <?php endif; ?>
-              <?php else : ?>
-                  <!-- Badge Sudah Panen -->
-                  <span class="badge bg-success p-2" title="Sudah Panen">Sudah Panen</span>
-                  <!-- Tombol Edit Data Panen -->
-                  <a href="<?= base_url(); ?>/dataSayur/dataPanenSayur/<?= $sayur['id_sayur']; ?>" class="text-warning mx-2" title="Edit Data Panen">
-                      <i class="fas fa-edit"></i>
-                  </a>
-                  <!-- Tombol Delete -->
-                  <?php if (isset($sayur['id_sayur'])) : ?>
-                      <form action="/dataSayur/<?= $sayur['id_sayur']; ?>" method="post" class="d-inline">
-                          <?= csrf_field(); ?>
-                          <input type="hidden" name="_method" value="DELETE">
-                          <button type="submit" class="btn btn-link text-danger p-0 mx-2" title="Delete" onclick="return confirm('Apakah anda yakin?');">
-                              <i class="fas fa-trash-alt"></i>
-                          </button>
-                      </form>
-                  <?php endif; ?>
-              <?php endif; ?>
-            </td>
-          </tr>
+                <!-- Waktu Prakiraan Panen -->
+                <td class="<?= (is_null($sayur['waktu_panen']) && $waktuPrakiraanPanen !== null && $waktuPrakiraanPanen <= $hariIni) ? 'table-color' : ''; ?>">
+                    <?= $sayur['waktu_panen'] ?? ($sayur['waktu_prakiraan_panen'] ?? '-'); ?>
+                </td>
+
+                <td>
+                    <?php if (is_null($sayur['waktu_panen'])) : ?>
+                        <!-- Tombol Panen -->
+                        <a href="<?= base_url(); ?>/dataSayur/dataPanenSayur/<?= $sayur['id_sayur']; ?>" class="text-success mx-2" title="Panen">
+                            <i class="fas fa-seedling"></i>
+                        </a>
+                        <!-- Tombol Edit -->
+                        <a href="<?= base_url(); ?>/dataSayur/editDataSayur/<?= $sayur['id_sayur']; ?>" class="text-warning mx-2" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <!-- Tombol Delete -->
+                        <?php if (isset($sayur['id_sayur'])) : ?>
+                            <form action="/dataSayur/<?= $sayur['id_sayur']; ?>" method="post" class="d-inline">
+                                <?= csrf_field(); ?>
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-link text-danger p-0 mx-2" title="Delete" onclick="return confirm('Apakah anda yakin?');">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        <?php endif; ?>
+                    <?php else : ?>
+                        <!-- Badge Sudah Panen -->
+                        <span class="badge bg-success p-2" title="Sudah Panen">Sudah Panen</span>
+                        <!-- Tombol Edit Data Panen -->
+                        <a href="<?= base_url(); ?>/dataSayur/dataPanenSayur/<?= $sayur['id_sayur']; ?>" class="text-warning mx-2" title="Edit Data Panen">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <!-- Tombol Delete -->
+                        <?php if (isset($sayur['id_sayur'])) : ?>
+                            <form action="/dataSayur/<?= $sayur['id_sayur']; ?>" method="post" class="d-inline">
+                                <?= csrf_field(); ?>
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-link text-danger p-0 mx-2" title="Delete" onclick="return confirm('Apakah anda yakin?');">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </td>
+            </tr>
         <?php endforeach; ?>
       </tbody>
     </table>
@@ -163,6 +175,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     $(document).ready(function () {
       // Ambil parameter filter dari URL
@@ -190,5 +203,24 @@
           $('#headerTitle').text(headerText);
       }
   });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let btnAkanPanen = document.getElementById("btnAkanPanen");
+        let alertBox = document.getElementById("alertAkanPanen");
+
+        // Cek jika sebelumnya sudah diklik
+        if (localStorage.getItem("akanPanenActive") === "true") {
+            alertBox.style.display = "block";
+        } else {
+            alertBox.style.display = "none";
+        }
+
+        btnAkanPanen.addEventListener("click", function () {
+            localStorage.setItem("akanPanenActive", "true");
+            alertBox.style.display = "block";
+        });
+    });
+</script>
+
 </script>
 <?= $this->endSection(); ?>

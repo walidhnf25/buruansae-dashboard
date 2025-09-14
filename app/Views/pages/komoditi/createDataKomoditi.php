@@ -25,6 +25,7 @@
                     <option value="BUAH">BUAH</option>
                     <option value="OLAHAN HASIL">OLAHAN HASIL</option>
                     <option value="OLAHAN SAMPAH">OLAHAN SAMPAH</option>
+                    <option value="OLAHAN Bibit">Bibit</option>
                 </select>
                 <div class="invalid-feedback">
                     <?= $validation->getError('sektor'); ?>
@@ -39,6 +40,15 @@
                     <?= $validation->getError('durasi_tanam'); ?>
                 </div>
                 <span class="input-group-text" id="basic-addon2">Hari</span>
+            </div>
+        </div>
+        <div class="col mb-2">
+            <label for="gambar" class="col-sm-2 col-form-label">Upload Foto Komoditi</label>
+            <div class="col-sm-12">
+                <input type="file" class="form-control <?= ($validation->hasError('gambar')) ? 'is-invalid' : ''; ?>" id="gambar" name="gambar">
+                <div class="invalid-feedback">
+                    <?= $validation->getError('gambar'); ?>
+                </div>
             </div>
         </div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">

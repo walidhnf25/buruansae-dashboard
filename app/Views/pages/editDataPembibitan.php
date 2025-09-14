@@ -1,44 +1,37 @@
 <?= $this->extend('layout/template'); ?>
 
 <?= $this->section('content'); ?>
-<div class="container tambah my-5">
+<div class="container tambah  my-5">
     <div class="row">
-        <h2 class="label-tambah-data mb-3">Edit Data Sampah</h2>
+        <h2 class="label-tambah-data mb-3">Edit Data Bibit</h2>
         <div class="col-12">
-            <form action="<?= base_url(); ?>/dataPengolahanSampah/update/<?= $sampah['id_data_sampah']; ?>" method="post">
+            <form action="<?= base_url(); ?>/dataPembibitan/update/<?= $bibit['id_bibit']; ?>" method="post">
                 <?= csrf_field(); ?>
                 <div class="mb-3">
-                    <label for="tanggal_masuk" class="form-label">Tanggal Tanam</label>
-                    <input type="date" class="form-control <?= ($validation->hasError('tanggal_masuk')) ? 'is-invalid' : ''; ?>" id="tanggal_masuk" name="tanggal_masuk" value="<?= (old('tanggal_masuk')) ? old('tanggal_masuk') : $sampah['tanggal_masuk']; ?>">
-                    <div class="invalid-feedback">
-                        <?= $validation->getError('tanggal_masuk'); ?>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="jenis_pengolahan" class="form-label">Jenis Pengolahan</label>
-                    <select class="form-select <?= ($validation->hasError('jenis_pengolahan')) ? 'is-invalid' : ''; ?>" 
-                            name="jenis_pengolahan" 
-                            id="jenis_pengolahan" 
+                    <label for="nama_sayur" class="form-label">Nama Sayur/Tanaman</label>
+                    <select class="form-select <?= ($validation->hasError('nama_sayur')) ? 'is-invalid' : ''; ?>" 
+                            name="nama_sayur" 
+                            id="nama_sayur" 
                             onchange="updateDurasiTanam()">
-                        <option value="" class="hidden" style="display: none;" disabled>Pilih Jenis Pengolahan</option>
+                        <option value="" class="hidden" style="display: none;" disabled>Pilih Sayur</option>
                         <?php foreach ($komoditi as $k) : ?>
                             <option value="<?= $k['nama_komoditi'] ?>" 
                                     data-durasi="<?= $k['durasi_tanam'] ?>" 
-                                    <?= old('jenis_pengolahan') == $k['nama_komoditi'] ? 'selected' : ''; ?>>
+                                    <?= old('nama_sayur') == $k['nama_komoditi'] ? 'selected' : ''; ?>>
                                 <?= $k['nama_komoditi'] ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
                     <div class="invalid-feedback">
-                        <?= $validation->getError('jenis_pengolahan'); ?>
+                        <?= $validation->getError('nama_sayur'); ?>
                     </div>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="nama_kelompok" class="form-label">Assign Tugas Kelompok</label>
+                    <label for="nama_kelompok" class="form-label">Assign Kelompok</label>
                     <select name="id_kelompok" class="form-select">
                         <option value="" style="display: none;" class="hidden" disabled>--Pilih Nama Kelompok--</option>
                         <?php foreach ($kelompok as $key => $value) { ?>
-                            <option value="<?php echo $value['id_kelompok']; ?>" data-penyuluh="<?php echo $value['penyuluh']; ?>" data-pendamping="<?php echo $value['pendamping']; ?>" data-kecamatan="<?php echo $value['kecamatan']; ?>" data-kelurahan="<?php echo $value['kelurahan']; ?>" <?php echo old('id_kelompok', $sampah['id_kelompok']) == $value['id_kelompok'] ? 'selected' : ''; ?>><?php echo $value['nama_kelompok']; ?></option>
+                            <option value="<?php echo $value['id_kelompok']; ?>" data-penyuluh="<?php echo $value['penyuluh']; ?>" data-pendamping="<?php echo $value['pendamping']; ?>" data-kecamatan="<?php echo $value['kecamatan']; ?>" data-kelurahan="<?php echo $value['kelurahan']; ?>" <?php echo old('id_kelompok', $bibit['id_kelompok']) == $value['id_kelompok'] ? 'selected' : ''; ?>><?php echo $value['nama_kelompok']; ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -58,17 +51,56 @@
                     <label for="kelurahan">Kelurahan</label>
                     <input type="text" name="kelurahan" id="kelurahan" class="form-control" readonly>
                 </div>
+                <div class="form-group mb-3">
+                    <label for="asal_bibit" class="form-label">Asal Bibit</label>
+                    <select name="asal_bibit" id="asal_bibit" class="form-select">
+                        <option value="" style="display: none;" class="hidden">--Pilih Asal Bibit--</option>
+                        <option value="vegetatif" 
+                            <?= old('asal_bibit', $bibit['asal_bibit']) == 'Vegetatif' ? 'selected' : ''; ?>>
+                            Vegetatif
+                        </option>
+                        <option value="generatif" 
+                            <?= old('asal_bibit', $bibit['asal_bibit']) == 'Generatif' ? 'selected' : ''; ?>>
+                            Generatif
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3 form-group">
+                    <label for="keterangan">Keterangan Asal Bibit</label>
+                    <input type="text" name="keterangan" id="keterangan" class="form-control" value="<?= old('keterangan', $bibit['keterangan']); ?>">
+                </div>
+
                 <div class="mb-3">
-                    <label for="jumlah_sampah" class="form-label">Jumlah Sampah (kg)</label>
-                    <input type="number" min="0" class="form-control <?= ($validation->hasError('jumlah_sampah')) ? 'is-invalid' : ''; ?>" id="jumlah_sampah" name="jumlah_sampah" value="<?= (old('jumlah_sampah')) ? old('jumlah_sampah') : $sampah['jumlah_sampah']; ?>">
+                    <label for="jumlah_semai" class="form-label">Jumlah Semai (Biji)</label>
+                    <input type="number" 
+                        min="1" 
+                        class="form-control <?= ($validation->hasError('jumlah_semai')) ? 'is-invalid' : ''; ?>" 
+                        id="jumlah_semai" 
+                        name="jumlah_semai"
+                        value="<?= old('jumlah_semai', $bibit['jumlah_semai']); ?>">
                     <div class="invalid-feedback">
-                        <?= $validation->getError('jumlah_sampah'); ?>
+                        <?= $validation->getError('jumlah_semai'); ?>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="tanggal_tanam" class="form-label">Tanggal Tanam</label>
+                    <input type="date" class="form-control <?= ($validation->hasError('tanggal_tanam')) ? 'is-invalid' : ''; ?>" id="tanggal_tanam" name="tanggal_tanam" value="<?= (old('tanggal_tanam')) ? old('tanggal_tanam') : $bibit['tanggal_tanam']; ?>">
+                    <div class="invalid-feedback">
+                        <?= $validation->getError('tanggal_tanam'); ?>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="jumlah_semai" class="form-label">Jumlah Tanam</label>
+                    <input type="number" min="1" class="form-control <?= ($validation->hasError('jumlah_semai')) ? 'is-invalid' : ''; ?>" id="jumlah_semai" name="jumlah_semai" value="<?= (old('jumlah_semai')) ? old('jumlah_semai') : $bibit['jumlah_semai']; ?>">
+                    <div class="invalid-feedback">
+                        <?= $validation->getError('jumlah_semai'); ?>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="waktu_prakiraan_panen" class="form-label">Waktu Prakiraan Panen</label>
-                        <input type="date" class="form-control <?= ($validation->hasError('waktu_prakiraan_panen')) ? 'is-invalid' : ''; ?>" id="waktu_prakiraan_panen" name="waktu_prakiraan_panen" value="<?= (old('waktu_prakiraan_panen')) ? old('waktu_prakiraan_panen') : $sampah['waktu_prakiraan_panen']; ?>">
+                        <input type="date" class="form-control <?= ($validation->hasError('waktu_prakiraan_panen')) ? 'is-invalid' : ''; ?>" id="waktu_prakiraan_panen" name="waktu_prakiraan_panen" value="<?= (old('waktu_prakiraan_panen')) ? old('waktu_prakiraan_panen') : $bibit['waktu_prakiraan_panen']; ?>">
                         <div class="invalid-feedback">
                             <?= $validation->getError('waktu_prakiraan_panen'); ?>
                         </div>
@@ -85,13 +117,13 @@
                 </div>
                 <div class="mb-3">
                     <label for="prakiraan_jumlah_panen" class="form-label">Prakiraan Jumlah Panen (kg)</label>
-                    <input type="number" min="0" step="any" class="form-control <?= ($validation->hasError('prakiraan_jumlah_panen')) ? 'is-invalid' : ''; ?>" id="prakiraan_jumlah_panen" name="prakiraan_jumlah_panen" value="<?= old('prakiraan_jumlah_panen', $sampah['prakiraan_jumlah_panen']); ?>">
+                    <input type="number" min="0" step="any" class="form-control <?= ($validation->hasError('prakiraan_jumlah_panen')) ? 'is-invalid' : ''; ?>" id="prakiraan_jumlah_panen" name="prakiraan_jumlah_panen" value="<?= old('prakiraan_jumlah_panen', $bibit['prakiraan_jumlah_panen']); ?>">
                     <div class="invalid-feedback">
                         <?= $validation->getError('prakiraan_jumlah_panen'); ?>
                     </div>
                 </div>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-                    <a href="<?= base_url(); ?>/dataPengolahanSampah" class="btn btn-secondary" type="button">Kembali</a>
+                    <a href="<?= base_url(); ?>/dataPembibitan" class="btn btn-secondary" type="button">Kembali</a>
                     <button class="btn btn-primary me-md-2" type="submit">Ubah</button>
                 </div>
             </form>
@@ -117,7 +149,7 @@
     }
 
     function updatePrakiraanPanen() {
-        const tanggalTanamInput = document.getElementById('tanggal_masuk');
+        const tanggalTanamInput = document.getElementById('tanggal_tanam');
         const waktuPrakiraanPanenInput = document.getElementById('waktu_prakiraan_panen');
         const durasiTanamInput = document.getElementById('durasi_tanam');
 
@@ -141,7 +173,7 @@
         }
     }
 
-    // Pasang event listener untuk input tanggal_masuk
-    document.getElementById('tanggal_masuk').addEventListener('change', updatePrakiraanPanen);
+    // Pasang event listener untuk input tanggal_tanam
+    document.getElementById('tanggal_tanam').addEventListener('change', updatePrakiraanPanen);
 </script>
 <?= $this->endSection(); ?>

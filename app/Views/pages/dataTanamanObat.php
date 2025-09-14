@@ -30,16 +30,25 @@
 
       <!-- Tombol Akan Panen -->
       <a href="<?= base_url(); ?>/dataTanamanObat?filter=akan_panen" 
-        class="btn btn-primary mx-2 d-flex align-items-center" 
+        class="btn btn-primary position-relative mx-2 d-flex align-items-center" 
         id="btnAkanPanen">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icon-tabler-clock-hour-4 me-2">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
               <path d="M17 3.34a10 10 0 1 1 -15 8.66l.005 -.324a10 10 0 0 1 14.995 -8.336m-5 2.66a1 1 0 0 0 -1 1v5.026l.009 .105l.02 .107l.04 .129l.048 .102l.046 .078l.042 .06l.069 .08l.088 .083l.083 .062l3 2a1 1 0 1 0 1.11 -1.664l-2.555 -1.704v-4.464a1 1 0 0 0 -.883 -.993z"/>
           </svg>
           Akan Panen
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger fs-6">
+            <?= $jumlahTerlambatPanen; ?>
+        </span>
       </a>
     </div>
   </div>
+
+  <?php if ($filter == 'akan_panen' && $jumlahTerlambatPanen > 0) : ?>
+    <div class="alert alert-light shadow-sm rounded-pill px-4 py-3 mt-4 text-center custom-alert-text" role="alert">
+      <strong>Terdapat <?= $jumlahTerlambatPanen; ?> Komoditi yang Sudah Melewati Waktu Panen</strong>
+    </div>
+  <?php endif; ?>
 
   <div class="table-responsive-sm">
     <table id="tablehome" class="table table-bordered table-hover ">
@@ -91,8 +100,16 @@
       </thead>
       <tbody>
         <?php $i = 1; ?>
-        <?php foreach ($data_tanaman_obat as $obat) : ?>
-          <tr class="table-light align-middle">
+          <?php foreach ($data_tanaman_obat as $obat) : ?>
+            <?php
+                // Konversi waktu_prakiraan_panen ke timestamp
+                $waktuPrakiraanPanen = isset($obat['waktu_prakiraan_panen']) ? strtotime($obat['waktu_prakiraan_panen']) : null;
+                $hariIni = strtotime(date('Y-m-d'));
+
+                // Jika waktu_panen NULL dan waktu_prakiraan_panen adalah hari ini atau sudah lewat, beri warna merah
+                $highlight = (is_null($obat['waktu_panen']) && $waktuPrakiraanPanen !== null && $waktuPrakiraanPanen <= $hariIni) ? 'table-color' : '';
+          ?>
+          <tr class="align-middle table-light">
             <th scope="row"><?= $i++; ?></th>
             <td><?= $obat['nama_tanaman_obat']; ?></td>
             <td><?= $obat['nama_kelompok']; ?></td>
@@ -105,14 +122,8 @@
             <td><?= $obat['jumlah_tanam'] . ' ' . $obat['kategori_tumbuhan'] . ''; ?></td>
 
             <!-- Waktu Panen / Prakiraan Panen -->
-            <td>
-              <?php if ($obat['waktu_panen'] === null) : ?>
-                <!-- If waktu_panen is null, display Waktu Prakiraan Panen -->
-                <?= $obat['waktu_prakiraan_panen'] ?? '-'; ?>
-              <?php else : ?>
-                <!-- If waktu_panen is not null, display Waktu Panen -->
-                <?= $obat['waktu_panen'] ?? '-'; ?>
-              <?php endif; ?>
+            <td class="<?= (is_null($obat['waktu_panen']) && $waktuPrakiraanPanen !== null && $waktuPrakiraanPanen <= $hariIni) ? 'table-color' : ''; ?>">
+              <?= $obat['waktu_panen'] ?? ($obat['waktu_prakiraan_panen'] ?? '-'); ?>
             </td>
 
             <td>
@@ -163,6 +174,12 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+  // Redirect jika tidak ada parameter filter di URL
+  if (!window.location.search.includes("filter=")) {
+      window.location.href = window.location.pathname + "?filter=sudah_panen";
+  }
+</script>
+<script>
     $(document).ready(function () {
       // Ambil parameter filter dari URL
       const urlParams = new URLSearchParams(window.location.search);
@@ -189,5 +206,22 @@
           $('#headerTitle').text(headerText);
       }
   });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    let btnAkanPanen = document.getElementById("btnAkanPanen");
+    let alertBox = document.getElementById("alertAkanPanen");
+
+    // Cek jika sebelumnya sudah diklik
+    if (localStorage.getItem("akanPanenActive") === "true") {
+        alertBox.style.display = "block";
+      } else {
+      alertBox.style.display = "none";
+    }
+
+    btnAkanPanen.addEventListener("click", function () {
+      localStorage.setItem("akanPanenActive", "true");
+        alertBox.style.display = "block";
+      });
+    });
 </script>
 <?= $this->endSection(); ?>
