@@ -75,6 +75,9 @@
             </div>
         </div>
         <div class="catalog card">
+            <?php if ($jumlahOlahanHasil > 0) : ?>
+                <span class="badge-count"><?= $jumlahOlahanHasil; ?></span>
+            <?php endif; ?>
             <img src="asset/olahan sampah.jpg" class="card-img-top" alt="asset/olahan sampah.jpg" >
             <h5 class="text-center mt-2 mb-3">Data Olahan Sampah</h4>
             <div class="d-grid gap-2 col-8 mx-auto mt-5 mb-3">
@@ -82,6 +85,9 @@
             </div>
         </div>
         <div class="catalog card">
+            <?php if ($jumlahOlahanHasil > 0) : ?>
+                <span class="badge-count"><?= $jumlahOlahanHasil; ?></span>
+            <?php endif; ?>
             <img src="asset/bibit.jpg" class="card-img-top" alt="asset/bibit.jpg" >
             <h5 class="text-center mt-2 mb-3">Data Bibit</h4>
             <div class="d-grid gap-2 col-8 mx-auto mt-5 mb-3">
